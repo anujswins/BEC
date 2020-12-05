@@ -1,0 +1,38 @@
+<!--<resources>-->
+
+<!--    &lt;!&ndash; Base application theme. &ndash;&gt;-->
+<!--    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">-->
+<!--        &lt;!&ndash; Customize your theme here. &ndash;&gt;-->
+<!--        <item name="android:textColor">#000000</item>-->
+<!--    </style>-->
+
+<!--</resources>-->
+
+<resources xmlns:tools="http://schemas.android.com/tools">
+
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <!-- Customize your theme here. -->
+                <item name="android:textColor">#000000</item>
+        <item name="android:datePickerDialogTheme" tools:ignore="NewApi">@style/datePickerTheme</item>
+        <item name="android:timePickerDialogTheme" tools:ignore="NewApi">@style/timePickerTheme</item>
+
+
+
+    </style>
+    <style name="datePickerTheme" parent="Theme.AppCompat.Light.Dialog">
+        <item name="colorAccent">#008BD0</item>
+        <item name="colorControlActivated">#008BD0</item>
+        <item name="colorControlHighlight">#008BD0</item>
+    </style>
+
+    <style name="timePickerTheme" parent="Theme.AppCompat.Light.Dialog">
+        <item name="colorAccent">#008BD0 </item>
+        <item name="android:textColorPrimary">#008BD0 </item>
+    </style>
+
+
+
+
+
+</resources>
