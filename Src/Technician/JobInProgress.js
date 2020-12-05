@@ -143,6 +143,7 @@ export default class JobInProgress extends Component {
 
         try {
             // this.toggleLoader(true);
+            //aaaaaaaaaaaaaaa
             let json_response = await AuthService.ObjectAttributes(this.state.jobId, this.state.userId, this.state.subSegmentId, this.state.segmentId, this.state.machineId,
                 this.state.machineTypeId, this.state.namePlate, this.state.orderBy, this.state.orderByDescending, this.state.allRecords);
 

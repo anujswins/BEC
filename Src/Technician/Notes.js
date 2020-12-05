@@ -367,7 +367,7 @@ class Feedback extends Component {
         this.Fun_GetFeedbackRecords();
             let token = await AppStorage.getjobid();
             token.map((data, index) => alert(data));
-           
+          //adadadadadadadadadadad 
         
       
 
