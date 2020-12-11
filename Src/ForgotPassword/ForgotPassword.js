@@ -15,6 +15,7 @@ import EditText from '../CommonComponents/EditText'
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
 import AuthService from '../RestClient/AuthService';
 import ApiLoader from '../PopUp/ApiLoader';
+import {AppStorage, key} from '../utils/AppStorage';
 export default class ForgotPassword extends Component {
 
   static navigationOptions = {
@@ -41,6 +42,9 @@ backgroundColor:'#008ad1'
 
 
   }
+  toggleLoader = (val) => {
+    this.setState(({isLoading: val}));
+};
 
   onChange = (value) => {
     this.setState({ UserEmail: value });
@@ -55,6 +59,19 @@ backgroundColor:'#008ad1'
     this.setState(({isLoading: val}));
 }
 
+
+saveEmail=(email)=>{
+
+AppStorage.saveKey(Key.SAVE_EMAIL,this.state.UserEmail).then(()=>{
+
+});
+
+
+}
+
+
+
+
   sendEmail = async () => {
     // Alert.alert("inside send email")
 
@@ -67,7 +84,9 @@ backgroundColor:'#008ad1'
 
 
         if (respo.data.StatusCode === 200) {
-          this.props.navigation.navigate('OTPVerification')
+          
+          this.props.navigation.navigate('OTPVerification',{Email:this.state.UserEmail})
+            // this.saveEmail(this.state.UserEmail);
         }
 else{
   Alert.alert("resposne in forgotPassword",respo.data.Message)
@@ -167,7 +186,7 @@ else{
           {/* -----------Email Address  Field */}
           <View style={{ marginTop:hp('10%')}}>
               {/* <CustomTextInput label="Email Address" onChange={this.onChange} />   */}
-             {/* <EditText
+             <EditText
                                 placeholder={'Email Address'}
                                 // IconName={'email'}
                                 editable={true}
@@ -180,8 +199,8 @@ else{
                                   // emailError: validate('email', val)
                               
                               })}
-                            /> */}
-           <TextInput style={styles.input}
+                            />
+           {/* <TextInput style={styles.input}
                                    underlineColorAndroid="transparent"
                                    placeholder="Password"
                                    placeholderTextColor="grey"
@@ -191,7 +210,7 @@ else{
                                    value={this.state.UserEmail}
                                    onChangeText={(text) => {
                                        this.setState({ UserEmail: text});
-                                   }}/>
+                                   }}/> */}
       
           </View>
 

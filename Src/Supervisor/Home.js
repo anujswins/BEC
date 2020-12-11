@@ -10,6 +10,8 @@ import BottomHomeComponent from '../CommonComponents/BottomHomeComponent';
 import DrawerHeader from '../CommonComponents/DrawerHeader'
 import BottomTabNavigator from '../CommonComponents/BottomTabNavigator';
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
+import {AppStorage, key} from '../utils/AppStorage';
+import AuthService from '../RestClient/AuthService';
 
 
 
@@ -24,6 +26,8 @@ export default class Home extends React.Component {
   constructor() {
     super();
     this.state = {
+      status: 'In Progress',
+      allRecords: true,
       CategoryList: [
         {
           CategoryName: 'Current Jobs',
@@ -71,9 +75,34 @@ export default class Home extends React.Component {
 
 
 
+
+  componentDidMount = async () => {
+    let UserId = await AppStorage.getUserId();
+
+
+    try {
+      let respo = await AuthService.JobDetails(UserId,UserId,this.state.status,this.state.allRecords);
+      alert(JSON.stringify(respo));
+  console.log('dashboard_respo_home_superviser########################',respo.data.data.jobsMainResponse.jobResponse);
+
+
+      AppStorage.saveKey(key.ALL_RECORDS_DATA, JSON.stringify(respo.data)).then(() => {
+
+      });
+
+    } catch (e) {
+
+      //Alert.alert(e.response.data.Message);
+      console.log('dashboard_techincian catch me print hua', e);
+    } finally {
+      // console.log('dashboard_techincian finally print hua');
+    }
+
+  }
+
   OnListItemClick = (item) => {
 
-    
+
 // Alert.alert(this.props.navigation.getParam('username'))
 
     if (item.CategoryName == "Current Jobs") {
@@ -122,10 +151,10 @@ export default class Home extends React.Component {
   render() {
     return (
       <SafeAreaView style={styles.container}>
-           <StatusBar  
-     backgroundColor = "#008BD0"  
-     barStyle = "#ffffff"   
-   /> 
+           <StatusBar
+     backgroundColor = "#008BD0"
+     barStyle = "#ffffff"
+   />
         {/* ---------header-------------- */}
         <View style={styles.headerStyle}>
           <DrawerHeader name="Supervisor Dashboard" openDrawer={this.props.navigation} status={true} notification={true}/>
@@ -196,7 +225,7 @@ const styles = StyleSheet.create({
     height:'82%',
     width:'100%',
     marginVertical:'1%',
-  
+
 
       // backgroundColor:'yellow',
 
@@ -225,11 +254,11 @@ const styles = StyleSheet.create({
     width: wp('6%'),
     resizeMode: 'contain',
     // backgroundColor:'red'
-  
+
   },
   CategoryNameStyle: {
     fontSize: hp('2.5%'),
-    
+
   },
 
   CategoryIconBackground: {

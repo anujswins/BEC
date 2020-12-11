@@ -2,7 +2,6 @@ import React, {Component} from 'react';
 import { SearchBar } from 'react-native-elements';
 import DrawerHeader from '../CommonComponents/DrawerHeader';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
-import {AppStorage, key} from '../utils/AppStorage';
 import {
     SafeAreaView,
     StatusBar,
@@ -22,6 +21,7 @@ import {
 import BottomTabNavigator from '../CommonComponents/BottomTabNavigator';
 import ApiLoader from '../../Src/PopUp/ApiLoader';
 import AuthService from '../../Src/RestClient/AuthService';
+import {AppStorage, key} from '../utils/AppStorage';
 const screen = Dimensions.get("screen");
 const dwidth = Dimensions.get('screen').width;
 const dheight = Dimensions.get('screen').height;
@@ -41,6 +41,88 @@ const mainData = [
     
     
 ];
+
+
+ const AssignButtonView=({item,assignedJobcode})=>{
+
+    // if(assignedJobcode!=null)
+    // {
+        if (assignedJobcode!=null  && item.JobCode=== assignedJobcode)
+        {
+        
+        return(
+         
+            <TouchableOpacity style={{width:'22%',height:'90%',backgroundColor:'#0288d5',marginHorizontal:4,
+            justifyContent:"center",alignItems:"center"}}
+            onPress={()=>this.props.navigation.navigate("ActiveJobs",{JobId:item.JobId}) }>
+        <Text style={{ color: 'white',justifyContent:"center", textAlign:"center"}}>View  </Text>
+        
+        </TouchableOpacity>
+       
+        
+        );
+        
+        
+        }
+        
+        else if(item.JobCode!= assignedJobcode)
+        {
+            return(
+            
+                       <TouchableOpacity style={{width:'22%',height:'90%',backgroundColor:'#0288d5',marginHorizontal:4,
+            justifyContent:"center",alignItems:"center"}}
+            onPress={()=>this.props.navigation.navigate("ActiveJobs",{JobId:item.JobId}) }>
+        <Text style={{ color: '#000000',justifyContent:"center", textAlign:"center"}}>Assign </Text>
+        
+        </TouchableOpacity>
+        
+            
+            
+            );
+    
+    }
+    
+    else{
+
+        return(
+            
+            <TouchableOpacity style={{width:'22%',height:'90%',backgroundColor:'#0288d5',marginHorizontal:4,
+ justifyContent:"center",alignItems:"center"}}
+ onPress={()=>this.props.navigation.navigate("ActiveJobs",{JobId:item.JobId}) }>
+<Text style={{ color: '#ffffff',justifyContent:"center", textAlign:"center"}}>Assign </Text>
+
+</TouchableOpacity>
+
+ 
+ 
+ );
+
+    }
+        
+    
+    
+    }
+    
+    // else{
+    // d   
+    //     return(
+          
+    //         <TouchableOpacity style={{width:'22%',height:'90%',backgroundColor:'#0288d5',marginHorizontal:4,
+    //         justifyContent:"center",alignItems:"center"}}
+    //         onPress={()=>this.props.navigation.navigate("ActiveJobs",{JobId:item.JobId}) }>
+    //     <Text style={{ color: '#ffffff',justifyContent:"center", textAlign:"center"}}>Assign </Text>
+        
+    //     </TouchableOpacity>
+        
+       
+    //     );
+    
+    
+    // }
+    
+    
+    
+    
 export default class CurrentJobs extends Component {
 
 
@@ -64,6 +146,8 @@ export default class CurrentJobs extends Component {
             orderBy: 'CreatedOn',
             orderByDescending: true,
             allRecords: true,
+            userId:'',
+            assignedJobcode:''
         }       
     }
     updateSearch = (search) => {
@@ -77,23 +161,66 @@ export default class CurrentJobs extends Component {
   componentDidMount(){
 this.Fun_GetAllRecords();
 
-
   }
   toggleLoader = (val) => {
     this.setState(({ isLoading: val }));
 };
-      Fun_GetAllRecords = async () => {
+      
+
+
+
+
+
+
+
+
+Fun_GetAllRecords = async () => {
 
 
         try {
             this.toggleLoader(true);
+             let technician_list= await AppStorage.getAllTechnician();
+
+            //  {this.state.technicianType.map(item=>
+            //     ({label:item.CodeName,value:item.CodeName}))}
+       
+
+
+            var response=await AppStorage.getLoginResponse();
+console.log("userId",response.userResponse.UserId);
+technician_list.map(item=>
+    {
+
+
+if(item.UserId===response.userResponse.UserId)
+{
+    
+
+console.log("job code",item.ActiveJobCode);
+this.setState({
+    assignedJobcode:item.ActiveJobCode
+})
+}
+
+
+    }
+    
+    );
+this.setState({
+    userId:response.userResponse.UserId,
+})
+            console.log("technician list &&&&&&&&&&&&&&&&&&&",this.state.assignedJobcode);     
+            
+            
+
             let json_response = await AuthService.SuperviseCurrentJobs(this.state.stageId, this.state.jobTypeId, this.state.machineTypeId, this.state.startDate, this.state.endDate,
                 this.state.clientId, this.state.assignToId, this.state.status, this.state.orderBy, this.state.orderByDescending, this.state.allRecords);
 
                 
-           this.ongettingdata(json_response);
-    
 
+            console.log('GetAllRecords try==', json_response.data);
+          
+            // mainData=json_response.data.Permissions;
             if (json_response.data.StatusCode === 200) {
                 // Alert.alert("data get successfully ");
                 //  console.log('response condition+++++++++', json_response.data.data.jobsMainResponse);
@@ -113,19 +240,7 @@ this.Fun_GetAllRecords();
         }
 
     };
-    ongettingdata = (respo) => {
-        // console.log('login response data ', respo.data);
-
-
-       
-
-
-  // alert('Alert'   + JSON.stringify(respo.data.data.jobsMainResponse.jobResponse));
-
-   AppStorage.saveKey(key.USER_JOBSDETAILS, JSON.stringify(respo.data.data.jobsMainResponse.jobResponse)).then(() => {
- });
-
-    }
+    
     render() {
         const { dimensions } = this.state;
         const { search ,isLoading} = this.state;
@@ -165,21 +280,50 @@ this.Fun_GetAllRecords();
                 </View>
                 <View style={{height:'69%', width: '100%', backgroundColor: "white" }}>
 
-                    <FlatList data={this.state.orderData}
-                        renderItem={({ item }) => (
+                    <FlatList
+                     data={this.state.orderData}
+                        renderItem={({ item }) => {console.log("item****",item.JobCode)
+                            return(
                             <View style={styles.FlatListView}>
                                 <Text style={{ width: '26%', height: '100%',padding: 10,textAlign:"center"}}>{item.EquipmentId}</Text>
                                 <Text style={{ width: '26%', height: '100%', padding: 10,textAlign:"center"}}>{item.JobCode}</Text>
                               
                                 <Text style={{ width: '23%', height: '100%',padding: 10, textAlign:"center"}}>{item.StageId}</Text>
-                                <View style={{width:'22%',height:'90%',backgroundColor:'#0288d5',marginHorizontal:4,
-                                justifyContent:"center",alignItems:"center"}}>
-<Text style={{ color: 'white',justifyContent:"center", textAlign:"center"}}>Assign Job</Text>
+                               
 
-</View> 
+{/*                                 
+                {item.JobCode=== this.state.assignedJobcode  ?   
+
+
+
+                 <TouchableOpacity style={{width:'22%',height:'90%',backgroundColor:'#0288d5',marginHorizontal:4,
+                                justifyContent:"center",alignItems:"center"}}
+                                onPress={()=>this.props.navigation.navigate("ActiveJobs",{JobId:item.JobId}) }>
+<Text style={{ color: 'white',justifyContent:"center", textAlign:"center"}}>View  </Text>
+
+</TouchableOpacity>
+
+ :
+
+<View style={{width:'22%',height:'90%',backgroundColor:'#0288d5',marginHorizontal:4,
+justifyContent:"center",alignItems:"center"}}>
+<Text style={{ color: '#000000',justifyContent:"center", textAlign:"center"}}>Assign Job</Text>
+
+</View>
+} */}
+
+<AssignButtonView item={item} assignedJobcode={this.state.assignedJobcode}/>
                                 
                             </View>
-                        )} >
+                        )} 
+
+
+
+
+                        } 
+                        
+                        
+                        >
 
                     </FlatList>
                  

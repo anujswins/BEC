@@ -9,7 +9,7 @@ import {
     Dimensions,
     View,
     Text,
-                                                                                                                                                        Image,
+    Image,
     TouchableOpacity,
     Button,
     SearchBar,
@@ -45,6 +45,8 @@ class Login extends React.Component {
             email: 'parshantwins@gmail.com',
             Password: 'Sayomsairam21!',
             count: 0,
+            Name: '',
+            userId: '',
 
         };
 
@@ -55,46 +57,79 @@ class Login extends React.Component {
     toggleLoader = (val) => {
         this.setState(({isLoading: val}));
     };
-componentDidMount = () => {
-   
-    //this.ifalreadylogined();
-}
-ifalreadylogined = async () => {
-    let token = await AppStorage.getToken();
-    if(token !== null || token !== '')
-    {
-        this.toggleLoader(false);
-         this.props.navigation.navigate('Dashboard');
-    }
-    else{
-        this.toggleLoader(false);
-    }
-}
+
 
     loginUser = async (role) => {
 
 
         try {
             this.toggleLoader(true);
-            
-         
+
             let respo = await AuthService.authenticate(this.state.email, this.state.Password, role);
 
-           
-        alert(JSON.stringify(respo));
-            if (respo.data.StatusCode === 200) {
-                // console.log('response condition', respo.data.StatusCode);
-                this.onLogin(respo);
+            this.setState({
+                Name: respo.data.data.userResponse.FirstName + ' ' + respo.data.data.userResponse.LastName,
+                //  userId:respo.data.data.userResponse.UserId
 
+            });
+            console.log('userId ', respo.data.data.userResponse.UserId);
+            this.toggleLoader(false);
+
+
+            if (respo.data.StatusCode === 200) {
+
+                this.onLogin(respo);
+                this.toggleLoader(false);
+                if (role == 'S') {
+                    console.log('inside if block  ');
+
+                    this.props.navigation.navigate(
+                        'Drawer',
+                        {
+                            username: this.state.email,
+                            Name: this.state.Name,
+                        },
+
+
+                        NavigationActions.navigate({
+                            routeName: 'Dashboard',
+                        }),
+                    );
+                } else {
+
+                    // this.toggleLoader(false);
+                    this.props.navigation.navigate(
+                        'TechnicianDrawer',
+                        {
+                            username: this.state.email,
+                            Name: this.state.Name,
+                            userId: respo.data.data.userResponse.UserId,
+
+
+                        },
+                        NavigationActions.navigate({
+                            routeName: 'Dashboard',
+                        }),
+                    );
+                    //alert('drawer')
+                }
             }
 
-        } catch (e) {
 
-            //Alert.alert(e.response.data.Message);
-            // console.log('login catch me print hua', e.response.data);
-        } finally {
+        } catch (e) {
             this.toggleLoader(false);
-            // console.log('login finally print hua');
+            //  Alert.alert(e.response.data.Message);
+            showMessage({
+                message: e.response.data.Message,
+                type: 'info',
+                backgroundColor: 'black',
+                position: 'top',
+
+            });
+
+        } finally {
+
+
         }
 
     };
@@ -105,20 +140,20 @@ ifalreadylogined = async () => {
 
 
         AppStorage.saveKey(key.USER_PROFILE_DATA, JSON.stringify(respo.data)).then(() => {
-            this.props.navigation.navigate('Dashboard');
+            // this.props.navigation.navigate('Dashboard');
+        });
+        AppStorage.saveKey(key.ALL_LOGINRESPO, JSON.stringify(respo.data)).then(() => {
+            // this.props.navigation.navigate('Dashboard');
         });
 
 
         // Alert.alert(respo.data.Message);
 
-    
 
     };
 
 
     validates = (status) => {
-
-        this.loginUser(status);
 
 
         let text = this.state.email;
@@ -169,48 +204,14 @@ ifalreadylogined = async () => {
         } else {
             this.setState({email: text});
             // console.log('Email is Correct');
-            if (status === 'S') {
-                this.props.navigation.navigate(
-                    'Drawer',
-                    {username: text},
-                    NavigationActions.navigate({
-                        routeName: 'Dashboard',
-                    }),
-                );
-            } else {
-                this.props.navigation.navigate(
-                    'TechnicianDrawer',
-                    {username: text},
-                    NavigationActions.navigate({
-                        routeName: 'Dashboard',
-                    }),
-                );
-//
-            }
+            this.loginUser(status);
 
 
         }
 
     };
 
-    //   loginApidata(email,Password) {
-    //   try {
-    //     let response = await fetch(
-    //       'http://64.202.184.112:5000/api/AuthAPI/Login'+"parshantwins@gmail.com",+'Sayomsairamsffdfsdfs21!',
-    //     );
-    //     let responseJson = await response.json();
-    //     console.log('viodmckdnckndckjndksd',  responseJSon);
 
-
-    //     return responseJson;
-    //   } catch (error) {
-    //     console.error(error);
-    //   }
-    // }
-
-// componentDidMount(){
-//   this.props.fetch_Data();
-// }
 
     render() {
         const {dimensions} = this.state;
@@ -219,7 +220,7 @@ ifalreadylogined = async () => {
 
 
             <SafeAreaView style={{flex: 1, backgroundColor: 'white', justifyContent: 'center'}}>
-             
+                <StatusBar hidden={false} backgroundColor={'#008BD0'}/>
 
                 <KeyboardAwareScrollView style={{backgroundColor: 'transparent'}}>
                     <ApiLoader visibility={isLoading} loadingColor={'green'} onCancelPress={() => {
@@ -272,13 +273,13 @@ ifalreadylogined = async () => {
 
 
                         }>
-                            <Text style={{color: 'white'}}>Login as Technician</Text>
+                            <Text style={{color: 'white',fontFamily: 'Roboto-Regular'}}>Login as Technician</Text>
                         </TouchableOpacity>
 
                     </View>
                     <View style={styles.forgotPasswordView}>
                         <TouchableOpacity onPress={() => this.props.navigation.navigate('ForgotPassword')}>
-                            <Text style={{color: '#33a1De'}}>Forgot Password</Text>
+                            <Text style={{color:'#33a1De',fontFamily: 'Roboto-Regular'}}>Forgot Password</Text>
                         </TouchableOpacity>
                     </View>
 
@@ -320,6 +321,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         textAlign: 'center',
         fontSize: 20,
+        fontFamily: 'Roboto-Regular',
     },
 
     mainImageText: {
@@ -336,6 +338,7 @@ const styles = StyleSheet.create({
         height: 40,
         borderColor: 'grey',
         borderBottomWidth: 1,
+        fontFamily: 'Roboto-Regular',
     },
     loginView: {
         flexDirection: 'row',

@@ -319,7 +319,7 @@ import FlashMessage from 'react-native-flash-message';
 import {showMessage, hideMessage} from 'react-native-flash-message';
 import ApiLoader from '../../Src/PopUp/ApiLoader';
 import AuthService from '../../Src/RestClient/AuthService';
-import {AppStorage, key} from '../utils/AppStorage';
+
 const screen = Dimensions.get('screen');
 const dwidth = Dimensions.get('screen').width;
 const dheight = Dimensions.get('screen').height;
@@ -365,11 +365,7 @@ class Feedback extends Component {
 
     componentDidMount = async () => {
         this.Fun_GetFeedbackRecords();
-            let token = await AppStorage.getjobid();
-            token.map((data, index) => alert(data));
-          //adadadadadadadadadadad 
         
-      
 
     };
 
