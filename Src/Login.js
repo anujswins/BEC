@@ -46,6 +46,8 @@ class Login extends React.Component {
             email: 'parshantwins@gmail.com',
             Password: 'Sayomsairam21!',
             count: 0,
+            Name: '',
+            userId: '',
 
         };
 
@@ -63,26 +65,81 @@ class Login extends React.Component {
 
         try {
             this.toggleLoader(true);
-            
-         
+
             let respo = await AuthService.authenticate(this.state.email, this.state.Password, role);
 
+<<<<<<< HEAD
         
+=======
+            this.setState({
+                Name: respo.data.data.userResponse.FirstName + ' ' + respo.data.data.userResponse.LastName,
+                //  userId:respo.data.data.userResponse.UserId
+
+            });
+            console.log('userId ', respo.data.data.userResponse.UserId);
+            this.toggleLoader(false);
+>>>>>>> cdc289e2804b5bc3c721f86018d5aca4d96f9fbc
 
 
             if (respo.data.StatusCode === 200) {
-                // console.log('response condition', respo.data.StatusCode);
-                this.onLogin(respo);
 
+                this.onLogin(respo);
+                this.toggleLoader(false);
+                if (role == 'S') {
+                    console.log('inside if block  ');
+
+                    this.props.navigation.navigate(
+                        'Drawer',
+                        {
+                            username: this.state.email,
+                            Name: this.state.Name,
+                        },
+
+
+                        NavigationActions.navigate({
+                            routeName: 'Dashboard',
+                        }),
+                    );
+                } else {
+
+                    // this.toggleLoader(false);
+                    this.props.navigation.navigate(
+                        'TechnicianDrawer',
+                        {
+                            username: this.state.email,
+                            Name: this.state.Name,
+                            userId: respo.data.data.userResponse.UserId,
+
+
+                        },
+                        NavigationActions.navigate({
+                            routeName: 'Dashboard',
+                        }),
+                    );
+                    //alert('drawer')
+                }
             }
 
-        } catch (e) {
 
+        } catch (e) {
+            this.toggleLoader(false);
+            //  Alert.alert(e.response.data.Message);
+            showMessage({
+                message: e.response.data.Message,
+                type: 'info',
+                backgroundColor: 'black',
+                position: 'top',
+
+            });
+
+<<<<<<< HEAD
             Alert.alert(e.response.data.Message);
             // console.log('login catch me print hua', e.response.data);
+=======
+>>>>>>> cdc289e2804b5bc3c721f86018d5aca4d96f9fbc
         } finally {
-            this.toggleLoader(false);
-            // console.log('login finally print hua');
+
+
         }
 
     };
@@ -93,20 +150,20 @@ class Login extends React.Component {
 
 
         AppStorage.saveKey(key.USER_PROFILE_DATA, JSON.stringify(respo.data)).then(() => {
-            this.props.navigation.navigate('Dashboard');
+            // this.props.navigation.navigate('Dashboard');
+        });
+        AppStorage.saveKey(key.ALL_LOGINRESPO, JSON.stringify(respo.data)).then(() => {
+            // this.props.navigation.navigate('Dashboard');
         });
 
 
         // Alert.alert(respo.data.Message);
 
-    
 
     };
 
 
     validates = (status) => {
-
-        this.loginUser(status);
 
 
         let text = this.state.email;
@@ -157,6 +214,7 @@ class Login extends React.Component {
         } else {
             this.setState({email: text});
             // console.log('Email is Correct');
+<<<<<<< HEAD
             if (status==="S") {
                 this.props.navigation.navigate('Dashboard');
                 this.props.navigation.navigate(
@@ -178,11 +236,15 @@ class Login extends React.Component {
                 );
 //alert('drawer')
             }
+=======
+            this.loginUser(status);
+>>>>>>> cdc289e2804b5bc3c721f86018d5aca4d96f9fbc
 
 
         }
 
     };
+<<<<<<< HEAD
     //   loginApidata(email,Password) {
     //   try {
     //     let response = await fetch(
@@ -197,10 +259,10 @@ class Login extends React.Component {
     //     console.error(error);
     //   }
     // }
+=======
 
-// componentDidMount(){
-//   this.props.fetch_Data();
-// }
+>>>>>>> cdc289e2804b5bc3c721f86018d5aca4d96f9fbc
+
 
 disableBackButton=()=>{
     Alert.alert("Alert!", "Are you sure you want to quit?", [
@@ -230,7 +292,7 @@ componentWillUnmount=()=>{
 
 
             <SafeAreaView style={{flex: 1, backgroundColor: 'white', justifyContent: 'center'}}>
-             
+                <StatusBar hidden={false} backgroundColor={'#008BD0'}/>
 
                 <KeyboardAwareScrollView style={{backgroundColor: 'transparent'}}>
                     <ApiLoader visibility={isLoading} loadingColor={'green'} onCancelPress={() => {
@@ -283,13 +345,13 @@ componentWillUnmount=()=>{
 
 
                         }>
-                            <Text style={{color: 'white'}}>Login as Technician</Text>
+                            <Text style={{color: 'white',fontFamily: 'Roboto-Regular'}}>Login as Technician</Text>
                         </TouchableOpacity>
 
                     </View>
                     <View style={styles.forgotPasswordView}>
                         <TouchableOpacity onPress={() => this.props.navigation.navigate('ForgotPassword')}>
-                            <Text style={{color: '#33a1De'}}>Forgot Password</Text>
+                            <Text style={{color:'#33a1De',fontFamily: 'Roboto-Regular'}}>Forgot Password</Text>
                         </TouchableOpacity>
                     </View>
 
@@ -331,6 +393,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         textAlign: 'center',
         fontSize: 20,
+        fontFamily: 'Roboto-Regular',
     },
 
     mainImageText: {
@@ -347,6 +410,7 @@ const styles = StyleSheet.create({
         height: 40,
         borderColor: 'grey',
         borderBottomWidth: 1,
+        fontFamily: 'Roboto-Regular',
     },
     loginView: {
         flexDirection: 'row',

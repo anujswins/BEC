@@ -6,9 +6,13 @@ import {TickButton} from '../CommonComponents/TickButton'
 import {CustomTextInput} from '../CommonComponents/CustomTextInput'
 const DeviceWidth=Dimensions.get('screen').width;
 const DeviceHeight=Dimensions.get('screen').height;
+import EditText from '../CommonComponents/EditText' 
 import DatePicker from 'react-native-datepicker'
+import AuthService from '../RestClient/AuthService';
+import ApiLoader from '../PopUp/ApiLoader';
 import BottomHomeCompnent from '../CommonComponents/BottomHomeComponent';
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
+import { AppStorage } from '../utils/AppStorage';
 export default class OTPVerification extends Component{
   static navigationOptions={
     title:'Profile Setting',
@@ -26,30 +30,78 @@ export default class OTPVerification extends Component{
 constructor(){
 super();
 this.state={
-email:''
+Code:'',
+isLoading: false,
 
 }
 
 
-1
+
+}
+componentDidMount(){
+ 
+
+
 }
 
+sendVerificationCode = async () => {
+  // Alert.alert("inside send email")
+
+  try {
+       this.toggleLoader(true);
+    var email=this.props.navigation.getParam('Email')
+  // let token = await AppStorage.getToken();
+  // var email=await AppStorage.getEmail();
+  //  Alert.alert("Email",email)
+      let respo = await AuthService.VerifyOTP(email,this.state.Code);
+
+   Alert.alert("resposne in OTP screen",respo.data.Message);
+
+
+      if (respo.data.StatusCode === 200) {
+        this.props.navigation.navigate('NewPassword',{userEmail:email})
+      }
+else{
+Alert.alert(respo.data.Message)
+
+}
+
+
+
+
+  } catch (e) {
+
+ 
+       console.log('login catch me print hua', e.response.data);
+      //  Alert.alert(e.response.data.Message)
+  } finally {
+      this.toggleLoader(false);
+      // console.log('login finally print hua');
+  }
+
+};
 
 onPress=()=>{
-// this.props.navigation.navigate('NewPassword')
+console.log("OTP entered",this.state.Code)
+this.sendVerificationCode();
 this.props.navigation.navigate('NewPassword',{itemId:65,myString:'gurjeet'})
 
 }
-
+toggleLoader = (val) => {
+  this.setState(({isLoading: val}));
+};
 onChange=(value)=>{
 this.setState({email:value});
 
 
 }
 render(){
+        const {isLoading} = this.state;
 return(
 <View style={styles.container}>
-    
+<ApiLoader visibility={isLoading} loadingColor={'green'} onCancelPress={() => {
+                    }}/>
+
     
     {/* ---------header--------- */}
 
@@ -71,7 +123,29 @@ return(
 </View>
 {/* -----------Email Address  Field */}
 <View style={{marginTop:hp('10%')}}>
+<<<<<<< HEAD
 <CustomTextInput label="Enter code" onChange={this.onChange}  />
+=======
+{/* <CustomTextInput label="Enter code" onChange={this.onChange}  /> */}
+
+<EditText
+                                placeholder={'Enter code'}
+                                // IconName={'email'}
+                                editable={true}
+                                maxLength={30}
+                                value={this.state.Code}
+                                autoCapitalize={'none'}
+                                keyboardType={'email-address'}
+                                // error={this.state.emailError}
+                                onChangeText={(val) => this.setState({Code : val, 
+                                  // emailError: validate('email', val)
+                              
+                              })}
+                            />
+
+
+
+>>>>>>> cdc289e2804b5bc3c721f86018d5aca4d96f9fbc
 </View>
 
 {/* ---------Next button ------------ */}

@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import {
+<<<<<<< HEAD
   SafeAreaView,
   StatusBar,
   StyleSheet,
@@ -225,8 +226,353 @@ elevation:20}}>
                                 <TouchableOpacity onPress={this.validates}>
 
 
+=======
+    SafeAreaView,
+    StatusBar,
+    StyleSheet,
+    Platform,
+    KeyboardAvoidingView,
+    TextInput,
+    Dimensions,
+    View,
+    Text,
+    Image,
+    TouchableOpacity,
+    Button,
+    Alert,
+    ScrollView,
+    Modal,
+
+} from 'react-native';
+import {Picker} from '@react-native-community/picker';
+
+import DropDownPicker from 'react-native-dropdown-picker';
+import StarRating from 'react-native-star-rating';
+import {heightPercentageToDP, widthPercentageToDP} from 'react-native-responsive-screen';
+import BottomTabNavigator from '../CommonComponents/BottomTabNavigator';
+import {Container, Header, Content, Card, CardItem, Body} from 'native-base';
+import FlashMessage from 'react-native-flash-message';
+import {showMessage, hideMessage} from 'react-native-flash-message';
+import RadioForm, {RadioButton, RadioButtonInput, RadioButtonLabel}
+    from 'react-native-simple-radio-button';
+import ApiLoader from '../../Src/PopUp/ApiLoader';
+import AuthService from '../../Src/RestClient/AuthService';
+import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
+import DrawerHeader from '../CommonComponents/DrawerHeader';
+import {NavigationActions} from 'react-navigation';
+
+const screen = Dimensions.get('screen');
+const dwidth = Dimensions.get('screen').width;
+const dheight = Dimensions.get('screen').height;
 
 
+var radio_props = [
+    {label: 'Comment', value: 'Comment'},
+    {label: 'Feedback', value: 'Feedback'},
+    {label: 'Suggestion', value: 'Suggestion'},
+];
+
+var radio_props1 = [
+  {label: 'Comment', value: 'Comment'},
+  {label: 'Feedback', value: 'Feedback'},
+  {label: 'Suggestion', value: 'Suggestion'},
+];
+
+class AddFeedback extends Component {
+
+
+    constructor(props) {
+        super();
+
+        this.state = {
+            starCount: 1,
+            selected: 'key1',
+            select: '',
+            language: 'Select Feedback Type',
+            Priority: 'Select Feedback Priority',
+            feed: '',
+            showModal: false,
+            showtext: 'Select Priority Type',
+            showtext1: 'Select Feedback Type',
+            choosecategory: true,
+            showModal1: false,
+            choosePriority: true,
+            drop: [],
+            dropdown: [],
+            'categoryName': 'Feedback Type',
+            'orderBy': 'CodeName',
+            'orderByDescending': false,
+            'allRecords': true,
+
+
+        };
+
+        this.dropdown = {
+            'categoryName': 'Feedback Priority',
+            'orderBy': 'CodeName',
+            'orderByDescending': false,
+            'allRecords': true,
+        };
+
+        this.create = {
+
+          "jobId": 84,
+          "feedbackType":97,
+          "feedbackPriority": 98,
+          "feedback": "string",
+          "userId": 1
+
+        };
+
+    }
+
+    onStarRatingPress(rating) {
+        this.setState({
+            starCount: rating,
+        });
+    }
+
+
+    showAlert = (value) => {
+    this.setState({showModal: true});
+};
+    showAlert1 = (value) => {
+ this.setState({showModal1: true});
+};
+    componentDidMount = async () => {
+        this.Fun_GetFeedbackType();
+        this.Fun_GetFeedbackPriority();
+        // this. Fun_GetFeedbackCreate();
+    };
+
+
+    toggleLoader = (val) => {
+        this.setState(({isLoading: val}));
+    };
+>>>>>>> cdc289e2804b5bc3c721f86018d5aca4d96f9fbc
+
+
+<<<<<<< HEAD
+=======
+            let json_response = await AuthService.superFeedbackType(this.state.categoryName,
+                this.state.orderBy, this.state.orderByDescending, this.state.allRecords,
+            );
+
+
+            console.log('GetFeedbackPriority try==', json_response.data.data.globalCodeMainResponse.globalCodeResponse);
+            if (json_response.data.StatusCode === 200) {
+
+                this.state.drop = json_response.data.data.globalCodeMainResponse.globalCodeResponse;
+                 console.log('data get ho gya', this.state.drop);
+             for (var i = 0; i < this.state.drop.length; i++) {
+                    var clientName = this.state.drop[i].CodeName;
+                    console.log('name agya h+++++++ ', clientName);
+                }
+ }
+
+
+        } catch (e) {
+
+
+            console.log('GetFeedbackPriority catch', e.response);
+        } finally {
+            this.toggleLoader(false);
+            console.log('GetFeedbackPriority finally print hua');
+        }
+    };
+
+
+    Fun_GetFeedbackPriority = async () => {
+        try {
+            this.toggleLoader(true);
+              let json_response = await AuthService.superFeedbackPriority(this.dropdown.categoryName,
+                this.dropdown.orderBy, this.dropdown.orderByDescending, this.dropdown.allRecords,
+            );
+            console.log('GetFeedbackPriority try==', json_response.data.data.globalCodeMainResponse.globalCodeResponse);
+            if (json_response.data.StatusCode === 200) {
+              this.state.dropdown = json_response.data.data.globalCodeMainResponse.globalCodeResponse;
+             console.log('data get ho gya', this.state.dropdown);
+                 for (var i = 0; i < this.state.dropdown.length; i++) {
+                    var clientName = this.state.dropdown[i].CodeName;
+                    console.log('get+++++++ ', clientName);
+                }
+ }
+
+
+        } catch (e) {
+ console.log('GetFeedbackPriority catch', e.response);
+        } finally {
+            this.toggleLoader(false);
+            console.log('GetFeedbackPriority finally print hua');
+        }
+    };
+
+    Fun_GetFeedbackCreate = async () => {
+        try {
+            this.toggleLoader(true);
+
+            let json_response = await AuthService.CreateFeedback(this.create.jobId, this.create.feedbackType,
+                this.create.feedbackPriority, this.create.feedback, this.create.userId,
+        
+
+ );
+ 
+ 
+
+
+            console.log('GetFeedbackCreate try', json_response);
+
+            if (json_response.data.StatusCode === 200) {
+                console.log('200 data geti', json_response.data.StatusCode);
+                Alert.alert('Thank you for your Feedback');
+                this.props.navigation.navigate('Feedback');
+
+            }
+
+
+        } 
+        catch (e) {
+
+                Alert.alert('Authentication failed, see inner exception.');
+            console.log('GetFeedbackPriority catch', e.response.data.Message);
+        } 
+        finally {
+            this.toggleLoader(false);
+            console.log('GetFeedbackPriority finally print hua');
+            Alert.alert('Authentication failed, see inner exception.');
+        }
+    };
+    validates = () => {
+
+        if (this.state.language == 'Select Feedback Type') {
+            showMessage({
+                message: 'Please Select FeedBack Type',
+                type: 'info',
+                backgroundColor: 'black',
+                position: ('top'),
+                hideStatusBar: false,
+            });
+
+
+        } else if (this.state.Priority == 'Select Feedback Priority') {
+
+            showMessage({
+                message: 'Please Select Feedback Priority',
+                type: 'info',
+                backgroundColor: 'black',
+                position: ('top'),
+                hideStatusBar: false,
+            });
+        } else if (this.state.starCount == 1) {
+            showMessage({
+                message: 'Please rating',
+                type: 'info',
+                backgroundColor: 'black',
+                position: ('top'),
+                hideStatusBar: false,
+            });
+        } else if (this.state.feed == ' ') {
+            showMessage({
+                message: 'Please write something',
+                type: 'info',
+                backgroundColor: 'black',
+                position: ('top'),
+                hideStatusBar: false,
+            });
+        } else {
+            // Alert.alert('Thank you for your Feedback');
+            // this.Fun_GetFeedbackType();
+            // this.Fun_GetFeedbackPriority();
+            this.Fun_GetFeedbackCreate();
+
+            // this.props.navigation.navigate('Feedback');
+
+        }
+
+    };
+
+
+    render() {
+        const {dimensions} = this.state;
+
+
+
+        return (
+
+
+            <SafeAreaView style={{
+                flex: 1,
+                backgroundColor: 'white',
+
+
+            }}>
+                <StatusBar
+                    backgroundColor="#008BD0"
+                    barStyle="#ffffff"
+                />
+
+                <View style={{height: '9%', backgroundColor: 'transparent'}}>
+                    <DrawerHeader name="Add Feedback" openDrawer={this.props.navigation} status={false}
+                                  notification={true}/>
+                </View>
+
+                <View style={{
+                    height: '8%', width: '100%', alignItems: 'center',
+                    backgroundColor: 'transparent', justifyContent: 'center', resizeMode: 'contain',
+                }}>
+
+                    <View style={{
+                        height: '60%',
+                        width: '90%',
+                        backgroundColor: 'white',
+                        justifyContent: 'center',
+                        resizeMode: 'contain',
+                        elevation:3,
+                    }}>
+                        <Text style={{
+                            textAlign: 'justify',
+                            padding:5,
+                        }}>{(this.props.navigation.getParam('datasend'))}</Text>
+                    </View>
+                </View>
+
+
+                <View style={{
+                    height: '7%', width: '100%', backgroundColor: 'white', justifyContent: 'center',
+                    paddingHorizontal: '7%',
+                }}>
+
+                    <TouchableOpacity
+                        style={{width: '100%', height: 'auto', backgroundColor: 'white', justifyContent: 'center'}}
+                        onPress={this.showAlert1}>
+
+                        {this.state.choosecategory ?
+
+                            <Text>
+                                Select Type
+                            </Text> :
+
+                            <Text style={{
+                                 fontSize: hp('2.1%'),
+                                backgroundColor: 'white',
+                                color:'grey'
+                            }}>
+                                {this.state.showtext}
+                            </Text>}
+
+
+                        <Modal
+
+                            visible={this.state.showModal1}
+
+                            transparent={true}>
+
+
+                            <View style={{
+                                height: 'auto', width: '90%', backgroundColor: 'white',
+                                marginLeft: '5%',
+                                marginTop: '45%', elevation:3}}>
+>>>>>>> cdc289e2804b5bc3c721f86018d5aca4d96f9fbc
                                 <View style={{
                                         elevation: 4, backgroundColor: 'transparent',width: '35%', height: '100%', 
                                         flexDirection: 'row',justifyContent:'center',alignItems:'center'

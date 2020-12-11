@@ -6,6 +6,8 @@ import {TickButton} from '../CommonComponents/TickButton'
 import {PasswordComponent} from '../CommonComponents/PasswordComponent'
 import BottomHomeCompnent from '../CommonComponents/BottomHomeComponent';
 import {showMessage,hideMessage}from 'react-native-flash-message';
+import AuthService from '../RestClient/AuthService';
+import ApiLoader from '../PopUp/ApiLoader';
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
 const DeviceWidth=Dimensions.get('screen').width;
 const DeviceHeight=Dimensions.get('screen').height;
@@ -28,7 +30,8 @@ constructor(){
 super();
 this.state={
 password:'',
-confirmPassword:''
+confirmPassword:'',
+isLoading: false,
 
 }
 
@@ -41,7 +44,7 @@ confirmPassword:''
 ValidatePassword=() =>{
  
     let reg= /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/ ;
-  const {firstName,lastName,email,password,confirmPassword,isChecked}=this.state;
+  const {password,confirmPassword}=this.state;
   var lettrs=/^[A-Za-z]+$/;
   
   
@@ -86,18 +89,54 @@ showMessage({
   }
  
   else {
-    // Alert.alert("Password reset successfully")
-  showMessage({
-      message:"Password reset successfully",
-      type:"info",
-      backgroundColor: "black",
-  });
+    this.resetPassword();
+  // showMessage({
+  //     message:"Password reset successfully",
+  //     type:"info",
+  //     backgroundColor: "black",
+  // });
 }
   
   }
   
-
-
+  toggleLoader = (val) => {
+    this.setState(({isLoading: val}));
+  };
+resetPassword = async () => {
+    // Alert.alert("inside send email")
+  
+    try {
+         this.toggleLoader(true);
+     var email=this.props.navigation.getParam('userEmail')
+     Alert.alert("Email",email)
+        let respo = await AuthService.resetPassword("gurjeet492@gmail.com",this.state.password);
+        // console.log('FORGOT PASS RESPONSE PRINTED===========================',respo.data.Message);
+  
+    //  Alert.alert("Password reset",respo.data.Message);
+  
+  
+        if (respo.data.StatusCode === 200) {
+          this.props.navigation.navigate('Login')
+        }
+  else{
+  Alert.alert(respo.data.Message)
+  
+  }
+  
+  
+  
+  
+    } catch (e) {
+  
+   
+         console.log('login catch me print hua', e.response.data);
+        //  Alert.alert(e.response.data.Message)
+    } finally {
+        this.toggleLoader(false);
+        // console.log('login finally print hua');
+    }
+  
+  };
 onChangePassword=(value)=>{
   
 this.setState({password:value});
@@ -112,6 +151,7 @@ onChangeConfirmPassword=(value)=>{
 
 
 render(){
+  const {isLoading} = this.state;
 return(
 <View style={styles.container}>
     
@@ -124,6 +164,8 @@ return(
 {/* --------- main View----------   */}
 <View  style={styles.subcontainer1}>
 {/* --------------lock icon and Email text------ */}
+<ApiLoader visibility={isLoading} loadingColor={'green'} onCancelPress={() => {
+                    }}/>
 <View style={styles.lockIconContainer}>
   <View>
   <Image

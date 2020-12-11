@@ -26,10 +26,20 @@ import { heightPercentageToDP, widthPercentageToDP } from 'react-native-responsi
 import { Container, Header, Content, Card, CardItem, Body, } from 'native-base'
 import BottomTabNavigator from '../CommonComponents/BottomTabNavigator';
 import DrawerHeader from '../CommonComponents/DrawerHeader';
+<<<<<<< HEAD
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import FlashMessage from "react-native-flash-message";
 import { showMessage, hideMessage } from "react-native-flash-message";
 const screen = Dimensions.get("screen");
+=======
+import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
+import FlashMessage from 'react-native-flash-message';
+import {showMessage, hideMessage} from 'react-native-flash-message';
+import ApiLoader from '../../Src/PopUp/ApiLoader';
+import AuthService from '../../Src/RestClient/AuthService';
+
+const screen = Dimensions.get('screen');
+>>>>>>> cdc289e2804b5bc3c721f86018d5aca4d96f9fbc
 const dwidth = Dimensions.get('screen').width;
 const dheight = Dimensions.get('screen').height;
 
@@ -48,7 +58,58 @@ class Feedback extends Component {
         };
     }
 
+<<<<<<< HEAD
     validates = () => {
+=======
+    changeVisibility(state) {
+        this.setState({
+            isVisibleA: false,
+            isVisibleB: false,
+            ...state,
+        });
+    }
+
+    componentDidMount = async () => {
+        this.Fun_GetFeedbackRecords();
+        
+
+    };
+
+
+    toggleLoader = (val) => {
+        this.setState(({isLoading: val}));
+    };
+
+
+    Fun_GetFeedbackRecords = async () => {
+        try {
+            this.toggleLoader(true);
+            let json_response = await AuthService.SuperviseCommentAndFeedback(this.state.jobId,
+                this.state.page, this.state.limit, this.state.orderBy, this.state.orderByDescending,
+                this.state.allRecords,
+            );
+            console.log('feedback data',
+                json_response.data.data.feedbackMainResponse.feedbackResponse);
+
+
+            if (json_response.data.StatusCode === 200) {
+
+                this.state.data = json_response.data.data.feedbackMainResponse.feedbackResponse;
+
+                console.log('data getting ',
+                    json_response.data.data.feedbackMainResponse.feedbackResponse);
+
+
+                for (var i = 0; i < this.state.data.length; i++) {
+                    var data_jobcode = this.state.data[i].JobCode;
+                    // console.log('name agya h+++++++ ', data_jobcode);
+                    this.setState({
+                        my_selected_name: data_jobcode,
+                    });
+                    // console.log('my_selected_name+++++++ ', this.state.my_selected_name);
+                }
+
+>>>>>>> cdc289e2804b5bc3c721f86018d5aca4d96f9fbc
 
         if (this.state.JobCode == "") {
          

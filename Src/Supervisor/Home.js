@@ -12,6 +12,10 @@ import BottomTabNavigator from '../CommonComponents/BottomTabNavigator';
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
 import {AppStorage, key} from '../utils/AppStorage';
 import AuthService from '../RestClient/AuthService';
+<<<<<<< HEAD
+=======
+
+>>>>>>> cdc289e2804b5bc3c721f86018d5aca4d96f9fbc
 
 
 let colors = ['#e8f7ff', '#fafafa']
@@ -109,9 +113,34 @@ componentWillUnmount=()=>{
   }
 
 
+
+  componentDidMount = async () => {
+    let UserId = await AppStorage.getUserId();
+
+
+    try {
+      let respo = await AuthService.JobDetails(UserId,UserId,this.state.status,this.state.allRecords);
+      alert(JSON.stringify(respo));
+  console.log('dashboard_respo_home_superviser########################',respo.data.data.jobsMainResponse.jobResponse);
+
+
+      AppStorage.saveKey(key.ALL_RECORDS_DATA, JSON.stringify(respo.data)).then(() => {
+
+      });
+
+    } catch (e) {
+
+      //Alert.alert(e.response.data.Message);
+      console.log('dashboard_techincian catch me print hua', e);
+    } finally {
+      // console.log('dashboard_techincian finally print hua');
+    }
+
+  }
+
   OnListItemClick = (item) => {
 
-    
+
 // Alert.alert(this.props.navigation.getParam('username'))
 
     if (item.CategoryName == "Current Jobs") {
@@ -160,7 +189,14 @@ componentWillUnmount=()=>{
   render() {
     return (
       <SafeAreaView style={styles.container}>
+<<<<<<< HEAD
   
+=======
+           <StatusBar
+     backgroundColor = "#008BD0"
+     barStyle = "#ffffff"
+   />
+>>>>>>> cdc289e2804b5bc3c721f86018d5aca4d96f9fbc
         {/* ---------header-------------- */}
         <View style={styles.headerStyle}>
           <DrawerHeader name="Supervisor Dashboard" openDrawer={this.props.navigation} status={true} notification={true}/>
@@ -231,7 +267,7 @@ const styles = StyleSheet.create({
     height:'82%',
     width:'100%',
     marginVertical:'1%',
-  
+
 
       // backgroundColor:'yellow',
 
@@ -260,10 +296,14 @@ const styles = StyleSheet.create({
     width: wp('6%'),
     resizeMode: 'contain',
     // backgroundColor:'red'
-  
+
   },
   CategoryNameStyle: {
     fontSize: hp('2.5%'),
+<<<<<<< HEAD
+=======
+
+>>>>>>> cdc289e2804b5bc3c721f86018d5aca4d96f9fbc
   },
 
   CategoryIconBackground: {

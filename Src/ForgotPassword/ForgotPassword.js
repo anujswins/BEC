@@ -13,8 +13,14 @@ import BottomHomeCompnent from '../CommonComponents/BottomHomeComponent';
 import DrawerHeader from '../CommonComponents/DrawerHeader';
 import EditText from '../CommonComponents/EditText'
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
+<<<<<<< HEAD
 
 
+=======
+import AuthService from '../RestClient/AuthService';
+import ApiLoader from '../PopUp/ApiLoader';
+import {AppStorage, key} from '../utils/AppStorage';
+>>>>>>> cdc289e2804b5bc3c721f86018d5aca4d96f9fbc
 export default class ForgotPassword extends Component {
 
   static navigationOptions = {
@@ -40,6 +46,9 @@ backgroundColor:'#008ad1'
 
 
   }
+  toggleLoader = (val) => {
+    this.setState(({isLoading: val}));
+};
 
   onChange = (value) => {
     this.setState({ UserEmail: value });
@@ -50,6 +59,47 @@ backgroundColor:'#008ad1'
     Alert.alert("inside forgot Password")
 
   }
+<<<<<<< HEAD
+=======
+  toggleLoader = (val) => {
+    this.setState(({isLoading: val}));
+}
+
+
+saveEmail=(email)=>{
+
+AppStorage.saveKey(Key.SAVE_EMAIL,this.state.UserEmail).then(()=>{
+
+});
+
+
+}
+
+
+
+
+  sendEmail = async () => {
+    // Alert.alert("inside send email")
+
+    try {
+        this.toggleLoader(true);
+     
+        let respo = await AuthService.getOTP(this.state.UserEmail);
+
+     Alert.alert("resposne in forgotPassword",respo.data.Message)
+
+
+        if (respo.data.StatusCode === 200) {
+          
+          this.props.navigation.navigate('OTPVerification',{Email:this.state.UserEmail})
+            // this.saveEmail(this.state.UserEmail);
+        }
+else{
+  Alert.alert("resposne in forgotPassword",respo.data.Message)
+
+}
+
+>>>>>>> cdc289e2804b5bc3c721f86018d5aca4d96f9fbc
 
 
   Validate = () => {
@@ -130,7 +180,21 @@ backgroundColor:'#008ad1'
                               
                               })}
                             />
+<<<<<<< HEAD
 
+=======
+           {/* <TextInput style={styles.input}
+                                   underlineColorAndroid="transparent"
+                                   placeholder="Password"
+                                   placeholderTextColor="grey"
+                                   autoCapitalize="none"
+                                   secureTextEntry={true}
+                                   maxLength={20}
+                                   value={this.state.UserEmail}
+                                   onChangeText={(text) => {
+                                       this.setState({ UserEmail: text});
+                                   }}/> */}
+>>>>>>> cdc289e2804b5bc3c721f86018d5aca4d96f9fbc
       
           </View>
 
