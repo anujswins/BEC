@@ -26,6 +26,7 @@ import JobAssignment from './Supervisor/JobAssignment';
 import StackHeader from './CommonComponents/StackHeader';
 import ActiveJobs from  './Supervisor/ActiveJobs'
 import AddTechnician from './Supervisor/AddTechnician'
+import JobInProgress from './Technician/JobInProgress'
 import TeamMember from './Supervisor/TeamMember';
 import CompletedJobs from './Supervisor/CompletedJobs';
 import JobAssign from './Supervisor/JobsAssign';
@@ -40,7 +41,7 @@ import SearchClient from './Supervisor/SearchClient'
 import TeamMember_Technician from "./Technician/teamMember"
 import EditText from './CommonComponents/EditText'
 import teamMember from './Technician/teamMember'
-import JobInProgress from './Technician/JobInProgress';
+import camera from './Technician/camera'
 // import AdditionalHours from './Technician/additionalHours';
 
 
@@ -154,7 +155,6 @@ const AppNavigator = createStackNavigator(
    TeamMember:{screen:TeamMember,navigationOptions:{headerShown:false} },
    EditText:{screen:EditText,navigationOptions:{headerShown:false}},
   Logout:{screen:Login},
-  JobInProgress:{screen:JobInProgress,navigationOptions:{headerShown:false}},
   Feedback:{screen:Feedback,navigationOptions:{headerShown:false}},
   AddFeedback:{screen:AddFeedback,navigationOptions:{headerShown:false}},
   AddTechnician:{screen:AddTechnician,navigationOptions:{headerShown:false}},
@@ -163,6 +163,8 @@ Notes:{screen:Notes,navigationOptions:{headerShown:false}},
 Notification:{screen:Notification,navigationOptions:{headerShown:false}},
 MyNotification:{screen:MyNotification,navigationOptions:{headerShown:false}},
 currentJob:{screen:currentJob,navigationOptions:{headerShown:false}},
+JobInProgress:{screen:JobInProgress,navigationOptions:{headerShown:false}},
+camera:{screen:camera,navigationOptions:{headerShown:false}},
  AdditionalHours:{screen:AdditionalHours,navigationOptions:{headerShown:false,headerRight: () => (
     <StackHeader/>)}},
   JobAssign:{screen:JobAssign,navigationOptions:{headerShown:false}},

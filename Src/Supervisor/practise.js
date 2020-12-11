@@ -1,34 +1,61 @@
-import React, { Component } from 'react';
-import 'react-native-gesture-handler';
-import { StyleSheet, Text, View, Button, Dimensions, Image, FlatList, Alert, TouchableOpacity } from 'react-native';
+import React, {PureComponent} from 'react';
+import { TouchableOpacity } from 'react-native';
+import {RNCamera} from 'react-native-camera';
+import Icon from 'react-native-vector-icons/dist/FontAwesome';
 
-const height = Dimensions.get("screen").height
-const width = Dimensions.get("screen").width
-export default class Practise extends Component {
+export default class Camera extends PureComponent 
+{ 
+ constructor(props) {
+    super();
+      this.state = {
+      takingPic: false,
+    };
+  }
+  takePicture = async () => {
+    if (this.camera && !this.state.takingPic) {
 
+      let options = {
+        quality: 0.85,
+        fixOrientation: true,
+        forceUpOrientation: true,
+      };
 
+      this.setState({takingPic: true});
 
-
-render(){
-    return (
-        <View style={{ flex: 1, width: '100%', backgroundColor: "silver" }}>
-            <View style={{ height: height * 0.1, width: width, backgroundColor: "yellow" }}>
-                <Text>
-                    View 1
-                    </Text>
-
-            </View>
-            <View style={{ height: height * 0.8, width: width, backgroundColor: "pink" }}>
-                <Text>
-                    View 2
-                    </Text>
-            </View>
-            <View style={{ height: height * 0.1, width: width, backgroundColor: "blue" }}>
-                <Text>
-                    View 3
-                    </Text>
-            </View>
-        </View>
-    )
-}
-}
+      try {
+         const data = await this.camera.takePictureAsync(options);
+         Alert.alert('Success', JSON.stringify(data));
+      } catch (err) {
+        Alert.alert('Error', 'Failed to take picture: ' + (err.message || err));
+        return;
+      } finally {
+        this.setState({takingPic: false});
+      }
+    }
+  };
+render() {
+  return (
+    
+    <RNCamera 
+      ref={ref => {
+        this.camera = ref;
+      }}
+      captureAudio={false}
+      style={{flex: 1}}
+     type={RNCamera.Constants.Type.back}
+      androidCameraPermissionOptions={{
+        title: 'Permission to use camera',
+        message: 'We need your permission to use your camera',
+        buttonPositive: 'Ok',
+        buttonNegative: 'Cancel',
+        
+      }} >
+                         <TouchableOpacity
+                        style={{width: '100%', height: 'auto', backgroundColor: 'white', justifyContent: 'center'}}
+                        onPress={this.takePicture}>
+      <Icon name="camera" color="blue"></Icon>
+      </TouchableOpacity>
+      </RNCamera>
+    );
+ 
+  }}

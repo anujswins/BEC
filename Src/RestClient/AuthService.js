@@ -36,383 +36,133 @@ export default class AuthService {
         });
 
     }
-    static async JobDetails(assignToId,loggedInUserId,status,allRecords) {
-        let token = await AppStorage.getToken();
-
-        return axios({
-            method: 'POST',
-            url: Api.JobDetails,
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': 'Bearer '+token
-            }, 
-            data: {
-                assignToId,
-                loggedInUserId,
-               status,
-               allRecords
-
-            },
 
 
-        });
-
-    }
 
 
-    static async getJobNoEquipId(JobNumber) {
-        let token = await AppStorage.getToken();
-        console.log('token  auth class   ',token);
 
-        
 
-        return axios({
-            method: 'POST',
-            url: Api.GetJobNoByEquipId,
-
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': 'Bearer '+token
-            }, 
     
-            data: {
-           
-                JobNumber
-            },
+static async SuperviseCurrentJobs( status,orderBy, orderByDescending, allRecords,page,limit) {
 
-
-        });
-
-    }
-    static async getJobByEquipId(EquipmentId) {
-        let token = await AppStorage.getToken();
-        console.log('token  auth class   ',token);
-
-        
-
-        return axios({
-            method: 'POST',
-            url: Api.GetJobByEquipmentId,
-
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': 'Bearer '+token
-            }, 
+    let token = await AppStorage.getToken();
+    // console.log('token auth class ',token);
     
-            data: {
-           
-                EquipmentId
-            },
-
-
-        });
-
-    }
-
-
-////////////////////////Additional Work hour ///////////////////
-
-    static async requestAdditionalHours(jobId,userId,requestStartTime,requestEndTime,workRequestDate,Description) {
-      
-        let token = await AppStorage.getToken();
-        return axios({
-            method: 'POST',
-            url: Api.AdditionalHours,
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': 'Bearer '+token
-            }, 
-            data: {
-                jobId,userId,requestStartTime,requestEndTime,workRequestDate,Description
-            },
-
-
-        });
-
-    }
-
-
-
-
-
-
-
-
-
-
-
-
-//////////////////////////Technician part of supervisor module screen 1
-    static async getActiveJobDetail( JobId) {
-        console.log("inside getTechnician")
-          let token = await AppStorage.getToken();
-          return axios({
-              method: 'POST',
-              url: Api.ActiveJobDetail,
-              headers: {
-                  'Content-Type': 'application/json',
-                  'Authorization': 'Bearer '+token
-              }, 
-              data: {
-                JobId
-                
-              },
-  
-  
-          });
-  
-      }
-
-
-      static async TeamMemberSupervisor( ActiveJobId) {
-        console.log("inside teammembersupervisor")
-          let token = await AppStorage.getToken();
-          return axios({
-              method: 'POST',
-              url: Api.TeamMembersupervisor,
-              headers: {
-                  'Content-Type': 'application/json',
-                  'Authorization': 'Bearer '+token
-              }, 
-              data: {
-                ActiveJobId
-                
-              },
-  
-  
-          });
-  
-      }
-
-
-
-
-
-
-
-//////////////////////////Technician part of supervisor module screen 1
-
-    static async getTechnicianDepartments(  
-        globalCodeCategoryId,
-        categoryName,
-        page ,
-        limit,
-        orderBy,
-        orderByDescending,
-        allRecords) {
-      console.log("inside getTechnician")
-        let token = await AppStorage.getToken();
-        return axios({
-            method: 'POST',
-            url: Api.TechnicianTypes,
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': 'Bearer '+token
-            }, 
-            data: {
-                
-                    globalCodeCategoryId,
-                    categoryName,
-                    page ,
-                    limit,
-                    orderBy,
-                    orderByDescending,
-                    allRecords
-                  
-              
-            },
-
-
-        });
-
-    }
-
-    static async getTechnicianDetail(   userTypeId,page,limit,CreatedOn,orderByDescending,allRecords) {
-        console.log("getTechnicianDetail called")
-          let token = await AppStorage.getToken();
-          return axios({
-              method: 'POST',
-              url: Api.TechnicianDetail,
-              headers: {
-                  'Content-Type': 'application/json',
-                  'Authorization': 'Bearer '+token
-              }, 
-              data: {
-                userTypeId,
-                page,
-                limit,
-                CreatedOn,
-                orderByDescending,
-                allRecords
-                
-              },
-  
-  
-          });
-  
-      }
-
-    static async ObjectAttributes(jobId, userId, subSegmentId, segmentId, machineId,machineTypeId,namePlate,orderBy,orderByDescending,allRecords) {
-       
-        let token = await AppStorage.getToken();
-    // console.log('token  auth class   ',token);
-
-
-
-
+    
+    
+    
     return axios({
-        method: 'POST',
-        url: Api.GetAllAttributes,
-
-
-        headers: {
-            'Content-Type': 'application/json',
-            'Authorization': 'Bearer '+token
-        }, 
-
+    method: 'POST',
+    url: Api.GetAllRecordsCurrent,
     
-           
-        data: {
-           
-            jobId,
-  userId,
- subSegmentId,
- segmentId,
- machineId,
- machineTypeId,
- namePlate,
- orderBy,
- orderByDescending,
- allRecords
-
-       
-        
-        },
-
-
+    
+    headers: {
+    'Content-Type': 'application/json',
+    'Authorization': 'Bearer '+token
+    },
+    
+    
+    
+    data: {
+    
+    
+    status,
+    orderBy,
+    orderByDescending,
+    allRecords,
+    page,
+    limit
+    
+    
+    },
+    
+    
     });
-
-
-        
-
+    
+    
+    
+    
     }
 
 
+    // static async resendemail(email) {
+    //     return axios({
+    //         method: 'GET',
+    //         url: Api.resend(email),
+    //         headers: CommonData.getHeaderWithoutToken(),
+    //     });
 
-    static async SuperviseCurrentJobs(stageId, jobTypeId, machineTypeId, startDate, endDate, clientId, assignToId, status,orderBy, orderByDescending, allRecords) {
-       
-        let token = await AppStorage.getToken();
-    // console.log('token  auth class   ',token);
-
-
-
-
-    return axios({
-        method: 'POST',
-        url: Api.GetAllRecordsCurrent,
-
-
-        headers: {
-            'Content-Type': 'application/json',
-            'Authorization': 'Bearer '+token
-        }, 
-
-    
-           
-        data: {
-           
-            stageId,
-            jobTypeId,
-            machineTypeId,
-            startDate,
-            endDate,
-            clientId,
-            assignToId,
-            status,
-            orderBy,
-            orderByDescending,
-            allRecords,
-       
-        
-        },
-
-
-    });
-
-
-        
-
-    }
-
-
-
-    ////////////////////////////////Technician module (My team )
-    static async GetTechnicianTeamMember(jobId,userId,page,limit,orderBy,orderByDescending,allRecords)
-     {
-       
-        let token = await AppStorage.getToken();
-  
-
-
-
-
-    return axios({
-        method: 'POST',
-        url: Api.TechniciansTeamMembers,
-
-
-        headers: {
-            'Content-Type': 'application/json',
-            'Authorization': 'Bearer '+token
-        }, 
-
-    
-           
-        data: {
-            jobId,userId,page,limit,orderBy,orderByDescending,allRecords
-        
-        },
-
-
-    });
-
-
-        
-
-    }
-
-
-////////////////////ForgotPassword/////////////////////
-
-static async getOTP(email) {
-      
-
-    return axios({
-        method: 'POST',
-        url: Api.forgotPassword,
-        data: {
-            email
-           
-        },
-
-
-    });
-
-}
-
+    // }
 
 
 //Assigned jobs
 static async SuperviseAssignJobs(
     
-    userTypeId,
-    NoJobAssigned,
-    page,
-    limit,
-    orderBy,
-    orderByDescending,
-    allRecords,
+        // userTypeId,
+        // NoJobAssigned,
+        page,
+        limit,
+        orderBy,
+        orderByDescending,
+        allRecords,
+        ) {
+       
+    let token = await AppStorage.getToken();
+// console.log('token  auth class   ',token);
+
+
+
+
+return axios({
+    method: 'POST',
+    url: Api.GetAllRecordsJob,
+
+
+    headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer '+token
+    }, 
+
+
+       
+    data: 
+       
+        {
+            //  userTypeId,
+            // NoJobAssigned,
+            page,
+            limit,
+            orderBy,
+            orderByDescending,
+            allRecords
+           }
+   
+    
+    
+
+
+});
+
+
+ 
+    
+
+}
+
+//Feedback and Comments
+
+static async SuperviseCommentAndFeedback(
+    
+    
+        jobId,
+        page,
+        limit,
+        orderBy,
+        orderByDescending,
+        allRecords
+       
     ) {
+   
 let token = await AppStorage.getToken();
 // console.log('token  auth class   ',token);
 
@@ -421,7 +171,7 @@ let token = await AppStorage.getToken();
 
 return axios({
 method: 'POST',
-url: Api.GetAllRecordsJob,
+url: Api.GetCommentAndFeedback,
 
 
 headers: {
@@ -434,8 +184,7 @@ headers: {
 data: 
    
     {
-        userTypeId,
-        NoJobAssigned,
+        jobId,
         page,
         limit,
         orderBy,
@@ -453,19 +202,17 @@ data:
 
 
 
+
 }
-
-//Feedback and Comments
-
-static async SuperviseCommentAndFeedback(
-
-
-    jobId,
-    page,
-    limit,
-    orderBy,
-    orderByDescending,
-    allRecords
+// Create Feedback 
+static async CreateFeedback(
+    
+    
+        jobId,
+        feedbackType,
+        feedbackPriority,
+        feedback,
+        userId
    
 ) {
 
@@ -477,7 +224,7 @@ let token = await AppStorage.getToken();
 
 return axios({
 method: 'POST',
-url: Api.GetCommentAndFeedback,
+url: Api.GetFeedbackCreate,
 
 
 headers: {
@@ -490,12 +237,13 @@ headers: {
 data: 
 
 {
-    jobId,
-    page,
-    limit,
-    orderBy,
-    orderByDescending,
-    allRecords
+    
+        jobId,
+        feedbackType,
+        feedbackPriority,
+        feedback,
+        userId
+       
    }
 
 
@@ -512,22 +260,22 @@ data:
 }
 // Completed Jobs
 static async SupCompletedJobs(
-
-          
-stageId,
-jobTypeId,
-machineTypeId,
-startDate,
-endDate,
-clientId,
-assignToId,
-status,
-orderBy,
-orderByDescending,
-Page,
-limit,
-allRecords
-
+    
+              
+    stageId,
+    jobTypeId,
+    machineTypeId,
+    startDate,
+    endDate,
+    clientId,
+    assignToId,
+    status,
+    orderBy,
+    orderByDescending,
+    Page,
+    limit,
+    allRecords
+   
 ) {
 
 let token = await AppStorage.getToken();
@@ -550,21 +298,21 @@ headers: {
 data: 
 
 {
-stageId,
-jobTypeId,
-machineTypeId,
-startDate,
-endDate,
-clientId,
-assignToId ,
-status,
-orderBy,
-orderByDescending,
-Page,
-limit,
-allRecords
-}
-
+    stageId,
+    jobTypeId,
+    machineTypeId,
+    startDate,
+    endDate,
+    clientId,
+    assignToId ,
+    status,
+    orderBy,
+    orderByDescending,
+    Page,
+    limit,
+    allRecords
+   }
+   
 
 
 
@@ -581,12 +329,12 @@ allRecords
 }
 // Supervisior ActiveJobs
 static async SupActiveJobs(
-
-          
-
-    JobId,
+    
+              
+    
+        JobId,
+       
    
-
 ) {
 
 let token = await AppStorage.getToken();
@@ -610,9 +358,9 @@ headers: {
 data: 
 
 {
-JobId,
-}
-
+    JobId,
+   }
+   
 
 
 
@@ -635,23 +383,23 @@ JobId,
 
 
 static async SupNotificationScreen(
-
-          
-
-    userId,
-    type,
-    page,
-    limit,
-    orderBy,
-    orderByDescending,
-    allRecords
     
-
+              
+    
+        userId,
+        type,
+        page,
+        limit,
+        orderBy,
+        orderByDescending,
+        allRecords
+        
+   
 ) {
 
 let token = await AppStorage.getToken();
 
-console.log('Hanji',token)
+console.log('',token)
 
 
 
@@ -671,16 +419,16 @@ headers: {
 data: 
 
 {
-userId,
-type,
-page,
-limit,
-orderBy,
-orderByDescending,
-allRecords
-
-}
-
+    userId,
+    type,
+    page,
+    limit,
+    orderBy,
+    orderByDescending,
+    allRecords
+    
+   }
+   
 
 
 
@@ -697,19 +445,19 @@ allRecords
 }
 // Assignment Jobs
 static async AssignmentJobs(
-
-    userId,
-    page,
-    limit,
-    orderBy,
-    orderByDescending,
-    allRecords,
     
-) {
+        userId,
+        page,
+        limit,
+        orderBy,
+        orderByDescending,
+        allRecords,
+        
+    ) {
+   
 
-
-    let token = await AppStorage.getToken();
-console.log('token  auth class   ',token);
+        let token = await AppStorage.getToken();
+ console.log('token  auth class ',token);
 
 
 
@@ -717,6 +465,58 @@ console.log('token  auth class   ',token);
 return axios({
 method: 'POST',
 url: Api.GetJobAssignment,
+
+
+headers: {
+    'Content-Type': 'application/json',
+    'Authorization': 'Bearer '+token
+}, 
+
+
+   
+data: 
+   
+    {
+
+        userId,
+        page,
+        limit,
+        orderBy,
+        orderByDescending,
+        allRecords,
+       }
+
+
+
+
+
+});
+
+
+
+
+
+}
+//Assigned Jobs
+static async AssignedJobs(
+    
+userId,
+jobId,
+action,
+    
+    
+) {
+
+
+    let token = await AppStorage.getToken();
+console.log('token  auth class ',token);
+
+
+
+
+return axios({
+method: 'POST',
+url: Api.JobAssigned,
 
 
 headers: {
@@ -729,13 +529,10 @@ headers: {
 data: 
 
 {
-
     userId,
-    page,
-    limit,
-    orderBy,
-    orderByDescending,
-    allRecords,
+    jobId,
+    action,
+    
    }
 
 
@@ -751,14 +548,14 @@ data:
 }
 //Feedback Type
 static async superFeedbackType (
-
-
-    categoryName,
-    orderBy,
-    orderByDescending,
-    allRecords
+    
+    
+        categoryName,
+        orderBy,
+        orderByDescending,
+        allRecords
+       
    
-
 ) {
 
 let token = await AppStorage.getToken();
@@ -783,11 +580,11 @@ data:
 
 {
 
-categoryName,
-orderBy,
-orderByDescending,
-allRecords
-}
+    categoryName,
+    orderBy,
+    orderByDescending,
+    allRecords
+   }
 
 
 
@@ -803,13 +600,13 @@ allRecords
 }
 // Feedback Priority
 static async superFeedbackPriority (
-
-
-categoryName,
-orderBy,
-orderByDescending,
-allRecords
-
+    
+    
+    categoryName,
+    orderBy,
+    orderByDescending,
+    allRecords
+   
 
 ) {
 
@@ -835,10 +632,10 @@ data:
 
 {
 
-categoryName,
-orderBy,
-orderByDescending,
-allRecords
+    categoryName,
+    orderBy,
+    orderByDescending,
+    allRecords
 }
 
 
@@ -854,18 +651,127 @@ allRecords
 
 }
 
+//////////////////////////Technician part of supervisor module screen 1
+
+static async getTechnicianDepartments(  
+  globalCodeCategoryId,
+    categoryName,
+    page ,
+    limit,
+    orderBy,
+    orderByDescending,
+    allRecords) {
+  console.log("inside getTechnician")
+    let token = await AppStorage.getToken();
+    return axios({
+        method: 'POST',
+        url: Api.TechnicianTypes,
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer '+token
+        }, 
+        data: {
+            
+             globalCodeCategoryId,
+                categoryName,
+                page ,
+                limit,
+                orderBy,
+                orderByDescending,
+                allRecords
+              
+          
+        },
+
+
+    });
+
+}
+
+static async getTechnicianDetail(userTypeId,page,limit,CreatedOn,orderByDescending,allRecords) {
+    console.log("getTechnicianDetail called")
+      let token = await AppStorage.getToken();
+      return axios({
+          method: 'POST',
+          url: Api.TechnicianDetail,
+          headers: {
+              'Content-Type': 'application/json',
+              'Authorization': 'Bearer '+token
+          }, 
+          data: {
+            userTypeId,
+            page,
+            limit,
+            CreatedOn,
+            orderByDescending,
+            allRecords
+            
+          },
+
+
+      });
+
+  }
+
+
+
+
+static async SuperviseCurrentJobs(stageId, jobTypeId, machineTypeId, startDate, endDate, clientId, assignToId, status,orderBy, orderByDescending, allRecords) {
+   
+    let token = await AppStorage.getToken();
+// console.log('token  auth class   ',token);
+
+
+
+
+return axios({
+    method: 'POST',
+    url: Api.GetAllRecordsCurrent,
+
+
+    headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer '+token
+    }, 
+
+
+       
+    data: {
+       
+        stageId,
+        jobTypeId,
+        machineTypeId,
+        startDate,
+        endDate,
+        clientId,
+        assignToId,
+        status,
+        orderBy,
+        orderByDescending,
+        allRecords,
+   
+    
+    },
+
+
+});
+
+
+    
+
+}
 //TechniciansCommentAndFeedback
 
 static async TechnicianCommentAndFeedback(
-
-
-jobId,
-page,
-limit,
-orderBy,
-orderByDescending,
-allRecords
-
+    
+    
+    jobId,
+    page,
+    limit,
+    orderBy,
+    orderByDescending,
+    allRecords
+   
 ) {
 
 let token = await AppStorage.getToken();
@@ -889,13 +795,13 @@ headers: {
 data: 
 
 {
-jobId,
-page,
-limit,
-orderBy,
-orderByDescending,
-allRecords
-}
+    jobId,
+    page,
+    limit,
+    orderBy,
+    orderByDescending,
+    allRecords
+   }
 
 
 
@@ -912,18 +818,18 @@ allRecords
 
 
 static async GetTechNotification(
-
-          
-{
-    userId,
-    type,
-    page,
-    limit,
-    orderBy,
-    orderByDescending,
-    allRecords
-    }
-
+    
+              
+    {
+        userId,
+        type,
+        page,
+        limit,
+        orderBy,
+        orderByDescending,
+        allRecords
+        }
+   
 ) {
 
 let token = await AppStorage.getToken();
@@ -948,16 +854,16 @@ headers: {
 data: 
 
 {
-userId,
-type,
-page,
-limit,
-orderBy,
-orderByDescending,
-allRecords
-
-}
-
+    userId,
+    type,
+    page,
+    limit,
+    orderBy,
+    orderByDescending,
+    allRecords
+    
+   }
+   
 
 
 
@@ -972,21 +878,153 @@ allRecords
 
 
 }
-// Get Notification of Technician Module
 
-static async techNotificationScreen(
 
-          
-{
+// job in Progress
+
+static async ObjectAttributes(jobId, userId, subSegmentId, segmentId, machineId,machineTypeId,namePlate,orderBy,orderByDescending,allRecords) {
+
+    let token = await AppStorage.getToken();
+    // console.log('token auth class ',token);
+    
+    
+    
+    
+    return axios({
+    method: 'POST',
+    url: Api.GetAllAttributes,
+    
+    
+    headers: {
+    'Content-Type': 'application/json',
+    'Authorization': 'Bearer '+token
+    },
+    
+    
+    
+    data: {
+    
+    jobId,
     userId,
-    type,
-    page,
-    limit,
+    subSegmentId,
+    segmentId,
+    machineId,
+    machineTypeId,
+    namePlate,
     orderBy,
     orderByDescending,
     allRecords
+    
+    
+    
+    },
+    
+    
+    });
+    
+    
+    // get dropdown Questionnaire
+    
+    
     }
 
+
+
+    //Dashboard
+static async JobDetails(assignToId,loggedInUserId,status,allRecords) {
+    let token = await AppStorage.getToken();
+     
+    
+    return axios({
+    method: 'POST',
+    url: Api.JobDetails,
+    headers: {
+    'Content-Type': 'application/json',
+    'Authorization': 'Bearer '+token
+    },
+    data: {
+    assignToId,
+    loggedInUserId,
+    status,
+    allRecords
+    
+    },
+    
+    
+    });
+    
+    }
+//Notification Mark as Read
+static async MarkAsRead(  
+    
+        notificationId,
+        userName,
+      
+    ) {
+
+    let token = await AppStorage.getToken();
+    return axios({
+        method: 'POST',
+        url: Api.markasreadNotification,
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer '+token
+        }, 
+        data: {
+         notificationId,
+            userName,
+     },
+
+
+    });
+
+}
+// Drop down of Questionnaire
+static async getDropDown(  
+    globalCodeCategoryId,
+    orderBy,
+    orderByDescending,
+    allRecords) {
+
+    let token = await AppStorage.getToken();
+    return axios({
+        method: 'POST',
+        url: Api.jobInprogressDropDown,
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer '+token
+        }, 
+        data: {
+            
+                globalCodeCategoryId,
+                 orderBy,
+                 orderByDescending,
+                 allRecords
+              
+          
+        },
+
+
+    });
+
+}
+
+
+// Get Notification of Technician Module
+
+static async techNotificationScreen(
+    
+              
+    {
+        userId,
+        type,
+        page,
+        limit,
+        orderBy,
+        orderByDescending,
+        allRecords
+        }
+   
 ) {
 
 let token = await AppStorage.getToken();
@@ -1011,16 +1049,16 @@ headers: {
 data: 
 
 {
-userId,
-type,
-page,
-limit,
-orderBy,
-orderByDescending,
-allRecords
-
-}
-
+    userId,
+    type,
+    page,
+    limit,
+    orderBy,
+    orderByDescending,
+    allRecords
+    
+   }
+   
 
 
 
@@ -1036,314 +1074,5 @@ allRecords
 
 }
 
-static async getAutoGenEquipJobNo() {
-    let token = await AppStorage.getToken();
-    console.log('token  auth class   ',token);
-
-    
-
-    return axios({
-        method: 'POST',
-        url: Api.GetAutoGenEquipId,
-
-        headers: {
-            'Content-Type': 'application/json',
-            'Authorization': 'Bearer '+token
-        }, 
-
-        data: {
-       
-           
-        },
-
-
-    });
-
 }
-
-static async getClientType(globalCodeCategoryId,categoryName,page,limit,orderBy,orderByDescending,allRecords) {
-    let token = await AppStorage.getToken();
-    console.log('token  auth class   ',token);
-
-    
-
-    return axios({
-        method: 'POST',
-        url: Api.GetRecordsClientType,
-
-        headers: {
-            'Content-Type': 'application/json',
-            'Authorization': 'Bearer '+token
-        }, 
-
-        data: {
-            globalCodeCategoryId,
-            categoryName,
-            page,
-            limit,
-            orderBy,
-            orderByDescending,
-            allRecords
-        },
-
-
-    });
-
-}
-
-static async SuperviseGetSearchClientRecord(searchText,page,limit,orderBy,orderByDescending,allRecords) {
-    let token = await AppStorage.getToken();
-    console.log('token  auth class   ',token);
-
-    
-
-    return axios({
-        method: 'POST',
-        url: Api.GetSearchClientRecord,
-
-        headers: {
-            'Content-Type': 'application/json',
-            'Authorization': 'Bearer '+token
-        }, 
-
-        data: {
-       
-            searchText,
-            page,
-            limit,
-            orderBy,
-            orderByDescending,
-            allRecords
-        },
-
-
-    });
-
-}
-
-static async GetMachineTypeDropdown(orderBy,orderByDescending,allRecords) {
-    let token = await AppStorage.getToken();
-    console.log('token  auth class   ',token);
-
-    
-
-    return axios({
-        method: 'POST',
-        url: Api.GetRecordsMachineType,
-
-        headers: {
-            'Content-Type': 'application/json',
-            'Authorization': 'Bearer '+token
-        }, 
-
-        data: {
-            orderBy,
-            orderByDescending,
-            allRecords
-        },
-
-
-    });
-
-}
-
-static async GetMachineDropdown(machineTypeId,orderBy,orderByDescending,allRecords) {
-    let token = await AppStorage.getToken();
-    console.log('token  auth class   ',token);
-
-    
-
-    return axios({
-        method: 'POST',
-        url: Api.GetAllRecordsMachine,
-
-        headers: {
-            'Content-Type': 'application/json',
-            'Authorization': 'Bearer '+token
-        }, 
-
-        data: {
-            machineTypeId,
-            orderBy,
-            orderByDescending,
-            allRecords
-        },
-
-
-    });
-
-}
-
-static async GetSegmentDropdown(machineId,orderBy,orderByDescending,allRecords) {
-    let token = await AppStorage.getToken();
-    console.log('token  auth class   ',token);
-
-    
-
-    return axios({
-        method: 'POST',
-        url: Api.GetAllRecordsSegment,
-
-        headers: {
-            'Content-Type': 'application/json',
-            'Authorization': 'Bearer '+token
-        }, 
-
-        data: {
-            machineId,
-            orderBy,
-            orderByDescending,
-            allRecords
-        },
-
-
-    });
-
-}
-
-static async GetChooseJobType(page,limit,orderBy,orderByDescending,allRecords) {
-    let token = await AppStorage.getToken();
-    console.log('token  auth class   ',token);
-
-    
-
-    return axios({
-        method: 'POST',
-        url: Api.GetAllChooseJobType,
-
-        headers: {
-            'Content-Type': 'application/json',
-            'Authorization': 'Bearer '+token
-        }, 
-
-        data: {
-            page,
-            limit,
-            orderBy,
-            orderByDescending,
-            allRecords
-        },
-
-
-    });
-
-}
-
-static async CreateJobClientEquipId(EquipmentId,jobTypeId,machineTypeId,machineId,segmentId,clientId,clientType,clientName,phoneNumber,userId,jobCode) {
-    let token = await AppStorage.getToken();
-    console.log('token  auth class   ',token);
-
-    
-
-    return axios({
-        method: 'POST',
-        url: Api.CreateJobClientType,
-
-        headers: {
-            'Content-Type': 'application/json',
-            'Authorization': 'Bearer '+token
-        }, 
-
-        data: {
-            EquipmentId,
-            jobTypeId,
-            machineTypeId,
-            machineId,
-            segmentId,
-            clientId,
-            clientType,
-            clientName,
-            phoneNumber,
-            userId,
-            jobCode
-        },
-
-
-    });
-
-}
-
-// Drop down of Questionnaire
-static async getDropDown(
-    globalCodeCategoryId,
-    orderBy,
-    orderByDescending,
-    allRecords) {
-    
-    let token = await AppStorage.getToken();
-    return axios({
-    method: 'POST',
-    url: Api.jobInprogressDropDown,
-    headers: {
-    'Content-Type': 'application/json',
-    'Authorization': 'Bearer '+token
-    },
-    data: {
-    
-    globalCodeCategoryId,
-    orderBy,
-    orderByDescending,
-    allRecords
-    
-    
-    },
-    
-    
-    });
-    
-    }
-
-
-    static async ObjectAttributes(jobId, userId, subSegmentId, segmentId, machineId,machineTypeId,namePlate,orderBy,orderByDescending,allRecords) {
-
-        let token = await AppStorage.getToken();
-        // console.log('token auth class ',token);
-        
-        
-        
-        
-        return axios({
-        method: 'POST',
-        url: Api.GetAllAttributes,
-        
-        
-        headers: {
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer '+token
-        },
-        
-        
-        
-        data: {
-        
-        jobId,
-        userId,
-        subSegmentId,
-        segmentId,
-        machineId,
-        machineTypeId,
-        namePlate,
-        orderBy,
-        orderByDescending,
-        allRecords
-        
-        
-        
-        },
-        
-        
-        });
-        
-        
-        
-        
-        }
-
-
-
-}
-
-
-
-
 

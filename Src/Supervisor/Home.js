@@ -94,7 +94,7 @@ export default class Home extends React.Component {
 
     }
     else if (item.CategoryName == "Job Assignment") {
-      this.props.navigation.navigate("JobAssignment")
+      this.props.navigation.navigate("JobAssignment",{JobAssignBool:false})
 
     }
 
@@ -229,7 +229,6 @@ const styles = StyleSheet.create({
   },
   CategoryNameStyle: {
     fontSize: hp('2.5%'),
-    
   },
 
   CategoryIconBackground: {

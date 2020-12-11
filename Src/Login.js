@@ -9,7 +9,7 @@ import {
     Dimensions,
     View,
     Text,
-                                                                                                                                                        Image,
+    Image,
     TouchableOpacity,
     Button,
     SearchBar,
@@ -44,6 +44,7 @@ class Login extends React.Component {
             isLoading: false,
             email: 'parshantwins@gmail.com',
             Password: 'Sayomsairam21!',
+            FirstName:"",
             count: 0,
 
         };
@@ -55,33 +56,19 @@ class Login extends React.Component {
     toggleLoader = (val) => {
         this.setState(({isLoading: val}));
     };
-componentDidMount = () => {
-   
-    //this.ifalreadylogined();
-}
-ifalreadylogined = async () => {
-    let token = await AppStorage.getToken();
-    if(token !== null || token !== '')
-    {
-        this.toggleLoader(false);
-         this.props.navigation.navigate('Dashboard');
-    }
-    else{
-        this.toggleLoader(false);
-    }
-}
+
 
     loginUser = async (role) => {
 
 
         try {
             this.toggleLoader(true);
-            
          
-            let respo = await AuthService.authenticate(this.state.email, this.state.Password, role);
+            let respo = await AuthService.authenticate(this.state.email, this.state.Password, role,);
+ console.log(respo.data.data.userResponse.FirstName,'hello');
+        
 
-           
-        alert(JSON.stringify(respo));
+
             if (respo.data.StatusCode === 200) {
                 // console.log('response condition', respo.data.StatusCode);
                 this.onLogin(respo);
@@ -90,7 +77,7 @@ ifalreadylogined = async () => {
 
         } catch (e) {
 
-            //Alert.alert(e.response.data.Message);
+            Alert.alert(e.response.data.Message);
             // console.log('login catch me print hua', e.response.data);
         } finally {
             this.toggleLoader(false);
@@ -105,7 +92,7 @@ ifalreadylogined = async () => {
 
 
         AppStorage.saveKey(key.USER_PROFILE_DATA, JSON.stringify(respo.data)).then(() => {
-            this.props.navigation.navigate('Dashboard');
+            // this.props.navigation.navigate('Dashboard');
         });
 
 
@@ -169,13 +156,16 @@ ifalreadylogined = async () => {
         } else {
             this.setState({email: text});
             // console.log('Email is Correct');
-            if (status === 'S') {
+            if (status==="S") {
+                this.props.navigation.navigate('Dashboard');
                 this.props.navigation.navigate(
                     'Drawer',
                     {username: text},
+                    {FirstName: text},
                     NavigationActions.navigate({
                         routeName: 'Dashboard',
                     }),
+                   
                 );
             } else {
                 this.props.navigation.navigate(
@@ -185,7 +175,7 @@ ifalreadylogined = async () => {
                         routeName: 'Dashboard',
                     }),
                 );
-//
+//alert('drawer')
             }
 
 
@@ -193,24 +183,7 @@ ifalreadylogined = async () => {
 
     };
 
-    //   loginApidata(email,Password) {
-    //   try {
-    //     let response = await fetch(
-    //       'http://64.202.184.112:5000/api/AuthAPI/Login'+"parshantwins@gmail.com",+'Sayomsairamsffdfsdfs21!',
-    //     );
-    //     let responseJson = await response.json();
-    //     console.log('viodmckdnckndckjndksd',  responseJSon);
-
-
-    //     return responseJson;
-    //   } catch (error) {
-    //     console.error(error);
-    //   }
-    // }
-
-// componentDidMount(){
-//   this.props.fetch_Data();
-// }
+    
 
     render() {
         const {dimensions} = this.state;
@@ -219,10 +192,10 @@ ifalreadylogined = async () => {
 
 
             <SafeAreaView style={{flex: 1, backgroundColor: 'white', justifyContent: 'center'}}>
-             
+                <StatusBar hidden={false} backgroundColor={'#008BD0'}/>
 
                 <KeyboardAwareScrollView style={{backgroundColor: 'transparent'}}>
-                    <ApiLoader visibility={isLoading} loadingColor={'green'} onCancelPress={() => {
+                    <ApiLoader visibility={isLoading} loadingColor={'blue'} onCancelPress={() => {
                     }}/>
 
                     <View style={styles.mainView}>

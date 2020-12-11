@@ -48,8 +48,8 @@ export default class CurrentJobs extends Component {
             UserType: '',
             SelectTechnician: "",
             data: "",
-            userTypeId: 0,
-            NoJobAssigned: true,
+            // userTypeId: 0,
+            // NoJobAssigned: true,
             page: 0,
             limit: 0,
             orderBy: "CreatedOn",
@@ -61,23 +61,15 @@ export default class CurrentJobs extends Component {
     }
 
 
-    // componentDidMount = async () => {
-    //     this.Fun_GetJobAllRecords();
-    //     this.fetchTechnicianDepartment();
-    //     this.setState({
-    //         data: "All Technician"
-    //     })
-    // };
-
-    componentDidMount(){
-       
+    componentDidMount = async () => {
+        this.Fun_GetJobAllRecords();
         this.fetchTechnicianDepartment();
         this.setState({
             data: "All Technician"
-        });
-        this.Fun_GetJobAllRecords();
-        
-        }
+        })
+    };
+
+    
 
 
 
@@ -89,8 +81,7 @@ export default class CurrentJobs extends Component {
     Fun_GetJobAllRecords = async () => {
         try {
             this.toggleLoader(true);
-            let json_response = await AuthService.SuperviseAssignJobs(this.state.userTypeId,
-                this.state.NoJobAssigned, this.state.page, this.state.limit, this.state.orderBy,
+            let json_response = await AuthService.SuperviseAssignJobs( this.state.page, this.state.limit, this.state.orderBy,
                 this.state.orderByDescending, this.state.allRecords);
 
             console.log('GetJobAllRecords try==', json_response.data.data.
@@ -161,7 +152,7 @@ export default class CurrentJobs extends Component {
 
             this.state.technicianType.splice(0, 0, ob1)
 
-            console.log("Gurjeet$$$$$$$$$$$$$$$$$$$$$", this.state.technicianType)
+            console.log("Miss $$$$$$$$$$$$$$$$$$$$$", this.state.technicianType)
 
         } catch (e) {
 
@@ -207,15 +198,38 @@ export default class CurrentJobs extends Component {
     updateSearch = (search) => {
         let searchText = search.toLowerCase();
         this.setState({
-            mydata: this.state.mydata.filter(x => (x.UserName).toString().toLowerCase().indexOf(searchText) > -1 ||
+            orderData: this.state.mydata.filter(x => (x.UserName).toString().toLowerCase().indexOf(searchText) > -1 ||
                 (x.CompletedJobs).toString().toLowerCase().indexOf(searchText) > -1)
         });
     }
+// -----------------------------IF USER NAVIGATE FROM  EQUIPMENTIDENTIFICATION OR JOB TECHNICIAN MODULE----------------------------
+    AssignOnPress=(value)=>{
+        if(value==true){
+
+          Alert.alert(
+              'Alert ',
+              'Job Assigned',
+              [
+        
+                { text: 'OK', onPress: () => this.props.navigation.navigate('JobsAssignment')},
+                
+          
+              ]
+              
+            );
+        }else if(value==false){
+           this.props.navigation.navigate("JobAssign") 
+
+        }
+  
+}
 
     render() {
         const { dimensions } = this.state;
         const { search } = this.state;
         const { isLoading } = this.state;
+        var NavigationBoolValue= this.props.navigation.getParam('JobAssignBool')
+       console.log("NavigationBoolValue***",NavigationBoolValue)
         return (
             <SafeAreaView style={{
                 flex: 1,
@@ -298,7 +312,7 @@ export default class CurrentJobs extends Component {
                                 <View style={{
                                     width: '20%', height: '90%', backgroundColor: '#0288d5', justifyContent: "center", alignItems: "center"
                                 }}>
-                                    <TouchableOpacity onPress={() => { this.props.navigation.navigate("JobAssign") }}>
+                                    <TouchableOpacity onPress={() => this.AssignOnPress(NavigationBoolValue)}>
 
                                         <Text style={{ color: 'white', justifyContent: "center", textAlign: "center" }}>Assign </Text>
                                     </TouchableOpacity>

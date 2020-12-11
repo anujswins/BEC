@@ -105,7 +105,8 @@ fetchTechnicianDepartment = async () => {
     try {
          this.toggleLoader(true);
         console.log('inside try');
-        let json_response = await AuthService.getTechnicianDepartments(0,"User Type",0,0,"CreatedOn",true,true);
+        let json_response = await AuthService.getTechnicianDepartments(0,
+            "User Type",0,0,"CreatedOn",true,true);
 this.setState({
     technicianType:json_response.data.data.globalCodeMainResponse.globalCodeResponse,
 })
@@ -170,26 +171,29 @@ fetchTechnicianDetail = async () => {
 };
 
 filterListData=(selectedValue)=>{
-   
+    // console.log("selectedvalue*****",selectedValue)
     this.state.updatedData=[]
-   
+    console.log("templist Data",this.state.updatedData) 
     let tempList=this.state.Data;
-   
+    console.log("FilterData called############",this.state.Data.length)
 for(var i=0;i<tempList.length;i++)
 {
-    
+    console.log("drop down",selectedValue + i) 
+    console.log("json value",tempList[i].UserType + i) 
+//  if(tempList[i].UserType===selectedValue)
+// if(tempList[i].UserType!==null){
 
     if(tempList[i].UserType===selectedValue)
     {
    
-        
+        console.log("inside if",) 
        this.state.updatedData.push(tempList[i]) 
     }
    
     else if(selectedValue==="All Technician")
     {
        this.state.updatedData.push(tempList[i]) 
-       
+       console.log("templist Data",tempList[i].UserType) 
     }
     else{
         console.log("Exception ")
@@ -206,7 +210,8 @@ for(var i=0;i<tempList.length;i++)
 
 // 
 
-
+console.log("Updated list",this.state.updatedData)
+// this.toggleLoader(false);
 }
 
 
@@ -320,7 +325,7 @@ toggleLoader = (val) => {
                 
                  
                    <DropDownPicker
-   
+    
     items={this.state.technicianType.map(item=>
         ({label:item.CodeName,value:item.CodeName}))}
 
@@ -333,11 +338,11 @@ toggleLoader = (val) => {
     style={{backgroundColor: '#fafafa',marginHorizontal:'4%',marginVertical: "2%"}}
     dropDownStyle={{backgroundColor: '#fafafa',marginHorizontal:'4%',alignItems:'flex-start',justifyContent:'flex-start'}}
     // defaultIndex={0}
-    onChangeItem={item =>{
+    onChangeItem={item =>{console.log("item****",item)
        this.setState({
            SelectTechnician:item.value
        })
-   
+    //    this.toggleLoader(true);
         this.filterListData(item.value)
 
     }
@@ -398,10 +403,9 @@ toggleLoader = (val) => {
                                     {item.ActiveJobCode ?
                                         <TouchableOpacity style={{ height: hp('6%'), width: wp('22%'), backgroundColor: 'transparent', justifyContent: 'center', alignItems: 'center' }}
                                             onPress={() =>  
-                                                 this.props.navigation.navigate("ActiveJobs",{JobId:item.JobId})
-                                                // console.log("Kuldeep",item.JobId)
-                                                }>
-                                                {/* onPress={() => this.props.navigation.navigate("ForgotPassword",{itemId:65,myString:'gurjeet'})} */}
+                                                 this.props.navigation.navigate
+                                                 ("ActiveJobs",{JobId:item.JobId})}>
+                      
                                             <Text style={{color: "#006DA6", fontSize:hp('1.7%')}}>
                                                 {item.ActiveJobCode}
                                             </Text>
@@ -411,7 +415,8 @@ toggleLoader = (val) => {
                                             <Text style={{fontSize:hp('1.7%'),paddingHorizontal:hp('2%'),paddingVertical:hp('1%'),color:'#ffffff',borderBottomWidth:4, borderBottomColor:'#0F3276',backgroundColor:'#008BD0'}}>
                                              Assign
                                             </Text>
-                                        </TouchableOpacity >}
+                                        </TouchableOpacity >
+                                        }
                                     <View style={{ height: hp('6%'), width: wp('30%'), backgroundColor: 'transparent', justifyContent: 'center', alignItems: 'center' }}>
                                         <Text style={{fontSize:hp('1.7%')}}>
                                             {item.CompletedJobs}

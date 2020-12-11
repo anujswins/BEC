@@ -13,8 +13,8 @@ import BottomHomeCompnent from '../CommonComponents/BottomHomeComponent';
 import DrawerHeader from '../CommonComponents/DrawerHeader';
 import EditText from '../CommonComponents/EditText'
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
-import AuthService from '../RestClient/AuthService';
-import ApiLoader from '../PopUp/ApiLoader';
+
+
 export default class ForgotPassword extends Component {
 
   static navigationOptions = {
@@ -35,8 +35,7 @@ backgroundColor:'#008ad1'
   constructor() {
     super();
     this.state = {
-      UserEmail: '',
-      isLoading: false,
+      UserEmail: ''
     }
 
 
@@ -51,51 +50,9 @@ backgroundColor:'#008ad1'
     Alert.alert("inside forgot Password")
 
   }
-  toggleLoader = (val) => {
-    this.setState(({isLoading: val}));
-}
 
-  sendEmail = async () => {
-    // Alert.alert("inside send email")
-
-    try {
-        this.toggleLoader(true);
-     
-        let respo = await AuthService.getOTP(this.state.UserEmail);
-
-     Alert.alert("resposne in forgotPassword",respo.data.Message)
-
-
-        if (respo.data.StatusCode === 200) {
-          this.props.navigation.navigate('OTPVerification')
-        }
-else{
-  Alert.alert("resposne in forgotPassword",respo.data.Message)
-
-}
-
-
-
-
-    } catch (e) {
-
-      // showMessage({
-      //   message: respo.data.Message,
-      //   type: "info",
-      //   backgroundColor: "black",
-    
-      // });
-         console.log('login catch me print hua', e.response.data);
-         Alert.alert("resposne in forgotPassword",e.response.data.Message)
-    } finally {
-        this.toggleLoader(false);
-        // console.log('login finally print hua');
-    }
-
-};
 
   Validate = () => {
-   
     let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
     const { UserEmail } = this.state;
     var lettrs = /^[A-Za-z]+$/;
@@ -123,23 +80,17 @@ else{
         position: (0, 0, 100, 100),
         hideStatusBar: true
       });
-
-
-
     }
 
 
 
     else {
-      this.sendEmail();
-
-     
+      this.props.navigation.navigate('OTPVerification')
     }
   }
 
 
   render() {
-    const {isLoading} = this.state;
     return (
       <View style={styles.container}>
 
@@ -152,8 +103,6 @@ else{
         {/* --------- main View----------   */}
         <View style={styles.subcontainer1}>
           {/* --------------lock icon and Email text------ */}
-          <ApiLoader visibility={isLoading} loadingColor={'green'} onCancelPress={() => {
-                    }}/>
           <View style={styles.lockIconContainer}>
             <View>
               <Image
@@ -167,7 +116,7 @@ else{
           {/* -----------Email Address  Field */}
           <View style={{ marginTop:hp('10%')}}>
               {/* <CustomTextInput label="Email Address" onChange={this.onChange} />   */}
-             {/* <EditText
+             <EditText
                                 placeholder={'Email Address'}
                                 // IconName={'email'}
                                 editable={true}
@@ -180,18 +129,8 @@ else{
                                   // emailError: validate('email', val)
                               
                               })}
-                            /> */}
-           <TextInput style={styles.input}
-                                   underlineColorAndroid="transparent"
-                                   placeholder="Password"
-                                   placeholderTextColor="grey"
-                                   autoCapitalize="none"
-                                   secureTextEntry={true}
-                                   maxLength={20}
-                                   value={this.state.UserEmail}
-                                   onChangeText={(text) => {
-                                       this.setState({ UserEmail: text});
-                                   }}/>
+                            />
+
       
           </View>
 

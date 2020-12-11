@@ -24,8 +24,6 @@ import {
 import DrawerHeader from "../CommonComponents/DrawerHeader"
 import BottomTabNavigator from '../CommonComponents/BottomTabNavigator';
 import { SearchBar } from 'react-native-elements';
-import ApiLoader from '../PopUp/ApiLoader';
-import AuthService from '../RestClient/AuthService';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 const height = Dimensions.get("screen").height
 const width = Dimensions.get("screen").width
@@ -34,59 +32,23 @@ export default class TeamMember extends Component {
     constructor() {
         super();
         this.state = {
-            isLoading: false,
-            Data:[],
-             id:''
+            Data: [{ TeamMemberName: "James Smith", Hours: "5" },
+            { TeamMemberName: "Maria Garcia", Hours: "6" },
+            { TeamMemberName: "Jackson D.", Hours: "7" },
+            { TeamMemberName: "Daniel Gracia", Hours: "6" },
+            { TeamMemberName: "Joseph M.", Hours: "8" },
+            { TeamMemberName: "Daniel K.", Hours: "10" },
+            { TeamMemberName: "Maria Garcia", Hours: "8" },
+            { TeamMemberName: "Andrew Smith", Hours: "5" },
+            { TeamMemberName: "Daniel Gracia", Hours: "4" },
+            { TeamMemberName: "Joseph M.", Hours: "5" },
+            { TeamMemberName: "Joseph M.", Hours: "5" },
+            { TeamMemberName: "Joseph M.", Hours: "5" }],
         }
     }
 
-
-componentDidMount(){
-    
-this.SupervisorTeamMember();
-
-}
-
-
-toggleLoader = (val) => {
-    this.setState(({ isLoading: val }));
-};
-
-
-    SupervisorTeamMember = async () => {
-        console.log('team member');
-        try {
-             this.toggleLoader(true);
-             var id=(this.props.navigation.getParam('ActiveJobId'));
-            
-             console.log("JObID&&&&&&&&&&&",this.props.navigation.getParam('ActiveJobId'))
-            let json_response = await AuthService.TeamMemberSupervisor(id);
-   
-                
-    
-            console.log('GetAllRecords try==', json_response.data.data.activeMainJobMembers.activeJobMembersResponse);
-           this.setState({
-        Data:json_response.data.data.activeMainJobMembers.activeJobMembersResponse
-          
-           
-    });
-           
-    
-        } catch (e) {
-    
-            //  Alert.alert(e.response.data);
-            // console.log('GetAllRecords catch', e.response.data);
-        } finally {
-            this.toggleLoader(false);
-            console.log('GetAllRecords finally print hua');
-        }
-    
-    };
-
-
-
     render() {
-        const { isLoading } = this.state;
+        
         return (
             <View style={{ flex: 1, height: '100%', width: '100%', backgroundColor: '#ffffff' }}>
                 <StatusBar  
@@ -96,8 +58,6 @@ toggleLoader = (val) => {
                 <View style={{height:'9%', width:'100%', backgroundColor:"#008BD0"}}>
                 <DrawerHeader name="Technicians" openDrawer={this.props.navigation} status={false} notification={true}/>
                </View>
-               <ApiLoader visibility={isLoading} loadingColor={'green'} onCancelPress={() => {
-                }} />
                <View style={{height:'82%', width:'100%', backgroundColor:'transparent'}}>
                <View style={{ height: '9%', width: '100%', backgroundColor: "#E6F7FF", justifyContent: "center", alignItems: "flex-start", paddingLeft: '6%' }}>
                     <Text style={{ fontSize: hp('2.6%'), fontWeight: "bold", color: "#008AD2", backgroundColor:'transparent', width:'50%' }}>
@@ -125,7 +85,7 @@ toggleLoader = (val) => {
                                 <View style={{ flexDirection: "row", height:hp('6%'),width:wp('90%'),borderBottomWidth: 1, borderBottomColor: "#D2D3D5", marginHorizontal: wp('5%'), backgroundColor:"transparent" }}>
                                     <View style={{ width: wp('45%'), height: hp('5.6%'), backgroundColor: "transparent", justifyContent: "center", alignItems: "flex-start", paddingLeft: '5%' }}>
                                         <Text style={{ fontSize: hp('1.8%'), color: "#333333" }}>
-                                            {item.UserName}
+                                            {item.TeamMemberName}
                                         </Text>
                                     </View>
                                     <View style={{ width:wp('45%'), height: hp('5.6%'), backgroundColor: "transparent", justifyContent: "center", alignItems: "flex-start", paddingLeft: '16%'}}>
@@ -148,7 +108,8 @@ toggleLoader = (val) => {
                 
 
                 <View style={{height:'9%', width:'100%', backgroundColor:"#008BD0",}}>
-                    <BottomTabNavigator isFeedbackIcon={true} isMenuIcon={true} navigate={this.props.navigation.navigate}/>
+                    <BottomTabNavigator isFeedbackIcon={true} isMenuIcon={true} 
+                    navigate={this.props.navigation.navigate}/>
                 </View>
             </View>
         )

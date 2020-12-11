@@ -5,12 +5,10 @@ import Action from '../Redux/Action';
 
 const key = {
     USER_PROFILE_DATA: 'USER_PROFILE_DATA',
-    USER_JOBSDETAILS: 'USER_JOBSDETAILS',
     USER_TOKEN: 'USER_TOKEN',
     USER_REMEMBER_ME: 'USER_REMEMBER_ME',
     NOTIFICATION_TOKEN_STATUS: 'NOTIFICATION_TOKEN_STATUS',
-    CHOOSE_JOB_TYPE:'CHOOSE_JOB_TYPE',                    // Choose Job Type
-    EQUIP_ID_DETAILS:'EQUIP_ID_DETAILS'                   //EquipIdYesDetails
+    JOBASSIGNMENT: 'JOBASSIGNMENT',
 
 };
 const AppStorage = {
@@ -23,24 +21,6 @@ const AppStorage = {
 
         }
     },
-
-    // ----------------ChooseJobTypeKey--------------------------------
-    async ChooseJobTypeKey(keyName, value) {
-        try {
-            await AsyncStorage.setItem(keyName, value);
-        } catch (error) {
-
-        }
-    },
-
-// ----------------------EquipIDAvail----------------------------
-async EquipIdAvail(keyName, value) {
-    try {
-        await AsyncStorage.setItem(keyName, value);
-    } catch (error) {
-
-    }
-},
     async saveRememberMeKey(keyName, value) {
         try {
             await AsyncStorage.setItem(keyName, value);
@@ -65,7 +45,7 @@ async EquipIdAvail(keyName, value) {
         try {
             let fcmToken = await AsyncStorage.getItem('Token_Notification');
 
-           return fcmToken
+            return fcmToken
         } catch (error) {
             console.log('PUSH NOTIFICATION TOKEN: error  ', error);
             return "";
@@ -85,7 +65,7 @@ async EquipIdAvail(keyName, value) {
         try {
             let response = await AsyncStorage.getItem(key.USER_PROFILE_DATA);
             response = JSON.parse(response);
-            let token=response.data.userResponse.token
+            let token = response.data.userResponse.token
             // console.log('token response++++++++++++++++',response);
             // console.log('mera token agya ===',token);
             return response.data.userResponse.token;
@@ -93,11 +73,12 @@ async EquipIdAvail(keyName, value) {
             return null;
         }
     },
+
     async getUserId() {
         try {
             let response = await AsyncStorage.getItem(key.USER_PROFILE_DATA);
             response = JSON.parse(response);
-            
+
             return response.data.userResponse.UserId;
         } catch (error) {
             return null;
@@ -107,25 +88,33 @@ async EquipIdAvail(keyName, value) {
         try {
             let response = await AsyncStorage.getItem(key.USER_JOBSDETAILS);
             response = JSON.parse(response);
-            
+
             return response;
         } catch (error) {
             return null;
         }
     },
-    async getjobid() {
+    // Job Assignment
+    async SuperviseAssignJobs() {
         try {
-            let response = await AsyncStorage.getItem(key.USER_JOBSDETAILS);
+            let response = await AsyncStorage.getItem(key.JOBASSIGNMENT);
             response = JSON.parse(response);
-         
-            return response.JobId;
-        } catch (error) {
+
+            console.log('appstorage data from assign job++++++++++++++++++++++++++++', response)
+
+
+            return response;
+        }
+        catch (error) {
             return null;
         }
     },
+
+
+
     async clearStorage() {
         try {
-            store.dispatch({type: Action.SIGN_OUT});
+            store.dispatch({ type: Action.SIGN_OUT });
             await AsyncStorage.removeItem(key.USER_PROFILE_DATA);
             await AsyncStorage.removeItem("Token_Notification");
         } catch (error) {
@@ -139,9 +128,9 @@ async EquipIdAvail(keyName, value) {
         }
     },
 
- 
+
 
 
 };
-export {AppStorage, key};
+export { AppStorage, key };
 

@@ -11,7 +11,6 @@ import {
     search,
     FlatList,
     Image,
-    Alert,
     TouchableOpacity
 } from 'react-native';
 
@@ -26,8 +25,6 @@ import DrawerHeader from "../CommonComponents/DrawerHeader"
 import BottomTabNavigator from '../CommonComponents/BottomTabNavigator';
 import { SearchBar } from 'react-native-elements';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
-import ApiLoader from '../../Src/PopUp/ApiLoader';
-import AuthService from '../../Src/RestClient/AuthService';
 const height = Dimensions.get("screen").height
 const width = Dimensions.get("screen").width
 
@@ -35,7 +32,6 @@ export default class TeamMember_Technician extends Component {
     constructor() {
         super();
         this.state = {
-            isLoading: false,
             Data: [{ TeamMemberName: "James Smith", Hours: "5" },
             { TeamMemberName: "Maria Garcia", Hours: "6" },
             { TeamMemberName: "Jackson D.", Hours: "7" },
@@ -50,67 +46,15 @@ export default class TeamMember_Technician extends Component {
             { TeamMemberName: "Joseph M.", Hours: "5" }],
         }
     }
-componentDidMount(){
-this.GetTeamMembers();
 
-
-}
-
-
-toggleLoader = (val) => {
-    this.setState(({isLoading: val}));
-};
-
-
-GetTeamMembers = async () => {
-    console.log("inside team member");
-
-    try {
-        this.toggleLoader(true);
-        console.log("inside try block");
-        let json_response = await AuthService.GetTechnicianTeamMember(5,39,1,10,"createdOn",true,true);
-
-            
-
-      
-      console.log('team member response', json_response.data);
-
-        this.setState({
-Data:json_response.data.data.jobActiveMainResponse.JobTechnicianTeamMembersList
-        });
-        //  Alert.alert('team member response',json_response.data.StatusCode);
-
-        // mainData=json_response.data.Permissions;
-
-        // if (json_response.data.StatusCode === 200) {
-        //     // Alert.alert("data get successfully ");
-        //     //  console.log('response condition+++++++++', json_response.data.data.jobsMainResponse);
-        //     this.state.orderData=json_response.data.data.jobsMainResponse.jobResponse;
-        //      console.log('cht_list==========',this.state.orderData);
-        //     // this.GetData(myrespo);
-
-        // }
-
-    } catch (e) {
-
-         Alert.alert(e.response.data);
-        console.log('GetAllRecords catch', e.response);
-    } finally {
-        this.toggleLoader(false);
-        console.log('GetAllRecords finally print hua');
-    }
-
-};
     render() {
-        const {isLoading} = this.state;
+        
         return (
             <View style={{ flex: 1, height: '100%', width: '100%', backgroundColor: '#ffffff' }}>
                 <StatusBar  
      backgroundColor = "#008BD0"  
      barStyle = "#ffffff"   
    /> 
-     <ApiLoader visibility={isLoading} loadingColor={'green'} onCancelPress={() => {
-                    }}/>
                 <View style={{height:'9%', width:'100%', backgroundColor:"#008BD0"}}>
                 <DrawerHeader name="Technicians" openDrawer={this.props.navigation} status={false} notification={true}/>
                </View>
@@ -135,14 +79,13 @@ Data:json_response.data.data.jobActiveMainResponse.JobTechnicianTeamMembersList
                     </View>
                 </View>
                 <View style={{ height:'82%', width: '100%', backgroundColor: 'transparent', }}>
-                    <FlatList 
-                    data={this.state.Data}
+                    <FlatList data={this.state.Data}
                         keyExtractor={(item,index)=>index.toString()}
                         renderItem={({ item }) => (
                                 <View style={{ flexDirection: "row", height:hp('6%'),width:wp('90%'),borderBottomWidth: 1, borderBottomColor: "#D2D3D5", marginHorizontal: wp('5%'), backgroundColor:"transparent" }}>
                                     <View style={{ width: wp('45%'), height: hp('5.6%'), backgroundColor: "transparent", justifyContent: "center", alignItems: "flex-start", paddingLeft: '5%' }}>
                                         <Text style={{ fontSize: hp('1.8%'), color: "#333333" }}>
-                                            {item.UserName}
+                                            {item.TeamMemberName}
                                         </Text>
                                     </View>
                                     <View style={{ width:wp('45%'), height: hp('5.6%'), backgroundColor: "transparent", justifyContent: "center", alignItems: "flex-start", paddingLeft: '16%'}}>

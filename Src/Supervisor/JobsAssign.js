@@ -30,20 +30,10 @@ import DrawerHeader from '../CommonComponents/DrawerHeader'
 const screen = Dimensions.get("screen");
 const dwidth = Dimensions.get('screen').width;
 const dheight = Dimensions.get('screen').height;
-const mainData = [];
-
-
-
-
-
-
-
 
 export default class JobAssign extends Component {
 
-
-
-  constructor(props) {
+ constructor(props) {
     super();
     this.state = {
       isFeebackIcon: true,
@@ -55,41 +45,9 @@ export default class JobAssign extends Component {
       orderByDescending: true,
       allRecords: true,
       isLoading: false,
-      mydata: [],
-      orderData: mainData,
-      // orderData: [
-
-
-
-      //   { MachineId: 1, JobCode: "JN-789009",
-      //     MachineName: "BEC-Induction Motor",MachineTypeName: "BEC-Phase Motor" },
-      //   { MachineId: 2, JobCode: "JN-789006",  
-      //   MachineName: "BEC-Induction Motor",MachineTypeName: "Phase Motor" },
-      //   { MachineId: 3, JobCode: "JN-789007", 
-      //    MachineName: "BEC-Induction Motor",MachineTypeName: "BEC-Phase Motor" },
-
-      //   { MachineId: 4, JobCode: "JN-789008", 
-      //    MachineName: "BEC-Induction Motor",
-      //    MachineTypeName: "Phase Motor" },
-      //   { MachineId: 5, JobCode: "JN-789009", 
-      //    MachineName: "BEC-Induction Motor",MachineTypeName: "BEC-Phase Motor" },
-      //   { MachineId: 6, JobCode: "JN-789011", 
-      //    MachineName: "BEC-Induction Motor",MachineTypeName: "Phase Motor" },
-
-      //   { MachineId: 7, JobCode: "JN-789012", 
-      //    MachineName: "BEC-Induction Motor",MachineTypeName: "Phase Motor" },
-      //   { MachineId: 8, JobCode: "JN-789013", 
-      //    MachineName: "BEC-Induction Motor",MachineTypeName: "BEC-Phase Motor" },
-      //   { MachineId: 9, JobCode: "JN-789014",  
-      //   MachineName: "BEC-Induction Motor",MachineTypeName: "Phase Motor" },
-
-
-
-
-
-      // ],
-
-
+      
+      mydata:[],
+      orderData: [],
       selectedcat: "",
       category: [
         {
@@ -113,26 +71,34 @@ export default class JobAssign extends Component {
       ]
 
     }
-
+this.create={
+  "userId": 39,
+  "jobId": 68,
+  "action":"Assigned"
+}
 
   }
   showAlert = () => {
     Alert.alert(
+      
       'Alert ',
       'Job Assigned',
       [
-
-        { text: 'OK', onPress: () => this.props.navigation.navigate('Technicians') },
+        
+        { text: 'OK',
+         onPress: () => this.props.navigation.navigate('JobAssignment') },
 
 
       ]
 
     );
+      this.JobAssigned();
 
 
   }
   componentDidMount = async () => {
     this.Fun_GetJobAssignRecords();
+    // this.JobAssigned();
   };
 
 
@@ -142,34 +108,23 @@ export default class JobAssign extends Component {
 
 
   Fun_GetJobAssignRecords = async () => {
+    
     try {
       this.toggleLoader(true);
       let json_response = await AuthService.AssignmentJobs(this.state.userId,
         this.state.page, this.state.limit, this.state.orderBy, this.state.orderByDescending,
         this.state.allRecords);
-
-      //  console.log('GetJobAssignRecords try==', json_response.data.
-      //  data.JobAssignMainDetail.jobAssignDetail);
-
-
       if (json_response.data.StatusCode === 200) {
-
-
-        console.log('GetJobAssignRecords try==', json_response.data.
-          data.JobAssignMainDetail.jobAssignDetail);
-
-        this.state.mydata = json_response.data.data.JobAssignMainDetail.jobAssignDetail;
-        console.log("hey", this.state.mydata)
+        console.log('GetJobAssignRecords try==', json_response.data.data.JobAssignMainDetail.jobAssignDetail);
+        
+        //  console.log("hey", this.state.mydata)
         this.state.orderData = json_response.data.data.JobAssignMainDetail.jobAssignDetail;
+        this.state.mydata = json_response.data.data.JobAssignMainDetail.jobAssignDetail;
         console.log("Data entered", this.state.orderData)
-
-
-
-
-
-
       }
-    } catch (e) {
+    
+    } 
+    catch (e) {
 
       Alert.alert(e.response);
       console.log('GetJobAssignRecords catch', e.response);
@@ -178,16 +133,36 @@ export default class JobAssign extends Component {
       console.log('GetJobAssignRecords finally print hua');
     }
   };
+
+// Job assigned
+JobAssigned = async () => {
+  try {
+    this.toggleLoader(true);
+    let json_response = await AuthService.AssignedJobs(this.create.userId,
+      this.create.jobId,this.create.action);
+      console.log("get Assigned",json_response)
+  
+  } catch (e) {
+
+    Alert.alert(e.response);
+    console.log('GetJobAssignRecords catch', e.response);
+  } finally {
+    this.toggleLoader(false);
+    console.log('GetJobAssignRecords finally print hua');
+  }
+};
+
+
   updateSearch = (search) => {
     let searchText = search.toLowerCase();
     this.setState({
-      orderData: mainData.filter(x => (x.Name).toString().toLowerCase().indexOf(searchText) > -1 ||
-        (x.id).toString().toLowerCase().indexOf(searchText) > -1 ||
-        (x.address).toString().toLowerCase().indexOf(searchText) > -1 ||
-        (x.Data).toString().toLowerCase().indexOf(searchText) > -1)
+       orderData:this.state.mydata.filter(x => (x.MachineName).toString().toLowerCase().indexOf(searchText)> -1 ||
+            (x.JobCode).toString().toLowerCase().indexOf(searchText) > -1 ||
+          (x.MachineTypeName).toString().toLowerCase().indexOf(searchText) > -1),
     });
+}
 
-  }
+
 
   async onValueChangeCat(value) {
     this.setState({ selectedcat: value });
@@ -250,21 +225,16 @@ export default class JobAssign extends Component {
                     height: hp('15%'), width: wp('47%'), backgroundColor: "transparent", justifyContent: 'center', alignItems: 'center'
 
                   }}>
-
-
                     <TouchableOpacity onPress={this.showAlert}>
 
                       <View style={{ elevation: 4, backgroundColor: 'transparent', width: wp('35%'), height: hp('5%'), flexDirection: 'row' }}>
-
                         <View style={{ backgroundColor: '#015ea1', width: wp('10%'), height: hp('5%'), justifyContent: 'center', alignItems: 'center' }}>
                           <Image source={require('../../assets/tick_icon.png')}
                             style={{ width: 25, height: 25 }} />
-
                         </View>
                         <View style={{ backgroundColor: '#0288d5', width: wp('25%'), height: hp('5%'), alignItems: 'center', justifyContent: 'center' }}>
                           <Text style={{ color: 'white' }}>Assign Job</Text>
                         </View>
-
                       </View>
 
                       <Text style={{ textAlign: "center", }}>
@@ -273,27 +243,18 @@ export default class JobAssign extends Component {
                         {item.MachineTypeName}</Text>
                     </TouchableOpacity>
                   </View>
-
                 </Card>
-
-
 
               ))}
           </ScrollView>
         </View>
-
-
         <View>
 
           <View style={{ height: '9%', backgroundColor: 'transparent' }}>
             <BottomTabNavigator isFeedbackIcon={true} isMenuIcon={true} navigate={this.props.navigation.navigate}>
             </BottomTabNavigator>
           </View>
-
-
         </View>
-
-
       </SafeAreaView>
 
     )

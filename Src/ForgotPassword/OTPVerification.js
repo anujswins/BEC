@@ -71,25 +71,7 @@ return(
 </View>
 {/* -----------Email Address  Field */}
 <View style={{marginTop:hp('10%')}}>
-{/* <CustomTextInput label="Enter code" onChange={this.onChange}  /> */}
-
-<EditText
-                                placeholder={'Email Address'}
-                                // IconName={'email'}
-                                editable={true}
-                                maxLength={30}
-                                value={this.state.UserEmail}
-                                autoCapitalize={'none'}
-                                keyboardType={'email-address'}
-                                // error={this.state.emailError}
-                                onChangeText={(val) => this.setState({ UserEmail: val, 
-                                  // emailError: validate('email', val)
-                              
-                              })}
-                            />
-
-
-
+<CustomTextInput label="Enter code" onChange={this.onChange}  />
 </View>
 
 {/* ---------Next button ------------ */}

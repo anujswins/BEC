@@ -1,15 +1,3 @@
-
-
-
-
-
-
-
-
-
-
-
-
 import React from 'react';
 import 'react-native-gesture-handler';
 import { StyleSheet, Text, View, Button, Dimensions, Image, FlatList, Alert, TouchableOpacity,StatusBar } from 'react-native';
@@ -18,19 +6,13 @@ import { NavigationContainer } from '@react-navigation/native';
 import BottomHomeComponent from '../CommonComponents/BottomHomeComponent';
 import DrawerHeader from '../CommonComponents/DrawerHeader'
 import BottomTabNavigator from '../CommonComponents/BottomTabNavigator';
+import {AppStorage, key} from '../utils/AppStorage';
+import AuthService from '../../Src/RestClient/AuthService';
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import {AppStorage, key} from '../utils/AppStorage';
-import AuthService from '../RestClient/AuthService';
+   let colors = ['#e8f7ff', '#fafafa']
 
-let colors = ['#e8f7ff', '#fafafa']
-
-
-
-
-
-
-export default class TechnicianDashboard extends React.Component {
+  export default class TechnicianDashboard extends React.Component {
   constructor() {
     super();
     this.state = {
@@ -68,39 +50,13 @@ export default class TechnicianDashboard extends React.Component {
                 
                         },
                 
+           ]
                 
                 
-                
-                
-                      ]
-                
-                
-
-
-
-    }
-
-  }
- componentDidMount = async () => {
-    let UserId = await AppStorage.getUserId();
-   
-    try {
-      let respo = await AuthService.JobDetails(UserId,UserId,this.state.status,this.state.allRecords);
-
-      //alert(JSON.stringify(respo));
-      AppStorage.saveKey(key.USER_JOBSDETAILS, JSON.stringify(respo.data)).then(() => {
-        this.props.navigation.navigate('Dashboard');
-    });
-
-  } catch (e) {
-
-      //Alert.alert(e.response.data.Message);
-     console.log('login catch me print hua', e.response.data);
-  } finally {
-       console.log('login finally print hua');
-  }
-
  }
+
+  }
+
 
 
   OnListItemClick = (item) => {
@@ -111,41 +67,54 @@ export default class TechnicianDashboard extends React.Component {
 
     }
 
-
-
-    else if (item.CategoryName == "Notes") {
+     else if (item.CategoryName == "Notes") {
       this.props.navigation.navigate("Notes")
-    
+     }
 
-    }
-
-    else if (item.CategoryName == 'My Notification') {
+    else if (item.CategoryName == 'My Notification') 
+    {
       this.props.navigation.navigate("MyNotification")
-
     }
     else if (item.CategoryName == "My Team") {
       this.props.navigation.navigate("TeamMemberTechnician")
-
-    }
-
-    else if (item.CategoryName == "CompletedJobs") {
+   }
+    else if (item.CategoryName == "CompletedJobs")
+    {
       this.props.navigation.navigate("CompletedJobs")
-
     }
-    else if (item.CategoryName == "Jobs in Progress") {
+    else if (item.CategoryName == "Jobs in Progress") 
+    {
       this.props.navigation.navigate("JobInProgress")
-      // Alert.alert("feedback");
     }
     else if (item.CategoryName == "Additional Work Hours") {
       this.props.navigation.navigate("AdditionalHours")
-      // Alert.alert("feedback");
+      
     }
-   
+
 
   }
 
 
+  componentDidMount = async () => {
+    let UserId = await AppStorage.getUserId();
+   
+    try {
+      let respo = await AuthService.JobDetails(UserId,UserId,this.state.status,this.state.allRecords);
 
+      alert(JSON.stringify(respo));
+      AppStorage.saveKey(key.USER_JOBSDETAILS, JSON.stringify(respo.data)).then(() => {
+        this.props.navigation.navigate('Dashboard');
+    });
+
+  } catch (e) {
+
+      Alert.alert(e.response.data.Message);
+    //  console.log('login catch me print hua', e.respo);
+  } finally {
+       console.log('login finally print hua');
+  }
+
+ }
   renderItem = ({ item }) => (
     <Item item1={item} />
 
