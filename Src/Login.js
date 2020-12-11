@@ -9,11 +9,12 @@ import {
     Dimensions,
     View,
     Text,
-                                                                                                                                                        Image,
+    Image,
     TouchableOpacity,
     Button,
     SearchBar,
     Alert,
+    BackHandler
 } from 'react-native';
 import Snackbar, {showSnackBar} from '@prince8verma/react-native-snackbar';
 import {showMessage, hideMessage} from 'react-native-flash-message';
@@ -55,21 +56,7 @@ class Login extends React.Component {
     toggleLoader = (val) => {
         this.setState(({isLoading: val}));
     };
-componentDidMount = () => {
-   
-    //this.ifalreadylogined();
-}
-ifalreadylogined = async () => {
-    let token = await AppStorage.getToken();
-    if(token !== null || token !== '')
-    {
-        this.toggleLoader(false);
-         this.props.navigation.navigate('Dashboard');
-    }
-    else{
-        this.toggleLoader(false);
-    }
-}
+
 
     loginUser = async (role) => {
 
@@ -80,8 +67,9 @@ ifalreadylogined = async () => {
          
             let respo = await AuthService.authenticate(this.state.email, this.state.Password, role);
 
-           
-        alert(JSON.stringify(respo));
+        
+
+
             if (respo.data.StatusCode === 200) {
                 // console.log('response condition', respo.data.StatusCode);
                 this.onLogin(respo);
@@ -90,7 +78,7 @@ ifalreadylogined = async () => {
 
         } catch (e) {
 
-            //Alert.alert(e.response.data.Message);
+            Alert.alert(e.response.data.Message);
             // console.log('login catch me print hua', e.response.data);
         } finally {
             this.toggleLoader(false);
@@ -169,13 +157,16 @@ ifalreadylogined = async () => {
         } else {
             this.setState({email: text});
             // console.log('Email is Correct');
-            if (status === 'S') {
+            if (status==="S") {
+                this.props.navigation.navigate('Dashboard');
                 this.props.navigation.navigate(
                     'Drawer',
                     {username: text},
+                    {FirstName: text},
                     NavigationActions.navigate({
                         routeName: 'Dashboard',
                     }),
+                   
                 );
             } else {
                 this.props.navigation.navigate(
@@ -185,14 +176,13 @@ ifalreadylogined = async () => {
                         routeName: 'Dashboard',
                     }),
                 );
-//
+//alert('drawer')
             }
 
 
         }
 
     };
-
     //   loginApidata(email,Password) {
     //   try {
     //     let response = await fetch(
@@ -212,6 +202,27 @@ ifalreadylogined = async () => {
 //   this.props.fetch_Data();
 // }
 
+disableBackButton=()=>{
+    Alert.alert("Alert!", "Are you sure you want to quit?", [
+        {
+          text: "Cancel",
+          onPress: () => null,
+          style: "cancel"
+        },
+        { text: "YES", onPress: () => BackHandler.exitApp()
+        () }
+      ]);
+    
+    return true
+}
+
+UNSAFE_componentWillMount=()=>{
+    BackHandler.addEventListener("hardwareBackPress",this.disableBackButton)
+}
+componentWillUnmount=()=>{
+    BackHandler.removeEventListener("hardwareBackPress",this.disableBackButton)
+    
+    }
     render() {
         const {dimensions} = this.state;
         const {isLoading} = this.state;

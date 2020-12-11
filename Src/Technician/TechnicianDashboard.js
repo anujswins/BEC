@@ -1,15 +1,3 @@
-
-
-
-
-
-
-
-
-
-
-
-
 import React from 'react';
 import 'react-native-gesture-handler';
 import { StyleSheet, Text, View, Button, Dimensions, Image, FlatList, Alert, TouchableOpacity,StatusBar } from 'react-native';
@@ -22,6 +10,8 @@ import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-nativ
 import { SafeAreaView } from 'react-native-safe-area-context';
 import {AppStorage, key} from '../utils/AppStorage';
 import AuthService from '../RestClient/AuthService';
+
+
 
 let colors = ['#e8f7ff', '#fafafa']
 
@@ -81,13 +71,15 @@ export default class TechnicianDashboard extends React.Component {
     }
 
   }
- componentDidMount = async () => {
+
+  componentDidMount = async () => {
     let UserId = await AppStorage.getUserId();
+    console.log("userid**********",UserId)
    
     try {
       let respo = await AuthService.JobDetails(UserId,UserId,this.state.status,this.state.allRecords);
 
-      //alert(JSON.stringify(respo));
+      alert(JSON.stringify(respo));
       AppStorage.saveKey(key.USER_JOBSDETAILS, JSON.stringify(respo.data)).then(() => {
         this.props.navigation.navigate('Dashboard');
     });
@@ -134,13 +126,14 @@ export default class TechnicianDashboard extends React.Component {
     }
     else if (item.CategoryName == "Jobs in Progress") {
       this.props.navigation.navigate("JobInProgress")
-      // Alert.alert("feedback");
+     
     }
+
     else if (item.CategoryName == "Additional Work Hours") {
       this.props.navigation.navigate("AdditionalHours")
       // Alert.alert("feedback");
     }
-   
+
 
   }
 

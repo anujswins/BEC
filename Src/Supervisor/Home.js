@@ -3,14 +3,15 @@
 
 import React from 'react';
 import 'react-native-gesture-handler';
-import { StyleSheet, Text, View, Button, Dimensions, Image, FlatList, Alert, TouchableOpacity,StatusBar,SafeAreaView } from 'react-native';
+import { StyleSheet, Text, View, Button, Dimensions, Image, FlatList, Alert, TouchableOpacity,StatusBar,SafeAreaView,BackHandler } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 //  import {} from 'react-native-gesture-handler';
 import BottomHomeComponent from '../CommonComponents/BottomHomeComponent';
 import DrawerHeader from '../CommonComponents/DrawerHeader'
 import BottomTabNavigator from '../CommonComponents/BottomTabNavigator';
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
-
+import {AppStorage, key} from '../utils/AppStorage';
+import AuthService from '../RestClient/AuthService';
 
 
 let colors = ['#e8f7ff', '#fafafa']
@@ -24,6 +25,8 @@ export default class Home extends React.Component {
   constructor() {
     super();
     this.state = {
+      status: 'In Progress',
+      allRecords: true,
       CategoryList: [
         {
           CategoryName: 'Current Jobs',
@@ -68,7 +71,42 @@ export default class Home extends React.Component {
     }
 
   }
+  componentDidMount = async () => {
+    let UserId = await AppStorage.getUserId();
 
+
+    try {
+      let respo = await AuthService.JobDetails(UserId,UserId,this.state.status,this.state.allRecords);
+      console.log('dashboard_respo_home########################',respo.data.data.jobsMainResponse);
+
+
+      AppStorage.saveKey(key.USER_JOBSDETAILS, JSON.stringify(respo.data)).then(() => {
+
+      });
+
+    } catch (e) {
+
+      //Alert.alert(e.response.data.Message);
+      console.log('dashboard_techincian catch me print hua', e);
+    } finally {
+      console.log('dashboard_techincian finally print hua');
+    }
+
+    BackHandler.addEventListener(
+      'hardwareBackPress',
+      this.handleBackButtonClick,
+    );
+
+
+
+  }
+componentWillUnmount=()=>{
+
+}
+  handleBackButtonClick=()=> {
+ 
+    return true;
+  }
 
 
   OnListItemClick = (item) => {
@@ -94,7 +132,7 @@ export default class Home extends React.Component {
 
     }
     else if (item.CategoryName == "Job Assignment") {
-      this.props.navigation.navigate("JobAssignment")
+      this.props.navigation.navigate("JobAssignment",{JobAssignBool:false})
 
     }
 
@@ -122,10 +160,7 @@ export default class Home extends React.Component {
   render() {
     return (
       <SafeAreaView style={styles.container}>
-           <StatusBar  
-     backgroundColor = "#008BD0"  
-     barStyle = "#ffffff"   
-   /> 
+  
         {/* ---------header-------------- */}
         <View style={styles.headerStyle}>
           <DrawerHeader name="Supervisor Dashboard" openDrawer={this.props.navigation} status={true} notification={true}/>
@@ -229,7 +264,6 @@ const styles = StyleSheet.create({
   },
   CategoryNameStyle: {
     fontSize: hp('2.5%'),
-    
   },
 
   CategoryIconBackground: {

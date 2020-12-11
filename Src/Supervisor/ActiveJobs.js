@@ -24,8 +24,6 @@ import {
 import DrawerHeader from "../CommonComponents/DrawerHeader"
 import BottomTabNavigator from '../CommonComponents/BottomTabNavigator';
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
-import ApiLoader from '../../Src/PopUp/ApiLoader';
-import AuthService from '../../Src/RestClient/AuthService';
 const height = Dimensions.get("screen").height
 const width = Dimensions.get("screen").width
 
@@ -46,53 +44,13 @@ export default class ActiveJobs extends Component {
     constructor() {
         super();
         this.state = {
-            jobId:'',
-            // Data: [{ JobNum: "JN-2345", MachineType: "3-Phase Induction motor", Machine: "Induction Motor", Segment: "Single Speed", Sub_segment: "3 Speed", Stage: "4", TotalTimeSpent: "25", TotalSpentToday: "4", TeamMember: "6" }]
-Data:[],
+            Data: [{ JobNum: "JN-2345", MachineType: "3-Phase Induction motor", Machine: "Induction Motor", Segment: "Single Speed", Sub_segment: "3 Speed", Stage: "4", TotalTimeSpent: "25", TotalSpentToday: "4", TeamMember: "6" }]
+
         }
     }
-componentDidMount(){
-this.ActiveJobDetail();
 
 
-}
-
-ActiveJobDetail = async () => {
-    console.log('Active jobs called');
-
-    try {
-         this.toggleLoader(true);
-        console.log('inside try');
-        var id=(this.props.navigation.getParam('JobId'));
-        
-        
-        let json_response = await AuthService.getActiveJobDetail(id);
-this.setState({
-    Data:json_response.data.data.assignedJobMainDetail.assignedJobDetail
-      
-       
-})
-            
-
-        console.log('GetAllRecords try==', json_response.data.data.assignedJobMainDetail.assignedJobDetail[0]);
-      
-       
-
-    } catch (e) {
-
-        //  Alert.alert(e.response.data);
-        // console.log('GetAllRecords catch', e.response.data);
-    } finally {
-        this.toggleLoader(false);
-        console.log('GetAllRecords finally print hua');
-    }
-
-};
-toggleLoader = (val) => {
-    this.setState(({ isLoading: val }));
-};
     render() {
-        const { search ,isLoading} = this.state;
         return (
             <SafeAreaView style={styles.container}>
                 <StatusBar  
@@ -102,8 +60,6 @@ toggleLoader = (val) => {
             <View style={styles.StackHeader}>
             <DrawerHeader name="Technicians" openDrawer={this.props.navigation} status={false} notification={true}/>
            </View>
-           <ApiLoader visibility={isLoading} loadingColor={'green'} onCancelPress={() => {
-                    }}/>
            <View style={{height:'82%',width:'100%', backgroundColor:'transparent'}}>
             <View style={styles.activeJobs}>
                 <Text style={styles.textActiveJobs}>
@@ -115,7 +71,7 @@ toggleLoader = (val) => {
                 keyExtractor={(item,index)=>index.toString()}
                     renderItem={({ item }) => (
                         <View style={styles.viewFlatListdataContain}>
-                            {/* <View style={styles.viewJobNoContainer}>
+                            <View style={styles.viewJobNoContainer}>
                                 <View style={styles.viewJobNo}>
                                     <Text style={styles.textJobNo}>
                                         Job Number
@@ -123,12 +79,12 @@ toggleLoader = (val) => {
                                 </View>
                                 <View style={styles.viewJobNoValue}>
                                     <Text style={styles.textJobNoValue}>
-                                        {item.JobCode}
+                                        {item.JobNum}
                                     </Text>
                                 </View>
-                            </View> */}
+                            </View>
 
-                            {/* <View style={styles.viewMachinetypeContainer}>
+                            <View style={styles.viewMachinetypeContainer}>
                                 <View style={styles.viewMachineType}>
                                     <Text style={styles.textMachineType}>
                                         Machine Type
@@ -139,7 +95,7 @@ toggleLoader = (val) => {
                                         {item.MachineType}
                                     </Text>
                                 </View>
-                            </View> */}
+                            </View>
 
                             <View style={styles.viewMachineContainer}>
                                 <View style={styles.viewMachine}>
@@ -174,16 +130,9 @@ toggleLoader = (val) => {
                                 </Text>
                                 </View>
                                 <View style={styles.viewSubsegmentValue}>
-                                    {item.Sub_segment===""?
                                     <Text style={styles.textSubsegmentValue}>
-                                        --
+                                        {item.Sub_segment}
                                     </Text>
-                                    :
-                                    <Text style={styles.textSubsegmentValue}>
-                                    {item.Sub_segment}
-                                </Text>
-                                    }
-                                    
                                 </View>
                             </View>
 
@@ -208,7 +157,7 @@ toggleLoader = (val) => {
                                 </View>
                                 <View style={styles.viewTotalTimeSpentValue}>
                                     <Text style={styles.textTotalTimeSpentValue}>
-                                        {item.TotalSpendTime}
+                                        {item.TotalTimeSpent}
                                     </Text>
                                 </View>
                             </View>
@@ -221,7 +170,7 @@ toggleLoader = (val) => {
                                 </View>
                                 <View style={styles.viewTotalSpentTodayValue}>
                                     <Text style={styles.textTotalSpentTodayValue}>
-                                        {item.TimeSpentToday}
+                                        {item.TotalSpentToday}
                                     </Text>
                                 </View>
                             </View>
@@ -233,18 +182,9 @@ toggleLoader = (val) => {
                                 </Text>
                                 </View>
                                 <View style={styles.viewTeamMemberBtn}>
-                                    <TouchableOpacity 
-                                    // onPress={() =>
-                                    //     // console.log("ActiveJobId@@@@@@@@@@@",item.JobId);
-                                    //      this.props.navigation.navigate("TeamMember"),{ActiveJobId:item.JobId }
-                                    //      }
-                                    onPress={() =>  
-                                        this.props.navigation.navigate("TeamMember",{ActiveJobId:item.JobId})
-                                       // console.log("Kuldeep",item.JobId)
-                                       }
-                                         >
+                                    <TouchableOpacity onPress={() => { this.props.navigation.navigate("TeamMember") }}>
                                         <Text style={styles.textTeamMemberBtn}>
-                                            {item.TotalMembers}
+                                            {item.TeamMember}
                                         </Text>
                                     </TouchableOpacity>
                                 </View>
@@ -262,7 +202,7 @@ toggleLoader = (val) => {
 
             </View>
             <View style={styles.viewAddMemberIcon}>
-            <TouchableOpacity onPress={() => { this.props.navigation.navigate("JobAssignment") }}>
+            <TouchableOpacity onPress={() => { this.props.navigation.navigate("Technicians") }}>
                     <Image style={{resizeMode:'contain',height:hp('10%'),width:wp('11.5%')}} source={require("../../assets/plus_icon.png")} />
                 </TouchableOpacity>
             </View>

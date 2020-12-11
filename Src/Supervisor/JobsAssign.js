@@ -1,5 +1,5 @@
 
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 import {
   SafeAreaView,
   StatusBar,
@@ -20,8 +20,7 @@ import {
   ScrollView
 } from 'react-native';
 import { Button } from 'react-native-elements';
-import ApiLoader from '../../Src/PopUp/ApiLoader';
-import AuthService from '../../Src/RestClient/AuthService';
+
 import { Container, Header, Title, Left, Right, Body, Card } from 'native-base'
 import BottomTabNavigator from '../CommonComponents/BottomTabNavigator';
 import { heightPercentageToDP, widthPercentageToDP } from 'react-native-responsive-screen';
@@ -30,15 +29,17 @@ import DrawerHeader from '../CommonComponents/DrawerHeader'
 const screen = Dimensions.get("screen");
 const dwidth = Dimensions.get('screen').width;
 const dheight = Dimensions.get('screen').height;
-const mainData = [];
+const mainData = [
+
+  { id: 1, Name: "JN-789005", Data: "BEC-INDUCTION MOTOR", address: "BEC-Phase Motor" },
+  { id: 2, Name: "JN-789005", Data: "BEC-Induction Motor", address: "BEC-Phase Motor" },
+  { id: 3, Name: "JN-789005", Data: "BEC-Induction Motor", address: "BEC-Phase Motor" },
 
 
 
 
 
-
-
-
+];
 export default class JobAssign extends Component {
 
 
@@ -48,46 +49,28 @@ export default class JobAssign extends Component {
     this.state = {
       isFeebackIcon: true,
       isMenuIcon: true,
-      userId: 0,
-      page: 0,
-      limit: 0,
-      orderBy: "CreatedOn",
-      orderByDescending: true,
-      allRecords: true,
-      isLoading: false,
-      mydata: [],
       orderData: mainData,
-      // orderData: [
+      orderData: [
 
 
 
-      //   { MachineId: 1, JobCode: "JN-789009",
-      //     MachineName: "BEC-Induction Motor",MachineTypeName: "BEC-Phase Motor" },
-      //   { MachineId: 2, JobCode: "JN-789006",  
-      //   MachineName: "BEC-Induction Motor",MachineTypeName: "Phase Motor" },
-      //   { MachineId: 3, JobCode: "JN-789007", 
-      //    MachineName: "BEC-Induction Motor",MachineTypeName: "BEC-Phase Motor" },
+        { id: 1, Name: "JN-789009", Data: "BEC-Induction Motor", address: "BEC-Phase Motor" },
+        { id: 2, Name: "JN-789006", Data: "BEC-Induction Motor", address: "Phase Motor" },
+        { id: 3, Name: "JN-789007", Data: "BEC-Induction Motor", address: "BEC-Phase Motor" },
 
-      //   { MachineId: 4, JobCode: "JN-789008", 
-      //    MachineName: "BEC-Induction Motor",
-      //    MachineTypeName: "Phase Motor" },
-      //   { MachineId: 5, JobCode: "JN-789009", 
-      //    MachineName: "BEC-Induction Motor",MachineTypeName: "BEC-Phase Motor" },
-      //   { MachineId: 6, JobCode: "JN-789011", 
-      //    MachineName: "BEC-Induction Motor",MachineTypeName: "Phase Motor" },
+        { id: 4, Name: "JN-789008", Data: "BEC-Induction Motor", address: "Phase Motor" },
+        { id: 5, Name: "JN-789009", Data: "BEC-Induction Motor", address: "BEC-Phase Motor" },
+        { id: 6, Name: "JN-789011", Data: "BEC-Induction Motor", address: "Phase Motor" },
 
-      //   { MachineId: 7, JobCode: "JN-789012", 
-      //    MachineName: "BEC-Induction Motor",MachineTypeName: "Phase Motor" },
-      //   { MachineId: 8, JobCode: "JN-789013", 
-      //    MachineName: "BEC-Induction Motor",MachineTypeName: "BEC-Phase Motor" },
-      //   { MachineId: 9, JobCode: "JN-789014",  
-      //   MachineName: "BEC-Induction Motor",MachineTypeName: "Phase Motor" },
+        { id: 7, Name: "JN-789012", Data: "BEC-Induction Motor", address: "Phase Motor" },
+        { id: 8, Name: "JN-789013", Data: "BEC-Induction Motor", address: "BEC-Phase Motor" },
+        { id: 9, Name: "JN-789014", Data: "BEC-Induction Motor", address: "Phase Motor" },
+        
 
 
 
 
-
-      // ],
+      ],
 
 
       selectedcat: "",
@@ -122,62 +105,15 @@ export default class JobAssign extends Component {
       'Job Assigned',
       [
 
-        { text: 'OK', onPress: () => this.props.navigation.navigate('Technicians') },
-
-
+        { text: 'OK', onPress: () =>     this.props.navigation.navigate('JobAssignment')},
+        
+  
       ]
-
+      
     );
 
 
   }
-  componentDidMount = async () => {
-    this.Fun_GetJobAssignRecords();
-  };
-
-
-  toggleLoader = (val) => {
-    this.setState(({ isLoading: val }));
-  };
-
-
-  Fun_GetJobAssignRecords = async () => {
-    try {
-      this.toggleLoader(true);
-      let json_response = await AuthService.AssignmentJobs(this.state.userId,
-        this.state.page, this.state.limit, this.state.orderBy, this.state.orderByDescending,
-        this.state.allRecords);
-
-      //  console.log('GetJobAssignRecords try==', json_response.data.
-      //  data.JobAssignMainDetail.jobAssignDetail);
-
-
-      if (json_response.data.StatusCode === 200) {
-
-
-        console.log('GetJobAssignRecords try==', json_response.data.
-          data.JobAssignMainDetail.jobAssignDetail);
-
-        this.state.mydata = json_response.data.data.JobAssignMainDetail.jobAssignDetail;
-        console.log("hey", this.state.mydata)
-        this.state.orderData = json_response.data.data.JobAssignMainDetail.jobAssignDetail;
-        console.log("Data entered", this.state.orderData)
-
-
-
-
-
-
-      }
-    } catch (e) {
-
-      Alert.alert(e.response);
-      console.log('GetJobAssignRecords catch', e.response);
-    } finally {
-      this.toggleLoader(false);
-      console.log('GetJobAssignRecords finally print hua');
-    }
-  };
   updateSearch = (search) => {
     let searchText = search.toLowerCase();
     this.setState({
@@ -193,68 +129,60 @@ export default class JobAssign extends Component {
     this.setState({ selectedcat: value });
   }
 
-
-
-
   render() {
     const { dimensions } = this.state;
     const { modalVisible } = this.state;
-    const { isLoading } = this.state;
+
     return (
 
       <SafeAreaView style={{
         flex: 1,
         backgroundColor: "white",
-
-
-      }}>
-        <StatusBar hidden={false} backgroundColor={"#008BD0"} />
-        <ApiLoader visibility={isLoading} loadingColor={'green'} onCancelPress={() => {
-        }} />
-        <View style={{ height: '10%', backgroundColor: 'transparent' }}>
-          <DrawerHeader name="Current Jobs" openDrawer={this.props.navigation} status={false} notification={true} />
+      
+    
+    }}>
+        <StatusBar hidden={false} backgroundColor={ "#008BD0"} />
+        <View style={{ height:'10%',backgroundColor: 'transparent' }}>
+        <DrawerHeader name="Current Jobs" openDrawer={this.props.navigation} status={false} notification={true}/>  
         </View>
-        <View style={{ height: '10%', width: '97%', justifyContent: "center", backgroundColor: "transparent", paddingHorizontal: 10 }}>
-          <TextInput style={{ fontSize: 17 }}
+        <View style={{ height: '10%', width: '97%', justifyContent: "center",backgroundColor: "transparent",paddingHorizontal:10 }}>
+          <TextInput style={{fontSize:17}}
             placeholder="Search"
             underlineColorAndroid="grey"
             multiline={true}
             onChangeText={(text) => { this.updateSearch(text) }}
           />
         </View>
-        <View style={{ height: '70%', width: '100%', backgroundColor: "transparent", alignItems: "center", marginBottom: 9 }}>
+        <View style={{ height: '70%', width: '100%', backgroundColor: "transparent", alignItems: "center",marginBottom:9 }}>
           <ScrollView vertical={true}
             showsVerticalScrollIndicator={false}
           >
             {
               this.state.orderData.map((item, key) => (
-
                 <Card style={{
-                  height: '1.2%', width: '97%',
-                  backgroundColor: "#e6f7ff", flexDirection: "row",
-                  justifyContent: "center", alignItems: 'center'
+                  height: '10%', width: '97%', backgroundColor: "#e6f7ff", flexDirection: "row", justifyContent: "center", alignItems: 'center'
 
                 }}>
                   <View style={{
-                    height: '25%', width: '47%', backgroundColor: "transparent", justifyContent: "center", alignItems: 'flex-start'
+                 height: '15%', width: '47%', backgroundColor: "transparent", justifyContent: "center", alignItems: 'flex-start'
 
                   }}>
 
 
-                    <Text style={{ marginLeft: 5 }}>{item.JobCode}</Text>
+                    <Text style={{ marginLeft: 5 }}>{item.Name}</Text>
                     <Text style={{ marginLeft: 5, top: 10 }}>
                       {"\n"}
-                      {item.MachineName}</Text>
+                      {item.Data}</Text>
                   </View>
                   <View style={{
                     height: hp('15%'), width: wp('47%'), backgroundColor: "transparent", justifyContent: 'center', alignItems: 'center'
 
                   }}>
 
-
+                    
                     <TouchableOpacity onPress={this.showAlert}>
 
-                      <View style={{ elevation: 4, backgroundColor: 'transparent', width: wp('35%'), height: hp('5%'), flexDirection: 'row' }}>
+                      <View style={{ elevation: 4, backgroundColor: 'transparent', width: wp('35%'), height:hp('5%'), flexDirection: 'row' }}>
 
                         <View style={{ backgroundColor: '#015ea1', width: wp('10%'), height: hp('5%'), justifyContent: 'center', alignItems: 'center' }}>
                           <Image source={require('../../assets/tick_icon.png')}
@@ -270,7 +198,7 @@ export default class JobAssign extends Component {
                       <Text style={{ textAlign: "center", }}>
                         {"\n"}
 
-                        {item.MachineTypeName}</Text>
+                        {item.address}</Text>
                     </TouchableOpacity>
                   </View>
 
@@ -279,19 +207,19 @@ export default class JobAssign extends Component {
 
 
               ))}
-          </ScrollView>
-        </View>
-
-
-        <View>
-
-          <View style={{ height: '9%', backgroundColor: 'transparent' }}>
-            <BottomTabNavigator isFeedbackIcon={true} isMenuIcon={true} navigate={this.props.navigation.navigate}>
-            </BottomTabNavigator>
+           </ScrollView> 
           </View>
+    
 
+          <View>
 
-        </View>
+<View style={{ height:'9%',backgroundColor: 'transparent' }}>
+<BottomTabNavigator isFeedbackIcon={true} isMenuIcon={true}  navigate={this.props.navigation.navigate}>
+ </BottomTabNavigator>
+               </View>
+
+  
+</View>
 
 
       </SafeAreaView>
@@ -302,8 +230,8 @@ export default class JobAssign extends Component {
 const styles = StyleSheet.create({
   container: {
 
-    flex: 1,
-    alignItems: 'center',
+  flex:1,
+   alignItems:'center',
     height: dheight,
     backgroundColor: "white"
   },

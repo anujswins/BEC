@@ -19,6 +19,7 @@ import { Picker } from '@react-native-community/picker';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import ApiLoader from '../../Src/PopUp/ApiLoader';
 import AuthService from '../../Src/RestClient/AuthService';
+import { AppStorage, key } from '../utils/AppStorage';
 const height = Dimensions.get("screen").height
 const width = Dimensions.get("screen").width
 let data = [{ ClientName: "Adams Abgill", ClientCode: "CN-18976", ClientMob: "9637849328", ClientMail: "adamsabgrill@gmail.com" },
@@ -37,16 +38,23 @@ export default class SearchClient extends Component {
     constructor() {
         super();
         this.state = {
-            isLoading:false,
+            isLoading: false,
             Data: [],
-            SelectedClient:'',
-            ClientName1:'',
-            clientCodeData1:'',
-            ClientMob1:'',
-            ClientMail1:'',
-            name:'',
-            clientId:'',
-            
+            SelectedClient: '',
+            ClientName1: '',
+            clientCodeData1: '',
+            ClientMob1: '',
+            ClientMail1: '',
+            name: '',
+            clientId: '',
+
+            searchText: '',
+            page: 0,
+            limit: 0,
+            orderBy1: "CreatedOn",
+            orderByDescending: true,
+            allRecords: true
+
         }
     }
     updateSearch = (search) => {
@@ -57,48 +65,47 @@ export default class SearchClient extends Component {
         })
     }
 
-    onPress=(item)=>{
-        this.props.navigation.navigate("Equip_ID",{clientNameData:item.Name,
-                        clientCodeData:item.ClientCode, ClientMob:item.PhoneNumber, ClientMail:item.Email}) 
-                        console.log("********************",item.Name)
+    onPress = (item) => {
+        this.props.navigation.navigate("Equip_ID", {
+            clientNameData: item.Name,
+            clientCodeData: item.ClientCode, ClientMob: item.PhoneNumber, ClientMail: item.Email,Client_Record:item
+        })
+        console.log("********************", item)
     }
 
     toggleLoader = (val) => {
         this.setState(({ isLoading: val }));
     };
 
-    SearchClientRec=async()=>{
+    SearchClientRec = async () => {
 
         try {
             this.toggleLoader(true);
-            let json_response = await AuthService.SuperviseGetSearchClientRecord(this.state.clientId);
-
-                
-
-            console.log('SearchClientData', json_response.data.StatusCode);
-            console.log('SearchClientData', json_response.data.data.clientMainResponse.clientResponse);
-
-            if(json_response.data.StatusCode==200){
-                console.log('*****StatusCode*******',json_response.data.StatusCode)
-              this.state.Data=  json_response.data.data.clientMainResponse.clientResponse
-              console.log('######StatusCode#######',this.state.Data)
-              console.log('######StatusCode#######',json_response.data.data.clientMainResponse.clientResponse)
-            }
            
-            // mainData=json_response.data.Permissions;
+            let json_response = await AuthService.SuperviseGetSearchClientRecord(this.state.searchText,this.state.page,this.state.limit,
+                this.state.orderBy1,this.state.orderByDescending,this.state.allRecords);
 
-            // if (json_response.data.StatusCode === 200) {
-            //     // Alert.alert("data get successfully ");
-            //     //  console.log('response condition+++++++++', json_response.data.data.jobsMainResponse);
-            //     this.state.orderData=json_response.data.data.jobsMainResponse.jobResponse;
-            //      console.log('cht_list==========',this.state.orderData);
-            //     // this.GetData(myrespo);
+                let Json_respo=json_response.data.data.clientMainResponse.clientResponse
 
-            // }
+
+          
+            if (json_response.data.StatusCode == 200) {
+                this.state.Data = Json_respo
+               
+                AppStorage.saveKey(key.SEARCH_CLIENT_RECORDS, JSON.stringify(Json_respo)).then(() => {
+                    console.log("=====AppStorage=========",Json_respo)
+                });
+
+
+
+
+            }
+
+           
 
         } catch (e) {
 
-             Alert.alert(e.json_response);
+            Alert.alert(e.json_response);
             console.log('GetAllRecords catch', e.json_response);
         } finally {
             this.toggleLoader(false);
@@ -111,63 +118,64 @@ export default class SearchClient extends Component {
         this.SearchClientRec();
     };
     render() {
-        const {isLoading} = this.state;
+        const { isLoading } = this.state;
         return (
             <SafeAreaView style={{ flex: 1, height: '100%', width: '100%', backgroundColor: "transparent" }}>
                 <View style={{ height: '9%', width: '100%', backgroundColor: "#008BD0" }}>
                     <DrawerHeader name="Equipment Identification" openDrawer={this.props.navigation} status={false} />
                 </View>
                 <ApiLoader visibility={isLoading} loadingColor={'green'} onCancelPress={() => {
-                    }}/>
+                }} />
                 <View style={{ height: '82%', width: '100%', backgroundColor: '#FFFFFF' }}>
                     <View style={{ height: '9%', width: '86%', marginHorizontal: '7%', backgroundColor: "transparent" }}>
                         <TextInput underlineColorAndroid={'#999999'} placeholder="Search Client" style={{ fontSize: hp('2.2%'), height: hp('6.5%'), paddingTop: hp('1%'), backgroundColor: "transparent", }}
                             onChangeText={(text) => this.updateSearch(text)} />
-                            
+
                     </View>
                     <View style={{ height: '9%', width: '100%', flexDirection: "row", backgroundColor: "#008BD0" }}>
-                    <View style={{ height: '100%', width: '50%', alignItems: "flex-start", justifyContent: "center", paddingLeft: '7%', backgroundColor: "transparent   " }}>
-                        <Text style={{fontSize:hp('2%'), color:"#ffffff"}}>
-                            Client Name
+                        <View style={{ height: '100%', width: '50%', alignItems: "flex-start", justifyContent: "center", paddingLeft: '7%', backgroundColor: "transparent   " }}>
+                            <Text style={{ fontSize: hp('2%'), color: "#ffffff" }}>
+                                Client Name
                     </Text>
-                    </View>
-                    <View style={{  height: '100%', width: '50%', alignItems: "flex-start", justifyContent: "center", paddingLeft: '7%', backgroundColor: "transparent" }}>
-                        <Text style={{fontSize:hp('2%'), color:"#ffffff"}}>
-                            Client Code
+                        </View>
+                        <View style={{ height: '100%', width: '50%', alignItems: "flex-start", justifyContent: "center", paddingLeft: '7%', backgroundColor: "transparent" }}>
+                            <Text style={{ fontSize: hp('2%'), color: "#ffffff" }}>
+                                Client Code
                     </Text>
+                        </View>
+                    </View>
+                    <View style={{ height: '82%', width: '96%', backgroundColor: "transparent", marginHorizontal: '2%' }}>
+                        <FlatList data={this.state.Data}
+                            keyExtractor={(item, index) => index.toString()}
+                            renderItem={({ item }) => {
+                                console.log('******item*******', item)
+                                return (
+                                    <TouchableOpacity onPress={() => { this.onPress(item) }}>
+                                        <View style={{ flexDirection: "row", borderBottomWidth: 1, borderBottomColor: "#D2D3D5", backgroundColor: 'transparent' }}>
+
+                                            <View style={{ height: hp('6%'), width: wp('50%'), justifyContent: "center", alignItems: "flex-start", padding: wp('5%') }}>
+                                                <Text style={{ fontSize: hp('2%') }}>
+                                                    {item.Name}
+                                                </Text>
+                                            </View>
+                                            <View style={{ height: hp('6%'), width: wp('50%'), justifyContent: "center", alignItems: "flex-start", padding: wp('5%') }}>
+                                                <Text style={{ fontSize: hp('2%') }}>
+                                                    {item.ClientCode}
+                                                </Text>
+                                            </View>
+                                        </View>
+                                    </TouchableOpacity>)
+                            }}>
+                        </FlatList>
+
                     </View>
                 </View>
-                <View style={{ height: '82%', width: '96%', backgroundColor: "transparent", marginHorizontal:'2%' }}>
-                    <FlatList data={this.state.Data}
-                    keyExtractor={(item,index)=>index.toString()}
-                        renderItem={({ item }) => {
-                            console.log('******item*******',item)
-                            return(
-                        <TouchableOpacity onPress={() => {this.onPress(item)}}>
-                            <View style={{ flexDirection: "row", borderBottomWidth: 1, borderBottomColor: "#D2D3D5",backgroundColor:'transparent' }}>
 
-                                <View style={{ height:hp('6%'),width: wp('50%'), justifyContent: "center", alignItems: "flex-start", padding: wp('5%') }}>
-                                    <Text style={{fontSize:hp('2%')}}>
-                                        {item.Name}
-                                    </Text>
-                                </View>
-                                <View style={{ height:hp('6%'),width: wp('50%'), justifyContent: "center", alignItems: "flex-start", padding: wp('5%')  }}>
-                                    <Text style={{fontSize:hp('2%')}}>
-                                        {item.ClientCode}
-                                    </Text>
-                                </View>
-                            </View>
-                        </TouchableOpacity>)}}>
-                    </FlatList>
 
-                </View>
-                </View>
-               
 
-                
-                
+
                 <View style={{ height: '9%', width: '100%', backgroundColor: "#008BD0", }}>
-                    <BottomTabNavigator isFeedbackIcon={true} isMenuIcon={true} navigate={this.props.navigation.navigate}/>
+                    <BottomTabNavigator isFeedbackIcon={true} isMenuIcon={true} navigate={this.props.navigation.navigate} />
                 </View>
             </SafeAreaView>
         )
@@ -258,13 +266,13 @@ export default class SearchClient extends Component {
 //             (x.ClientCode).toString().toLowerCase().indexOf(searchText) > -1)})
 //     }
 //     render() {
-   
+
 //         return (
 //             <SafeAreaView style={{ flex: 1, height: hp('100%'), width: wp('100%'), backgroundColor: "transparent" }}>
 //                <View style={{ height: hp('9%'), width: wp('100%'), backgroundColor: "transparent" }}>
 //           <DrawerHeader name="Equipment Identification" openDrawer={this.props.navigation} status={false} />
 //         </View>
-               
+
 //                 <View style={{ height: hp('8%'), width: wp('85%'), marginHorizontal: wp('7.5%'), marginTop:hp('1%'),backgroundColor: "transparent" }}>
 //                     <TextInput placeholder="Search Client" style={{fontSize:hp('2.2%'), height:hp('6%'), width:wp('85%'), paddingTop:hp('1%'),backgroundColor:"transparent", borderBottomWidth: 1, borderBottomColor: "#ABABAB",}}
 //                     onChangeText={(text)=>this.updateSearch(text)}/>

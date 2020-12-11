@@ -41,6 +41,7 @@ import TeamMember_Technician from "./Technician/teamMember"
 import EditText from './CommonComponents/EditText'
 import teamMember from './Technician/teamMember'
 import JobInProgress from './Technician/JobInProgress';
+import SplashScreen from './SplashScreen'
 // import AdditionalHours from './Technician/additionalHours';
 
 
@@ -154,7 +155,6 @@ const AppNavigator = createStackNavigator(
    TeamMember:{screen:TeamMember,navigationOptions:{headerShown:false} },
    EditText:{screen:EditText,navigationOptions:{headerShown:false}},
   Logout:{screen:Login},
-  JobInProgress:{screen:JobInProgress,navigationOptions:{headerShown:false}},
   Feedback:{screen:Feedback,navigationOptions:{headerShown:false}},
   AddFeedback:{screen:AddFeedback,navigationOptions:{headerShown:false}},
   AddTechnician:{screen:AddTechnician,navigationOptions:{headerShown:false}},
@@ -171,11 +171,13 @@ currentJob:{screen:currentJob,navigationOptions:{headerShown:false}},
   SearchClient:{screen:SearchClient,navigationOptions:{headerShown:false}},
   Equip_Id_Details:{screen:Equip_Id_Details,navigationOptions:{headerShown:false}},
   Equip_ID:{screen:Equip_ID,navigationOptions:{headerShown:false}},
-  StackHeader:{screen:StackHeader}
+  StackHeader:{screen:StackHeader},
+  JobInProgress:{screen:JobInProgress,navigationOptions:{headerShown:false}},
+  SplashScreen:{screen:SplashScreen,navigationOptions:{headerShown:false}},
   
 },
   {
-    initialRouteName: "Login",
+    initialRouteName: "SplashScreen",
     // headerMode: "none",
      //unmountInactiveRoutes: true
   }

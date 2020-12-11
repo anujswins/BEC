@@ -20,8 +20,12 @@ import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-nat
 import { AppStorage, key } from '../utils/AppStorage';
 import AuthService from '../../Src/RestClient/AuthService';
 import ApiLoader from '../../Src/PopUp/ApiLoader';
+import { number } from 'prop-types';
+import { FlatList } from 'react-native-gesture-handler';
 import { TickButton } from '../CommonComponents/TickButton';
 import RadioForm, { RadioButton, RadioButtonInput, RadioButtonLabel } from 'react-native-simple-radio-button';
+import { showMessage, hideMessage } from "react-native-flash-message";
+import Checkbox from 'react-native-modest-checkbox'
 import moment from 'moment';
 // import CheckBox from 'react-native-check-box'
 import { CheckBox } from 'react-native-elements'
@@ -46,7 +50,11 @@ export default class JobInProgress extends Component {
             response_JsonId: [],
             response_Json_CheckBoxValues: [],
             ChooseBtnData: [],
-            stageid: '',
+
+
+
+
+
             id: '',
             jobId: 178,
             userId: 39,
@@ -61,6 +69,7 @@ export default class JobInProgress extends Component {
             AttributeName: '',
             respo_json: '',
             getAttributeName: [],
+            // getAttributeType: [],
             singleBlock: false,
             MultiInputText: false,
             MultiCheckBox: false,
@@ -68,10 +77,13 @@ export default class JobInProgress extends Component {
             MultiOption: false,
             getIndex: [],
             j: 0,
+
+
             checkBoxArrValues: [],
             checkboxAttCollection: [],
-            currency:'',
+
             checkedCheckBox: false,
+            cb: {},
             getInputText: '',
             getInputvariables: [],
             getQuestion: "",
@@ -103,6 +115,10 @@ export default class JobInProgress extends Component {
             startTime: '',
             endTime: '',
             chosenDate: '',
+
+
+
+
             showBoolean: false,
             showCurrency: false,
             showSingleDate: false,
@@ -112,9 +128,7 @@ export default class JobInProgress extends Component {
             showText: false,
             showSingleTime: false,
             i: 0,
-            showIdentifyButton: true,
-            multioptioncheck:'',
-            jobdetailsdata:[],
+            showIdentifyButton: true
 
 
 
@@ -143,7 +157,6 @@ export default class JobInProgress extends Component {
 
         try {
             // this.toggleLoader(true);
-            //aaaaaaaaaaaaaaa
             let json_response = await AuthService.ObjectAttributes(this.state.jobId, this.state.userId, this.state.subSegmentId, this.state.segmentId, this.state.machineId,
                 this.state.machineTypeId, this.state.namePlate, this.state.orderBy, this.state.orderByDescending, this.state.allRecords);
 
@@ -152,7 +165,7 @@ export default class JobInProgress extends Component {
 
             this.state.respo_json = json_response.data.data.attributesMainResponse.objectAttributesResponse
             //       this.state.response_Json_CheckBoxValues = json_response.data.data.attributesMainResponse.objectAttributesResponse[0].AttributeCollection
-            console.log("respoJson****", json_response)
+            //          console.log("respoJson****", this.state.respo_json)
             // this.setState({ AttributeName: json_response.data.data.attributesMainResponse.objectAttributesResponse[0].AttributeName })
             // console.log('&&&&&&&&&&&&&', this.state.AttributeName);
             for (i = 0; i < this.state.respo_json.length; i++) {
@@ -181,30 +194,30 @@ export default class JobInProgress extends Component {
                 if (this.state.getAttributeName[0].AttributeType == "Single") {
                     console.log("==============Datatype*****============", this.state.getAttributeName[0].AttributeDataType)
                     this.setState({ singleBlock: true })
-                    //     alert("SinglebBlocktrue")
+               //     alert("SinglebBlocktrue")
                     if (this.state.getAttributeName[0].AttributeDataType == "Boolean") {
-                        //        alert("Boolean")
+                //        alert("Boolean")
                         this.setState({ showBoolean: true })
                     } else if (this.state.getAttributeName[0].AttributeDataType == "Currency") {
-                        //       alert("Currency")
+                 //       alert("Currency")
                         this.setState({ showCurrency: true })
                     } else if (this.state.getAttributeName[0].AttributeDataType == "Date") {
-                        //       alert("Date")
+                 //       alert("Date")
                         this.setState({ showSingleDate: true })
                     } else if (this.state.getAttributeName[0].AttributeDataType == "Image") {
-                        //       alert("Image")
+                 //       alert("Image")
                         this.setState({ showImage: true })
                     } else if (this.state.getAttributeName[0].AttributeDataType == "Number") {
-                        //       alert("Number")
+                 //       alert("Number")
                         this.setState({ showNumber: true })
                     } else if (this.state.getAttributeName[0].AttributeDataType == "Phone No") {
-                        //       alert("Phone No")
+                 //       alert("Phone No")
                         this.setState({ showPhoneNo: true })
                     } else if (this.state.getAttributeName[0].AttributeDataType == "Text") {
-                        //       alert("Text")
+                 //       alert("Text")
                         this.setState({ showText: true })
                     } else if (this.state.getAttributeName[0].AttributeDataType == "Time") {
-                        //      alert("Time")
+                  //      alert("Time")
                         this.setState({ showSingleTime: true })
                     }
 
@@ -214,25 +227,25 @@ export default class JobInProgress extends Component {
                     this.state.checkboxAttCollection.push(this.state.getAttributeName[0].AttributeCollection)
                     this.state.checkboxAttCollection = [].concat.apply([], this.state.checkboxAttCollection)
                     console.log("****=====4444444444******", this.state.checkboxAttCollection)
-                    //  alert("MultiCheckBox")
+                  //  alert("MultiCheckBox")
 
                 } else if (this.state.getAttributeName[0].AttributeType == "MultiInput Text") {
                     this.setState({ MultiInputText: true })
                     this.state.checkboxAttCollection.push(this.state.getAttributeName[0].AttributeCollection)
                     this.state.checkboxAttCollection = [].concat.apply([], this.state.checkboxAttCollection)
                     console.log("****=====4444444444******", this.state.checkboxAttCollection)
-                    //   alert("MultiInputText")
+                 //   alert("MultiInputText")
 
                 } else if (this.state.getAttributeName[0].AttributeType == "Multi Option") {
                     this.setState({ MultiOption: true })
                     this.state.checkboxAttCollection.push(this.state.getAttributeName[0].AttributeCollection)
                     this.state.checkboxAttCollection = [].concat.apply([], this.state.checkboxAttCollection)
                     console.log("****=====4444444444******", this.state.checkboxAttCollection)
-                    //   alert("MultiOption")
+                 //   alert("MultiOption")
 
                 } else if (this.state.getAttributeName[0].AttributeType == "Drop Down") {
                     this.setState({ Dropdown: true })
-                    //   alert("Dropdown")
+                 //   alert("Dropdown")
 
                 }
 
@@ -293,49 +306,38 @@ export default class JobInProgress extends Component {
 
     componentDidMount = () => {
         this.GetAllAttributes();
-        this.abc();
 
     }
-    abc = async() => {
-        let jobdetailsdata =  await AppStorage.getJobDetails();
-        this.setState(({ jobdetailsdata: jobdetailsdata }));
-    }
+
     toggleLoader = (val) => {
         this.setState(({ isLoading: val }));
     };
     identifyBtn = () => {
-        var a  = this.state.getSingleCurrency;
-        //alert(this.state.jobId +this.state.getBoolValue  + this.state.chosenDate + JSON.stringify(this.state.multioptioncheck) + JSON.stringify(a)   + this.state.getSingleText  + this.state.startTime   + '   '   + JSON.stringify(jobdetailsdata));
-        alert("******" +  JSON.stringify(this.state.jobdetailsdata));
-        // var response = res.data.data.jobsMainResponse;
-        // var AssignedJobId = response.AssignedJob;
-        // var eqpId = response.jobResponse[0].EquipmentId;
-        // var jobCode = response.jobResponse[0].JobCode;
-        // var JobId = response.jobResponse[0].JobId;
-        // AsyncStorage.setItem('JobId', '' + JobId + '');
-        // var stage = response.jobResponse[0].StageId;
-
+        alert("Identified")
     }
 
 
     validates = () => {
         //  alert("")
         this.state.checkboxAttCollection.length = 0
-        this.setState({
-            singleBlock: false,
-            showBoolean: false,
-            MultiCheckBox: false,
-            MultiInputText: false,
-            MultiOption: false,
-            Dropdown: false,
-            showCurrency: false,
-            showSingleDate: false,
-            showImage: false,
-            showNumber: false,
-            showPhoneNo: false,
-            showText: false,
-            showSingleTime: false
-        })
+        console.log("************====================********", this.state.getAttributeName)
+
+        this.setState({ singleBlock: false })
+        this.setState({ MultiCheckBox: false })
+        this.setState({ MultiInputText: false })
+        this.setState({ MultiOption: false })
+        this.setState({ Dropdown: false })
+
+        this.setState({ showBoolean: false })
+        this.setState({ showCurrency: false })
+        this.setState({ showSingleDate: false })
+        this.setState({ showImage: false })
+        this.setState({ showNumber: false })
+        this.setState({ showPhoneNo: false })
+        this.setState({ showText: false })
+        this.setState({ showSingleTime: false })
+
+        // this.state.getIndex.length=0
         console.log("Finallykkkkkkkkkkkk********", this.state.i)
         var i = this.state.i
         console.log("this.state.getIndex^^^^^^", this.state.getIndex)
@@ -469,7 +471,9 @@ export default class JobInProgress extends Component {
 
     // ------------------Multioption---------------------
     MultiOptioncheckboxhandler = (value, i) => {
-        this.setState({ checked: i, isRequired: true , multioptioncheck : value})
+        this.setState({ checked: i })
+        console.log("this.state.checked^^^^^^^******", value)
+        this.setState({ isRequired: true })
 
     }
     //------------------MultiTextInput--------------------------
@@ -519,8 +523,9 @@ export default class JobInProgress extends Component {
     }
     singleCurrencyfun = (value) => {
 
-        this.setState({ currency: value })
-        this.state.getSingleCurrency.push(value);
+        this.state.getSingleCurrency.push(value)
+
+        console.log("==========", this.state.getSingleCurrency)
     }
 
     showDatePicker = () => {
@@ -629,7 +634,7 @@ export default class JobInProgress extends Component {
 
 
     render() {
-        const { isLoading, stageid } = this.state;
+        const { isLoading } = this.state;
         console.log("**************FinalResultin Render", this.state.getQuestion)
         console.log("===============", this.state.getBoolValue)
         return (
@@ -691,7 +696,7 @@ export default class JobInProgress extends Component {
 
                 </View>
                 <View style={{ height: "82%", width: '100%', backgroundColor: '#FFFFFF' }}>
-                    <View style={{ height: '20%', width: '100%', backgroundColor: "#E6F7FF" }}>
+                    <View style={{ height: '22%', width: '100%', backgroundColor: "#E6F7FF" }}>
                         <View style={{ height: '40%', width: '100%', paddingTop: '2%', backgroundColor: 'transparent', justifyContent: 'flex-start', alignItems: 'center' }}>
                             <Text style={{ fontSize: hp('2.2%'), fontWeight: 'bold', backgroundColor: 'transparent', width: '15%', paddingLeft: '0.5%' }}>Stage</Text>
                         </View>
@@ -699,28 +704,27 @@ export default class JobInProgress extends Component {
                             <View style={{ height: '1%', width: wp('17.5%'), backgroundColor: '#D0D0D0', marginTop: Dimensions.get('window').width * 0.05, }} />
                             <View style={{
                                 borderRadius: Math.round(Dimensions.get('window').width + Dimensions.get('window').height) / 2, width: Dimensions.get('window').width * 0.1,
-                                height: Dimensions.get('window').width * 0.1, alignItems: 'center', justifyContent: 'center', backgroundColor: stageid === '' ? '#008BD0' : '#eee',
+                                height: Dimensions.get('window').width * 0.1, alignItems: 'center', justifyContent: 'center', backgroundColor: '#008BD0'
                             }}>
-                                <Text style={{ fontSize: hp('2%'), }}>1</Text>
+                                <Text style={{ fontSize: hp('2%'), color: '#FFFFFF' }}>1</Text>
                             </View>
                             <View style={{ height: '1%', width: wp('17.5%'), backgroundColor: '#D0D0D0', marginTop: Dimensions.get('window').width * 0.05 }} />
                             <View style={{
                                 borderRadius: Math.round(Dimensions.get('window').width + Dimensions.get('window').height) / 2, width: Dimensions.get('window').width * 0.1,
-                                height: Dimensions.get('window').width * 0.1, alignItems: 'center', justifyContent: 'center', backgroundColor: stageid == 1 ? '#008BD0' : '#eee',
+                                height: Dimensions.get('window').width * 0.1, alignItems: 'center', justifyContent: 'center', backgroundColor: '#D0D0D0'
                             }}>
                                 <Text style={{ fontSize: hp('2%') }}>2</Text>
                             </View>
                             <View style={{ height: '1%', width: wp('17.5%'), backgroundColor: '#D0D0D0', marginTop: Dimensions.get('window').width * 0.05 }} />
                             <View style={{
                                 borderRadius: Math.round(Dimensions.get('window').width + Dimensions.get('window').height) / 2, width: Dimensions.get('window').width * 0.1,
-                                height: Dimensions.get('window').width * 0.1, alignItems: 'center', justifyContent: 'center', backgroundColor: stageid === 2 ? '#008BD0' : '#eee',
+                                height: Dimensions.get('window').width * 0.1, alignItems: 'center', justifyContent: 'center', backgroundColor: '#D0D0D0'
                             }}>
                                 <Text style={{ fontSize: hp('2%') }}>3</Text>
                             </View>
                             <View style={{ height: '1%', width: wp('17.5%'), backgroundColor: '#D0D0D0', marginTop: Dimensions.get('window').width * 0.05 }} />
                         </View>
                     </View>
-
                     {/*===========================Working in this view ============================= */}
                     <View style={{ height: '78%', width: '100%', backgroundColor: 'transparent' }}>
                         <View style={{ height: '86%', width: '100%', backgroundColor: 'transparent' }}>
@@ -867,7 +871,7 @@ export default class JobInProgress extends Component {
                                         {this.state.showPhoneNo === true ? <TextInput
                                             style=
                                             {{
-                                                height: hp('7%'), borderColor: 'gray', borderBottomWidth: 1, backgroundColor: 'transparent'
+                                                height: hp('7%'), borderColor: 'gray', borderBottomWidth: 1,  backgroundColor: 'transparent'
                                             }}
                                             keyboardType='numeric'
                                             placeholder="Number"
@@ -879,7 +883,7 @@ export default class JobInProgress extends Component {
                                             <TextInput
                                                 style=
                                                 {{
-                                                    height: hp('7%'), borderColor: 'gray', borderBottomWidth: 1, backgroundColor: 'transparent'
+                                                    height: hp('7%'), borderColor: 'gray', borderBottomWidth: 1,  backgroundColor: 'transparent'
                                                 }}
                                                 keyboardType='default'
                                                 placeholder="Text"
@@ -902,10 +906,10 @@ export default class JobInProgress extends Component {
                                         {this.state.showNumber === true ? <TextInput
                                             style=
                                             {{
-                                                height: hp('7%'), borderColor: 'gray', borderBottomWidth: 1, backgroundColor: 'transparent'
+                                                height: hp('7%'), borderColor: 'gray', borderBottomWidth: 1,  backgroundColor: 'transparent'
                                             }}
-                                            keyboardType='decimal-pad'
-                                            placeholder="Currency"
+                                            keyboardType='numeric'
+                                            placeholder="Number"
                                             maxLength={30}
                                             onChangeText={(Currency) => this.singleCurrencyfun(Currency)}
                                             value={this.state.PhoneNo}
@@ -925,10 +929,10 @@ export default class JobInProgress extends Component {
                                                 console.log("Value%%%%%%", value)
                                                 if (value == "Yes") {
                                                     this.setState({ getBoolValue: true })
-                                                    //     alert("Yes")
+                                               //     alert("Yes")
                                                 } else if (value == "No") {
                                                     this.setState({ getBoolValue: false })
-                                                    //   alert("No")
+                                                 //   alert("No")
                                                 }
 
                                                 console.log("getBoolValue", this.state.getBoolValue)
@@ -1017,7 +1021,7 @@ export default class JobInProgress extends Component {
 
                                     </View>
 
-
+                                  
 
                                 </View>
                             </ScrollView>

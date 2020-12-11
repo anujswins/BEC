@@ -29,7 +29,7 @@ export default class Equip_Id_Details extends Component {
         super();
         this.state = {
             isLoading: false,         // Need
-            EquipId: "",              // Need
+                          // Need
             Job_Num: '',
             DummyId: "BEC1020",
             showDetails: '',
@@ -37,7 +37,8 @@ export default class Equip_Id_Details extends Component {
             isFocus: true,
             Data: [],
             showData: false,
-
+            JobNumber: true,
+            EquipId: "",
             jobTypeId: '',
             machineTypeId: '',
             machineId: '',
@@ -47,36 +48,26 @@ export default class Equip_Id_Details extends Component {
             clientName: '',
             phoneNumber: '',
             userId: '',
-            jobCode: ''
+            jobCode: '',
 
-            // Data: [{ JobNum: "Job Number", Job_Number: "JN-3455", ClientName: "Client Name", Client_Name: "Steve John", Mac: "Machine", Machine: "3 Phase Induction Motor", MacType: "Machine Type", Machine_Type: "Induction Motor", Segmnt: "Segment", Segment: "Single Speed", RatedPow: "Rated Power", Rated_Power: "909", RatedVol: "Rated Voltage", Rated_Voltage: "909" }]
-        }
+                   }
     }
-    // componentDidMount = async () => {
+   
 
-    // }
+    componentDidMount = async () => {
+        let respo_storage = await AppStorage.getJobDetails();                                                //GetAll_Records_Data
+        console.log('EquipmentIddetails=============', respo_storage.data.jobsMainResponse.jobResponse);
+        let getJobType_resp = await AppStorage.getJobTypeId();                                                  //GetJobTypeID
+        let login_respo = await AppStorage.getLoginResponse();
+        var user_id=login_respo.userResponse.UserId 
+        this.setState({jobTypeId: getJobType_resp.JobTypeId,userId: user_id});
+
+
+    };
 
     toggleLoader = (val) => {
         this.setState(({ isLoading: val }));
     };
-
-    onLogin = (json_response, json_respo) => {
-        console.log('login response data ', json_response.data.StatusCode, json_respo.data);
-
-
-        AppStorage.saveKey(key.USER_PROFILE_DATA, JSON.stringify(json_response.data, json_respo.data)).then(() => {
-            console.log('Appstorage_DATA')
-        });
-
-
-
-        //   Alert.alert(respo.data.Message);
-
-
-
-    };
-
-
 
 
 
@@ -85,12 +76,23 @@ export default class Equip_Id_Details extends Component {
 
         try {
             this.toggleLoader(true);
+
             var json_response = await AuthService.getJobByEquipId(this.state.EquipId);
-            var json_respo = await AuthService.getJobNoEquipId()
-            console.log('my_data', json_response.data)
-            console.log('my_data_json_respo wala', json_respo.data.JobNumber)
+            var json_respo = await AuthService.getJobNoEquipId(this.state.JobNumber);
+console.log("88888888888888888888888888888",json_response.data)
+            this.state.ClientId = json_response.data.data.jobsResponse.ClientId;
+            this.state.ClientName = json_response.data.data.jobsResponse.ClientName;
+            this.state.MachineTypeId = json_response.data.data.jobsResponse.MachineTypeId;
+            this.state.MachineId = json_response.data.data.jobsResponse.MachineId;
+            this.state.SegmentId = json_response.data.data.jobsResponse.SegmentId;
+
+
+            var json_response = await AuthService.getJobByEquipId(this.state.EquipId);
+            var json_respo = await AuthService.getJobNoEquipId(this.state.JobNumber)
+            // console.log('my_data', json_response.data.data)
+            // console.log('my_data_json_respo wala', json_respo)
             this.setState({
-                JobNumber: json_respo.data.JobNumber
+                jobCode: json_respo.data.JobNumber
             })
             if (json_response.data.StatusCode == 200) {
                 this.showData();
@@ -104,11 +106,14 @@ export default class Equip_Id_Details extends Component {
             }
 
         }
-        catch (e) {
-            console.log('###############', e.json_response.data.StatusCode, this.state.EquipId)
-            Alert.alert(json_response.data.Message)
-
-
+        catch {
+            showMessage({
+                message: "No record found",
+                type: "info",
+                backgroundColor: "black",
+                position: (0, 0, 100, 100),
+                hideStatusBar: false
+              });
         }
         finally {
             this.toggleLoader(false);
@@ -162,7 +167,7 @@ export default class Equip_Id_Details extends Component {
     createjobRespo = (respo_json_CreateJobClienttype) => {
 
         AppStorage.EquipIdAvail(key.EQUIP_ID_DETAILS, JSON.stringify(respo_json_CreateJobClienttype.data)).then(() => {
-            console.log("respo_json_CreateJobClienttype.data**", respo_json_CreateJobClienttype.data)
+   //         console.log("respo_json_CreateJobClienttype.data**", respo_json_CreateJobClienttype.data)
         });
 
 
@@ -170,33 +175,50 @@ export default class Equip_Id_Details extends Component {
 
     // ----------------------Create_Job_Button-----------------
     validCreateJobBtn = async () => {
-alert("Create button")
+
+        console.log('Vinod_Storage_data', this.state.EquipId +""+this.state.jobTypeId+""+
+        this.state.MachineTypeId+""+
+        this.state.MachineId+""+
+        this.state.SegmentId+""+
+        this.state.ClientId+""+
+        this.state.ClientName+""+this.state.jobCode);
+        console.log('post data create job me===============', this.state.EquipId,
+        this.state.jobTypeId,
+            this.state.MachineTypeId,
+            this.state.MachineId,
+            this.state.SegmentId,
+            this.state.ClientId,
+            this.state.ClientName,
+            this.state.userId,
+            this.state.jobCode);
+
+
+
+
         try {
             this.toggleLoader(true);
-
-
-            var respo_json_CreateJobClienttype = await AuthService.CreateJobClientEquipId(this.state.EquipId);
-
+            var respo_json_CreateJobClienttype = await AuthService.CreateJobClientEquipId(this.state.EquipId, this.state.jobTypeId, this.state.MachineTypeId, 
+                this.state.MachineId, this.state.SegmentId, this.state.ClientId,this.state.clientType,this.state.ClientName,this.state.phoneNumber, this.state.userId, this.state.jobCode);
+let respo_create_job_Btn
             console.log("****ClientType********", respo_json_CreateJobClienttype.data.StatusCode)
             if (respo_json_CreateJobClienttype.data.StatusCode == 200) {
-
-
-                var Resp = respo_json_CreateJobClienttype.data
-                console.log("Resp********", Resp)
-                this.createjobRespo(respo_json_CreateJobClienttype);
+                this.props.navigation.navigate("JobAssignment", {JobAssignBool:true})
+                AppStorage.saveKey(key.EQUIP_ID_DETAILS, JSON.stringify(respo_json_CreateJobClienttype.data.data)).then(() => {
+                    console.log("=====AppStorageJson_respo_Machine+++++++++++++", respo_json_CreateJobClienttype.data.data)
+                  });
             }
 
 
         } catch (e) {
 
-            Alert.alert(e.respo_json_CreateJobClienttype);
+            Alert.alert(e);
             console.log('catch block', e)
             // console.log('catch block', e.respo_json_CreateJobClienttype);
         } finally {
             this.toggleLoader(false);
             console.log('finally');
         }
-        this.props.navigation.navigate("JobAssignment", {JobAssignBool:true})
+       // this.props.navigation.navigate("JobAssignment", {JobAssignBool:true})
     }
     render() {
         const { isLoading } = this.state;
@@ -259,14 +281,13 @@ alert("Create button")
                             keyExtractor={(item, index) => index.toString()}
                             renderItem={({ item }) => (
                                 <View>
-
                                     <View style={{ alignItems: "center", backgroundColor: "transparent" }}>
                                         <View style={{ flexDirection: "row", backgroundColor: 'transparent', height: hp('5%') }}>
                                             <View style={{ width: wp('44%'), height: hp('4.5%'), backgroundColor: "transparent", justifyContent: "center" }}>
                                                 <Text style={{ fontSize: hp('1.8%'), color: "#333333" }}>Job no.</Text>
                                             </View>
                                             <View style={{ width: wp('46%'), height: hp('4.5%'), paddingBottom: hp('0.5%'), borderBottomWidth: 1, borderBottomColor: "#D2D3D5", backgroundColor: "transparent", justifyContent: "flex-end", alignItems: "flex-start" }}>
-                                                <Text style={{ fontSize: hp('1.8%'), color: "#333333" }}>{this.state.JobNumber}</Text>
+                                                <Text style={{ fontSize: hp('1.8%'), color: "#333333" }}>{this.state.jobCode}</Text>
                                             </View>
                                         </View>
 
@@ -353,9 +374,7 @@ alert("Create button")
     }
 }
 
-
-
-
+// ----------------------------------------------------------------------------------------
 // import React, { Component } from 'react';
 // import {
 //     SafeAreaView,
@@ -393,14 +412,12 @@ alert("Create button")
 //             showDetails:'',
 //             showButton:true,
 //             isFocus:true,
-//             Data:[],
-//             showData:false,
-
+//             Data:[]
 //            // Data: [{ JobNum: "Job Number", Job_Number: "JN-3455", ClientName: "Client Name", Client_Name: "Steve John", Mac: "Machine", Machine: "3 Phase Induction Motor", MacType: "Machine Type", Machine_Type: "Induction Motor", Segmnt: "Segment", Segment: "Single Speed", RatedPow: "Rated Power", Rated_Power: "909", RatedVol: "Rated Voltage", Rated_Voltage: "909" }]
 //         }
 //     }
 //     // componentDidMount = async () => {
-   
+
 //     // }
 
 //     toggleLoader = (val) => {
@@ -409,17 +426,17 @@ alert("Create button")
 
 //     onLogin = (json_response,json_respo) => {
 //          console.log('login response data ', json_response.data.StatusCode,json_respo.data);
-         
+
 
 //         AppStorage.saveKey(key.USER_PROFILE_DATA, JSON.stringify(json_response.data,json_respo.data)).then(() => {
 //             console.log('Appstorage_DATA')
 //         });
-         
-         
+
+
 
 //  //   Alert.alert(respo.data.Message);
 
-    
+
 
 //     };
 
@@ -429,53 +446,41 @@ alert("Create button")
 
 //     equipIDgetDetails=async(myid)=>{
 //         console.log('funtion me id agau h bhai', myid);
-       
+
 //         try{
 //             this.toggleLoader(true);
 //             var json_response = await AuthService.getJobByEquipId(this.state.EquipId);
 //             var json_respo=await AuthService.getJobNoEquipId()
 //             console.log('my_data',json_response.data)
 //             console.log('my_data_json_respo wala',json_respo.data.JobNumber)
-//             this.setState({
-//                 JobNumber:json_respo.data.JobNumber
-//             })
 //              if(json_response.data.StatusCode==200){
-//                this.showData();
-//                 //  this.onLogin(json_response,json_respo);
-               
-//                 //  this.state.Data=json_response.data.data
-//                 // this.setState({
-//                 //     Data:json_response.data.data.jobsResponse
-                    
 
-//                 // })
-//                 this.state.Data.length=0
-//                 this.state.Data.push(json_response.data.data.jobsResponse)
+//                  this.onLogin(json_response,json_respo);
+
+//                  this.state.Data=json_response.data.data
 //                  console.log('*************Component wala data******',this.state.Data)
-//         //    console.log("&&&&&&&&Data&&&&&&&&&&",this.state.Data.jobsResponse.ClientName)
-//            this.setState({
-//             showButton:false,
-//         });
+//            console.log("&&&&&&&&Data&&&&&&&&&&",this.state.Data.jobsResponse.ClientName)
+//                 //  <ApiLoader visibility={isLoading} loadingColor={'green'} onCancelPress={() => {
+//                 // }} />
 //              }
-             
 //         }
 //         catch(e){
 //             console.log('###############',e.json_response.data.StatusCode,this.state.EquipId)
 //         Alert.alert(json_response.data.Message)
-    
+
 
 //         }
 //         finally {
 //             this.toggleLoader(false);
 //             // console.log('login finally print hua');
 //         }
-  
+
 // //         try {
 // //             this.toggleLoader(true);
-         
+
 // //             let respo = await AuthService.getJobByEquipId(this.state.EquipId);
 // // console.log('**************',respo)
-        
+
 
 
 // //             if (respo.data.StatusCode === 200) {
@@ -503,7 +508,7 @@ alert("Create button")
 
 //     validates = () => {
 
- 
+
 //         if (this.state.EquipId == "") {
 
 
@@ -517,32 +522,25 @@ alert("Create button")
 //         }
 //         else { 
 //             this.equipIDgetDetails(this.state.EquipId)
-            
+
 //         }
-    
+
 
 //     }
-// showData=()=>{
-//     this.setState({
-//      showData:true   
-//     })
-// }
-    
-    
+
+
+
 //     handleFocus=()=>[
 //         this.setState({isFocus:false})
 //     ]
 
 //     render() {
-//         const {isLoading} = this.state;
 //         const { navigate } = this.props.navigation;
 //         return (
 //             <SafeAreaView style={{ flex: 1, height: '100%', width: '100%', backgroundColor: "#FFFFFF", }}>
 //                 <View style={{ height: '9%', width: '100%', backgroundColor: "#008BD0" }}>
 //                 <DrawerHeader name="Equipment Identification" openDrawer={this.props.navigation} status={false} notification={true}/>
 //                 </View>
-//                 <ApiLoader visibility={isLoading} loadingColor={'green'} onCancelPress={() => {
-//                     }}/>
 //                 <View style={{ height: '72%', width: '100%', backgroundColor: 'transparent' }}>
 //                     <View style={{ height: '22%', width: '100%', backgroundColor: "#E6F7FF" }}>
 //                     <View style={{ height: '40%', width: '100%', paddingTop: '2%', backgroundColor: 'transparent', justifyContent: 'flex-start', alignItems: 'center' }}>
@@ -582,97 +580,89 @@ alert("Create button")
 //                         <View style={{ width: '51%',backgroundColor: "transparent", justifyContent: 'center', }}>
 //                             <TextInput underlineColorAndroid={this.state.isFocus?'#D2D3D5':'#008BD0'} style={{ fontSize: hp('1.8%'), backgroundColor: "transparent", paddingTop: '2%' }}
 //                                onFocus={this.handleFocus}
-//                             //    onSubmitEditing={()=>this.showData()}
 //                                onChangeText={value => {
 //                                     this.setState({ EquipId: value })
 //                                 //    console.log(this.state.EquipId)
 //                                 }} />
 //                         </View>
 //                     </View>
-//          { this.state.showData?<View style={{ height: '70.5%', width: '90%', backgroundColor: "transparent", marginHorizontal: '5%' }}>
-//                         <FlatList data={this.state.Data}
+//                     <View style={{ height: '70.5%', width: '90%', backgroundColor: "transparent", marginHorizontal: '5%' }}>
+//                         {/* <FlatList data={this.state.Data}
 //                             keyExtractor={(item, index) => index.toString()}
 //                             renderItem={({ item }) => (
 //                                 <View>
-                                  
+
 //                                         <View style={{ alignItems: "center", backgroundColor: "transparent" }}>
 //                               <View style={{ flexDirection: "row", backgroundColor: 'transparent', height: hp('5%') }}>
 //                                        <View style={{ width: wp('44%'), height: hp('4.5%'), backgroundColor: "transparent", justifyContent: "center" }}>
 //                                                     <Text style={{ fontSize: hp('1.8%'), color: "#333333" }}>Job no.</Text>
 //                                                 </View>
 //                                                 <View style={{  width: wp('46%'), height: hp('4.5%'), paddingBottom: hp('0.5%'), borderBottomWidth: 1, borderBottomColor: "#D2D3D5", backgroundColor: "transparent", justifyContent: "flex-end", alignItems: "flex-start" }}>
-//                                                     <Text style={{ fontSize: hp('1.8%'), color: "#333333" }}>{this.state.JobNumber}</Text>
+//                                                     <Text style={{ fontSize: hp('1.8%'), color: "#333333" }}>J-234324</Text>
 //                                                 </View>
 //                                             </View>
 
-//                        {/* {item.ClientName!=""?  */}
-//                                   <View style={{ flexDirection: "row", backgroundColor: 'transparent', height: hp('5%') }}>
+//                                        <View style={{ flexDirection: "row", backgroundColor: 'transparent', height: hp('5%') }}>
 //                                                 <View style={{ width: wp('44%'), height: hp('4.5%'), backgroundColor: "transparent", justifyContent: "center" }}>
 //                                                     <Text style={{ fontSize: hp('1.8%'), color: "#333333" }}>Client Name</Text>
 //                                                 </View>
 //                                                 <View style={{ width: wp('46%'), height: hp('4.5%'), borderBottomWidth: 1, borderBottomColor: "#D2D3D5", backgroundColor: "transparent", justifyContent: "center", alignItems: "flex-start"}}>
-//                                                     <Text style={{ fontSize: hp('1.8%'), color: "#333333" }}>{item.ClientName}</Text>
+//                                                     <Text style={{ fontSize: hp('1.8%'), color: "#333333" }}>Navi</Text>
 //                                                 </View>
 //                                             </View>
-//                                             {/* :null} */}
 
-//                                 {item.MachineTypeName!=""?         <View style={{ flexDirection: "row", backgroundColor: 'transparent', height: hp('5%') }}>
+//                                             <View style={{ flexDirection: "row", backgroundColor: 'transparent', height: hp('5%') }}>
 //                                                 <View style={{ width: wp('44%'), height: hp('4.5%'), backgroundColor: "transparent", justifyContent: "center" }}>
-//                                                     <Text style={{ fontSize: hp('1.8%'), color: "#333333" }}>Machine Type</Text>
+//                                                     <Text style={{ fontSize: hp('1.8%'), color: "#333333" }}>{item.Mac}</Text>
 //                                                 </View>
 //                                                 <View style={{ width: wp('46%'), height: hp('4.5%'), borderBottomWidth: 1, borderBottomColor: "#D2D3D5", backgroundColor: "transparent", justifyContent: "center", alignItems: "flex-start" }}>
-//                                                     <Text style={{ fontSize: hp('1.8%'), color: "#333333" }}>{item.MachineTypeName}</Text>
+//                                                     <Text style={{ fontSize: hp('1.8%'), color: "#333333" }}>{item.Machine}</Text>
 //                                                 </View>
 //                                             </View>
-//                                             :null}
 
-//                         { item.MachineName!=""?        <View style={{ flexDirection: "row", backgroundColor: 'transparent', height: hp('5%') }}>
+//                                             <View style={{ flexDirection: "row", backgroundColor: 'transparent', height: hp('5%') }}>
 //                                                 <View style={{ width: wp('44%'), height: hp('4.5%'), backgroundColor: "transparent", justifyContent: "center" }}>
-//                                                     <Text style={{ fontSize: hp('1.8%'), color: "#333333" }}>Machine</Text>
+//                                                     <Text style={{ fontSize: hp('1.8%'), color: "#333333" }}>{item.MacType}</Text>
 //                                                 </View>
 //                                                 <View style={{ width: wp('46%'), height: hp('4.5%'), borderBottomWidth: 1, borderBottomColor: "#D2D3D5", backgroundColor: "transparent", justifyContent: "center", alignItems: "flex-start" }}>
-//                                                     <Text style={{ fontSize: hp('1.8%'), color: "#333333" }}>{item.MachineName}</Text>
+//                                                     <Text style={{ fontSize: hp('1.8%'), color: "#333333" }}>{item.Machine_Type}</Text>
 //                                                 </View>
 //                                             </View>
-//                                             :null}
 
-//                      { item.SegmentName!=""  ?                <View style={{ flexDirection: "row", backgroundColor: 'transparent', height: hp('5%') }}>
+//                                             <View style={{ flexDirection: "row", backgroundColor: 'transparent', height: hp('5%') }}>
 //                                                 <View style={{ width: wp('44%'), height: hp('4.5%'), backgroundColor: "transparent", justifyContent: "center" }}>
-//                                                     <Text style={{ fontSize: hp('1.8%'), color: "#333333" }}>Segment</Text>
+//                                                     <Text style={{ fontSize: hp('1.8%'), color: "#333333" }}>{item.Segmnt}</Text>
 //                                                 </View>
 //                                                 <View style={{ width: wp('46%'), height: hp('4.5%'), borderBottomWidth: 1, borderBottomColor: "#D2D3D5", backgroundColor: "transparent", justifyContent: "center", alignItems: "flex-start" }}>
-//                                                     <Text style={{ fontSize: hp('1.8%'), color: "#333333" }}>{item.SegmentName}</Text>
+//                                                     <Text style={{ fontSize: hp('1.8%'), color: "#333333" }}>{item.Segment}</Text>
 //                                                 </View>
 //                                             </View>
-//                                          :null   
-//                                         }
 
-//                        {item.SubSegmentName!=""?                  <View style={{ flexDirection: "row", backgroundColor: 'transparent', height: hp('5%') }}>
+//                                             <View style={{ flexDirection: "row", backgroundColor: 'transparent', height: hp('5%') }}>
 //                                                 <View style={{ width: wp('44%'), height: hp('4.5%'), backgroundColor: "transparent", justifyContent: "center" }}>
-//                                                     <Text style={{ fontSize: hp('1.8%'), color: "#333333" }}>Sub Segment</Text>
+//                                                     <Text style={{ fontSize: hp('1.8%'), color: "#333333" }}>{item.RatedPow}</Text>
 //                                                 </View>
 //                                                 <View style={{ width: wp('46%'), height: hp('4.5%'),  borderBottomWidth: 1, borderBottomColor: "#D2D3D5", backgroundColor: "transparent", justifyContent: "center", alignItems: "flex-start" }}>
-//                                                     <Text style={{ fontSize: hp('1.8%'), color: "#333333" }}>{item.SubSegmentName}</Text>
+//                                                     <Text style={{ fontSize: hp('1.8%'), color: "#333333" }}>{item.Rated_Power}</Text>
 //                                                 </View>
 //                                             </View>
-//                                             :null}
 
-//                                             {/* <View style={{ flexDirection: "row", backgroundColor: 'transparent', height: hp('5%') }}>
+//                                             <View style={{ flexDirection: "row", backgroundColor: 'transparent', height: hp('5%') }}>
 //                                                 <View style={{ width: wp('44%'), height: hp('4.5%'), backgroundColor: "transparent", justifyContent: "center" }}>
 //                                                     <Text style={{ fontSize: hp('1.8%'), color: "#333333" }}>{item.RatedVol}</Text>
 //                                                 </View>
 //                                                 <View style={{ width: wp('46%'), height: hp('4.5%'),  borderBottomWidth: 1, borderBottomColor: "#D2D3D5", backgroundColor: "transparent", justifyContent: "flex-end", alignItems: "flex-start" }}>
 //                                                     <Text style={{ fontSize: hp('1.8%'), color: "#333333" }}>{item.Rated_Voltage}</Text>
 //                                                 </View>
-//                                             </View> */}
+//                                             </View>
 //                                         </View>
-                                      
+
 
 //                                 </View>
 //                             )}>
 
-//                         </FlatList>
-//                     </View>:null}
+//                         </FlatList> */}
+//                     </View>
 //                 </View>
 //                 <View style={{ height: '10%', width: '100%', backgroundColor: 'transparent', alignItems: "center", justifyContent: "center", }}>
 //                {this.state.showButton ?    <TickButton label="Next" handleClick={this.validates} />: <TickButton label="CreateJob" handleClick={() => { this.props.navigation.navigate("JobAssignment") }} />
@@ -687,12 +677,3 @@ alert("Create button")
 //         )
 //     }
 // }
-
-
-
-
-
-
-
-
-
