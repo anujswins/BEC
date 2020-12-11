@@ -13,8 +13,7 @@ import {
     Image,
     TouchableOpacity,
     Button,
-    ScrollView,
-    Alert
+    ScrollView
 } from 'react-native';
 import {Picker} from '@react-native-community/picker';
 import DropDownPicker from 'react-native-dropdown-picker';
@@ -24,8 +23,6 @@ import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-nat
 import {Collapse,CollapseHeader, CollapseBody, AccordionList} from 'accordion-collapse-react-native';
 import { Container, Header, Content, Card, CardItem, Body, } from 'native-base';
 import BottomTabNavigator from '../CommonComponents/BottomTabNavigator';
-import ApiLoader from '../../Src/PopUp/ApiLoader';
-import AuthService from '../../Src/RestClient/AuthService';
 const screen = Dimensions.get("screen");
 const dwidth = Dimensions.get('screen').width;
 const dheight = Dimensions.get('screen').height;
@@ -52,22 +49,6 @@ const dheight = Dimensions.get('screen').height;
           starCount: 2.5,
           selected: "key1",
           language: 'java',
-          isLoading: false,
-            "stageId": 0,
-            "jobTypeId": 0,
-            "machineTypeId": 0,
-            "startDate": "",
-            "endDate": "",
-            "clientId": 0,
-            "assignToId": 0,
-            "status": "Completed",
-            "orderBy": "CreatedOn",
-            "orderByDescending": true,
-            "Page":0,
-            "limit":0,
-            "allRecords": false,
-            mylistcheck:'',
-           
           tmpArray : [
 
 
@@ -96,15 +77,8 @@ const dheight = Dimensions.get('screen').height;
       }
 
 
-      componentDidMount = async () => {
-        this.Fun_CompletedAllRecords();
-    };
-
-
-    toggleLoader = (val) => {
-        this.setState(({ isLoading: val }));
-    };
       
+<<<<<<< HEAD
 
 
     Fun_CompletedAllRecords = async () => {
@@ -154,11 +128,14 @@ const dheight = Dimensions.get('screen').height;
 
 
   };
+=======
+  
+>>>>>>> 1efb17fd4e6918320511e82874706b886d9fece0
 
 
     render() {
         const { dimensions } = this.state;
-        const { isLoading } = this.state;
+        
         return (
 
          
@@ -170,9 +147,6 @@ const dheight = Dimensions.get('screen').height;
         
         }}>
             <StatusBar hidden={false} backgroundColor={"#008BD0"} />
-            <ApiLoader visibility={isLoading} loadingColor={'green'} onCancelPress={() => {
-                }} />
-
             <View style={{ height:'9%',backgroundColor: 'transparent' }}>
             <DrawerHeader name='Completed Jobs' openDrawer={this.props.navigation} status={false} notification={true}/>  
             </View>
@@ -180,68 +154,47 @@ const dheight = Dimensions.get('screen').height;
             <ScrollView vertical={true}
                 showsVerticalScrollIndicator={false}
                >
+           {                  
+               this.state.tmpArray.map((item, key) => (
+                <View style={{justifyContent:"center",alignItems:"center",padding:10}}>
+           <Collapse>
+    <CollapseHeader>
+      <View style={{backgroundColor:"white",height: hp('6%'), width: wp('80%'), justifyContent:"center",padding:10,
+      borderColor:"#d3d3d3",borderWidth:1,}}>
+        <Text style={{color:"black"}}>JobNo-{item.jobNumber}</Text>
+      </View>
+    </CollapseHeader>
+    <CollapseBody style={{backgroundColor:"white",height:'auto', width: wp('80%'),
+       borderColor:"#d3d3d3",borderWidth:1}}>
+    <View style={{height:'auto',width: wp('80%'),flexDirection:"row"}}>
+    <View style={{height:'auto',width: wp('40%'),flexDirection:"column"}}>
+         <Text style={{color:"#33a1De",fontSize:17,fontWeight:"bold"}}> Job No-
+        </Text>
+               <Text style={{color:"#33a1De",fontSize:17,fontWeight:"bold"}}> {item.Tool}-</Text>
+               <Text style={{color:"#33a1De",fontSize:17,fontWeight:"bold"}}> {item.speedtype}-</Text>
+               <Text style={{color:"#33a1De",fontSize:17,fontWeight:"bold"}}> {item.time}</Text>
+               <Text style={{color:"#33a1De",fontSize:17,fontWeight:"bold"}}> {item.date}</Text>
+               <Text style={{color:"#33a1De",fontSize:17,fontWeight:"bold"}}> {item.Status}</Text>
+            
+         </View>
+         <View style={{height:'auto', width: wp('40%'),flexDirection:"column"}}>
+         <Text style={{color:"black",fontSize:17,fontWeight:"bold"}}> {item.jobNumber}</Text>
+         <Text style={{color:"black",fontSize:17,fontWeight:"bold"}}> {item.machinename} </Text>
+         <Text style={{color:"black",fontSize:17,fontWeight:"bold"}}>{item.Segmentspeed}</Text>
+         <Text style={{color:"black",fontSize:17,fontWeight:"bold"}}> {item.Time} </Text>
+         <Text style={{color:"black",fontSize:17,fontWeight:"bold"}}> {item.dates} </Text>
+         <Text style={{color:"black",fontSize:17,fontWeight:"bold"}}> {item.status} </Text>
+     
+        </View>
+        
+         </View>
 
-
-
-
-{this.state.mylistcheck=="No record found." ? 
-
-
-<Text  style={{ fontSize:23,color:'black',alignItems:'center',justifyContent:'center',}}>No Records Found</Text>
-
-
-
- : 
-<View>
-{this.state.tmpArray.map((item, key) => (
-  <View style={{justifyContent:"center",alignItems:"center",padding:10}}>
-<Collapse>
-
-<CollapseHeader>
-<View style={{backgroundColor:"white",height: hp('6%'), width: wp('80%'), justifyContent:"center",padding:10,
-borderColor:"#d3d3d3",borderWidth:1,}}>
-<Text style={{color:"black"}}>JobNo-{item.jobNumber}</Text>
-</View>
-</CollapseHeader>
-<CollapseBody style={{backgroundColor:"white",height:'auto', width: wp('80%'),
-borderColor:"#d3d3d3",borderWidth:1}}>
-<View style={{height:'auto',width: wp('80%'),flexDirection:"row"}}>
-<View style={{height:'auto',width: wp('40%'),flexDirection:"column"}}>
-<Text style={{color:"#33a1De",fontSize:17,fontWeight:"bold"}}> Job No-
-</Text>
- <Text style={{color:"#33a1De",fontSize:17,fontWeight:"bold"}}> {item.Tool}-</Text>
- <Text style={{color:"#33a1De",fontSize:17,fontWeight:"bold"}}> {item.speedtype}-</Text>
- <Text style={{color:"#33a1De",fontSize:17,fontWeight:"bold"}}> {item.time}</Text>
- <Text style={{color:"#33a1De",fontSize:17,fontWeight:"bold"}}> {item.date}</Text>
- <Text style={{color:"#33a1De",fontSize:17,fontWeight:"bold"}}> {item.Status}</Text>
-
-</View>
-<View style={{height:'auto', width: wp('40%'),flexDirection:"column"}}>
-<Text style={{color:"black",fontSize:17,fontWeight:"bold"}}> {item.jobNumber}</Text>
-<Text style={{color:"black",fontSize:17,fontWeight:"bold"}}> {item.machinename} </Text>
-<Text style={{color:"black",fontSize:17,fontWeight:"bold"}}>{item.Segmentspeed}</Text>
-<Text style={{color:"black",fontSize:17,fontWeight:"bold"}}> {item.Time} </Text>
-<Text style={{color:"black",fontSize:17,fontWeight:"bold"}}> {item.dates} </Text>
-<Text style={{color:"black",fontSize:17,fontWeight:"bold"}}> {item.status} </Text>
-
-</View>
-
-</View>
-
-
-</CollapseBody>
+        
+    </CollapseBody>
 </Collapse>
 
 </View>
- ))}
- </View>
- } 
-
-
-
-
-
-  
+               ))}
                
 
 </ScrollView>

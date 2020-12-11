@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+<<<<<<< HEAD
 import {
     ScrollView,
     Text,
@@ -37,6 +38,55 @@ export default class Notification extends Component {
                  options:['Delhi','Mumbai','gaziabaad'],
                  Answer: "Delhi",
                  },
+=======
+import { Dimensions, StyleSheet, View, Image, Text, TouchableOpacity, Alert, FlatList } from 'react-native';
+import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
+
+
+export default class Pract extends Component {
+    constructor() {
+        super(); {
+            this.state = {
+                var_A: ["hello","ji","hanji","Navdeep","Garg"]
+
+            }
+        }
+    }
+    render() {
+        return (
+            <View style={{ flex: 1, height: '100%', width: '100%', backgroundColor: "white" }}>
+                <Text>
+                    sdfsd
+                </Text>
+                <View style={{ height: '60%', width: '100%', backgroundColor: 'pink' }}> 
+                    <FlatList data={this.state.var_A}
+                        numColumns={1}
+                        renderItem={({ item }) => {
+                            return (
+                                <View style={{flexDirection:"row",justifyContent:"center",backgroundColor:"green"}}>
+                                <View style={{ backgroundColor:"yellow", }}>
+                                    <TouchableOpacity style={{ height: hp('6%'), width: wp('10%'), backgroundColor: 'red',
+                                    flexDirection:"row",
+                                    justifyContent: 'space-around', alignItems: "flex-start",margin:50}}>
+                                        <Text>
+                                            {item}
+                                            
+                                            </Text>
+                                        
+                                    </TouchableOpacity>
+                       
+                                </View>
+                                </View>
+                            )
+                        }}>
+
+                    </FlatList>
+                </View>
+                {/* <View style={{height:'10%', width:'100%', backgroundColor:'blue'}}>
+                <Text style={{height:'100%', width:"50%", backgroundColor:"pink"}}>
+                    vgvgvhv
+                </Text>
+>>>>>>> 1efb17fd4e6918320511e82874706b886d9fece0
                 
                  {
                     id: 1, 
@@ -114,9 +164,13 @@ componentDidMount(){
              onPress={()=>this.checkAnswer(item.options)}> 
             <Text style={{backgroundColor:"blue",fontSize:50}}>{item.options}</Text>
                 </Text>
+<<<<<<< HEAD
    
     
 
+=======
+                </View> */}
+>>>>>>> 1efb17fd4e6918320511e82874706b886d9fece0
             </View>
                             ))}
 

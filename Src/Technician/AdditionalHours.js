@@ -129,7 +129,7 @@ return(
 
 <View style={styles.subcontainer2}>
 <View style={{width:"90%",height:"7%",borderColor:'gray', 
-marginTop:"5%",justifyContent:'center'}}
+marginTop:"5%",justifyContent:'center',backgroundColor:'red'}}
 elevation={3}>
  <TouchableOpacity style={styles.setTimeStyle} onPress={this.showDatePicker} >
 {
@@ -145,7 +145,7 @@ elevation={3}>
 
 
 
- <View style={{width:"90%",height:"7%",borderColor:'gray', 
+ <View style={{backgroundColor:'red',width:"90%",height:"7%",borderColor:'gray', 
 marginTop:"5%",justifyContent:'center',shadowColor: '#000',
 shadowOffset: { width: 0, height: 1 },
 shadowOpacity: 0.8,
@@ -165,7 +165,7 @@ shadowRadius: 2,
 </TouchableOpacity>
 </View>
    
-<View style={{width:"90%",height:"7%",borderColor:'gray', 
+<View style={{backgroundColor:'blue',width:"90%",height:"7%",borderColor:'gray', 
 marginTop:"5%",justifyContent:'center'}}
 elevation={3}
 >

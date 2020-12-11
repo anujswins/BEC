@@ -38,7 +38,7 @@ var radio_props1 = [
   { label: "BEC-3-Phase Motor", value: "BEC-3-Phase Motor" },
   { label: "BEC-3-Phase Motor", value: "BEC-3-Phase Motor" },
   { label: "BEC-3-Phase Motor", value: "BEC-3-Phase Motor" },
-  
+
 ]
 
 var Mac_A = [{ Mactype: "Machine Type", MacValue: "BEC-3-Phase Motor" }]
@@ -72,8 +72,8 @@ export default class EquipidPractise extends Component {
   }
 
   onFocus = () => {
-  
-    this.props.navigation.navigate("SearchClient") 
+
+    this.props.navigation.navigate("SearchClient")
     {this.setState({click:true})}
    { this.setState({ show: true }) }
   }
@@ -86,14 +86,14 @@ export default class EquipidPractise extends Component {
     //   this.setState({showMachineTypeModal:false})}
       this.setState({showMachineTypeModal:false})
     this.setState({showModal:true})
-  
+
 
   }
   validates = () => {
 
     if (this.state.click == false) {
-     
-        
+
+
         showMessage({
             message:"Please select client",
              type:"info",
@@ -103,7 +103,7 @@ export default class EquipidPractise extends Component {
           });
     }
     else {
-         
+
       {this.props.navigation.navigate("Technicians")}
 
     }
@@ -263,7 +263,7 @@ export default class EquipidPractise extends Component {
             </View> : null}
             <TouchableOpacity activeOpacity={0.8} onPress={()=>this.Machinetype()}>
             <View style={{ flexDirection: "row", height: hp('5%'), width: wp('90%'), justifyContent: "center", marginHorizontal: wp('5%'), borderBottomWidth: 1, borderBottomColor: "#D2D3D5", backgroundColor: 'transparent' }}>
-               
+
                 <View style={{ height: hp('5%'), width: wp('80%'), backgroundColor: "transparent", justifyContent: 'center', alignItems: 'flex-start' }}>
        {this.state.showMachineTypeModal?     <Text style={{ fontSize: hp('2.1%'), backgroundColor: "transparent" }}>Select Machine Type</Text>
         :<Text>{this.state.Mtype}</Text>
@@ -325,14 +325,14 @@ export default class EquipidPractise extends Component {
               }}
               radioStyle={{paddingRight: 40, marginVertical:hp('1%')}}
               wrapStyle={{marginVertical:hp('9%')}}
-              
+
 
             />
                                         </View>
                                     )}>
 
                                     </FlatList>
-                               
+
             </View>
             <View style={{height:hp('5%'), width:wp('90%'), backgroundColor:"#ffffff", alignItems:"flex-end", justifyContent:"flex-end", paddingRight:wp('5%'), paddingBottom:hp('2%')}}>
                                 <TouchableOpacity onPress={()=>{this.setState({Mtype:this.state.value2})
@@ -343,8 +343,8 @@ export default class EquipidPractise extends Component {
                                 </Text>
                                 </TouchableOpacity>
                                 </View>
-                            
-                                
+
+
                             </View>
                         </View>
 
@@ -578,7 +578,7 @@ export default class EquipidPractise extends Component {
             </View> : null}
             <TouchableOpacity activeOpacity={0.8} onPress={()=>this.Machinetype()}>
             <View style={{ flexDirection: "row", height: hp('5%'), width: wp('90%'), justifyContent: "center", marginHorizontal: wp('5%'), borderBottomWidth: 1, borderBottomColor: "#D2D3D5", backgroundColor: 'transparent' }}>
-               
+
                 <View style={{ height: hp('5%'), width: wp('80%'), backgroundColor: "transparent", justifyContent: 'center', alignItems: 'flex-start' }}>
        {this.state.showMachineTypeModal?     <Text style={{ fontSize: hp('2.1%'), backgroundColor: "transparent" }}>Select Machine Type</Text>
         :<Text>{this.state.Mtype}</Text>
@@ -640,14 +640,14 @@ export default class EquipidPractise extends Component {
               }}
               radioStyle={{paddingRight: 40, marginVertical:hp('1%')}}
               wrapStyle={{marginVertical:hp('9%')}}
-              
+
 
             />
                                         </View>
                                     )}>
 
                                     </FlatList>
-                               
+
             </View>
             <View style={{height:hp('5%'), width:wp('90%'), backgroundColor:"#ffffff", alignItems:"flex-end", justifyContent:"flex-end", paddingRight:wp('5%'), paddingBottom:hp('2%')}}>
                                 <TouchableOpacity onPress={()=>{this.setState({Mtype:this.state.value2})
@@ -658,8 +658,8 @@ export default class EquipidPractise extends Component {
                                 </Text>
                                 </TouchableOpacity>
                                 </View>
-                            
-                                
+
+
                             </View>
                         </View>
 
@@ -756,7 +756,7 @@ export default class EquipidPractise extends Component {
   }
 }
 // this.props.navigation.navigate("Technicians")
-{/* <RadioForm 
+{/* <RadioForm
                radio_props={radio_props}
                initial={-1}
                formHorizontal={true}
@@ -789,7 +789,7 @@ export default class EquipidPractise extends Component {
 // }
 
 
-//   render() {  
+//   render() {
 //     let itemId = this.props.route.params.itemId
 //     let myString = this.props.route.params.myString
 
@@ -800,8 +800,8 @@ export default class EquipidPractise extends Component {
 // //   const otherParam = params ? params.otherParam : null
 //     return (
 //       <View>
-//         <Button 
-//          title={'Go to screen 2'} 
+//         <Button
+//          title={'Go to screen 2'}
 //          onPress={() => this.props.navigation.navigate('SearchClient')} />
 //           <Text>itemId:{itemId}</Text>
 //     <Text>MyString:{myString}</Text>

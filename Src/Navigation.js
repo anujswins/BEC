@@ -41,7 +41,12 @@ import SearchClient from './Supervisor/SearchClient'
 import TeamMember_Technician from "./Technician/teamMember"
 import EditText from './CommonComponents/EditText'
 import teamMember from './Technician/teamMember'
+<<<<<<< HEAD
 import camera from './Technician/camera'
+=======
+import JobInProgress from './Technician/JobInProgress';
+import SplashScreen from './SplashScreen'
+>>>>>>> 1efb17fd4e6918320511e82874706b886d9fece0
 // import AdditionalHours from './Technician/additionalHours';
 
 
@@ -173,11 +178,13 @@ camera:{screen:camera,navigationOptions:{headerShown:false}},
   SearchClient:{screen:SearchClient,navigationOptions:{headerShown:false}},
   Equip_Id_Details:{screen:Equip_Id_Details,navigationOptions:{headerShown:false}},
   Equip_ID:{screen:Equip_ID,navigationOptions:{headerShown:false}},
-  StackHeader:{screen:StackHeader}
+  StackHeader:{screen:StackHeader},
+  JobInProgress:{screen:JobInProgress,navigationOptions:{headerShown:false}},
+  SplashScreen:{screen:SplashScreen,navigationOptions:{headerShown:false}},
   
 },
   {
-    initialRouteName: "Login",
+    initialRouteName: "SplashScreen",
     // headerMode: "none",
      //unmountInactiveRoutes: true
   }

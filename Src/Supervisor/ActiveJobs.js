@@ -24,8 +24,11 @@ import {
 } from 'react-native/Libraries/NewAppScreen';
 import DrawerHeader from "../CommonComponents/DrawerHeader"
 import BottomTabNavigator from '../CommonComponents/BottomTabNavigator';
+<<<<<<< HEAD
 import ApiLoader from '../../Src/PopUp/ApiLoader';
 import AuthService from '../../Src/RestClient/AuthService';
+=======
+>>>>>>> 1efb17fd4e6918320511e82874706b886d9fece0
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
 const height = Dimensions.get("screen").height
 const width = Dimensions.get("screen").width
@@ -47,11 +50,15 @@ export default class ActiveJobs extends Component {
     constructor() {
         super();
         this.state = {
+<<<<<<< HEAD
             "JobId": 0,
+=======
+>>>>>>> 1efb17fd4e6918320511e82874706b886d9fece0
             Data: [{ JobNum: "JN-2345", MachineType: "3-Phase Induction motor", Machine: "Induction Motor", Segment: "Single Speed", Sub_segment: "3 Speed", Stage: "4", TotalTimeSpent: "25", TotalSpentToday: "4", TeamMember: "6" }]
 
         }
     }
+<<<<<<< HEAD
     componentDidMount = async () => {
         this.Fun_GetActiveJobRecords();
     };
@@ -80,6 +87,9 @@ export default class ActiveJobs extends Component {
             console.log('GetActiveJobRecords finally print hua');
         }};
  
+=======
+
+>>>>>>> 1efb17fd4e6918320511e82874706b886d9fece0
 
     render() {
         return (
