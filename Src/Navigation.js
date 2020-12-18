@@ -6,8 +6,8 @@ import { createStackNavigator } from "react-navigation-stack"
 import { Icon } from 'react-native-elements';
 import SideBar from '../Src/CommonComponents/SideBar'
 
-
-
+import SplashScreen from './SplashScreen'
+import JobDetail from '../Src/Technician/JobDetail'
 import Home from './Supervisor/Home';
 import Login from '../Src/Login';
 import AdditionalHours from '../Src/Technician/AdditionalHours'
@@ -26,7 +26,6 @@ import JobAssignment from './Supervisor/JobAssignment';
 import StackHeader from './CommonComponents/StackHeader';
 import ActiveJobs from  './Supervisor/ActiveJobs'
 import AddTechnician from './Supervisor/AddTechnician'
-import JobInProgress from './Technician/JobInProgress'
 import TeamMember from './Supervisor/TeamMember';
 import CompletedJobs from './Supervisor/CompletedJobs';
 import JobAssign from './Supervisor/JobsAssign';
@@ -41,12 +40,8 @@ import SearchClient from './Supervisor/SearchClient'
 import TeamMember_Technician from "./Technician/teamMember"
 import EditText from './CommonComponents/EditText'
 import teamMember from './Technician/teamMember'
-<<<<<<< HEAD
-import camera from './Technician/camera'
-=======
 import JobInProgress from './Technician/JobInProgress';
-import SplashScreen from './SplashScreen'
->>>>>>> 1efb17fd4e6918320511e82874706b886d9fece0
+import Camera from './Technician/Camera';
 // import AdditionalHours from './Technician/additionalHours';
 
 
@@ -147,6 +142,7 @@ const AppNavigator = createStackNavigator(
     // CurrentJobs:{screen:CurrentJobs,navigationOptions:{headerRight: props => <StackHeader {...props} />,headerStyle:{backgroundColor:'#008ad1'}},
    Technicians:{screen:Technicians ,navigationOptions:{headerShown:false}},
    teamMember:{screen:teamMember ,navigationOptions:{headerShown:false}},
+  JobDetail :{ screen:JobDetail,navigationOptions:{headerShown:false}},
    ForgotPassword:{screen:ForgotPassword ,
     // navigationOptions:{headerTitle:'Forgot Password',headerStyle:{backgroundColor:'#008ad1'}},headerTintColor:'#fff',
     // headerTintColor:'#fff'
@@ -160,6 +156,7 @@ const AppNavigator = createStackNavigator(
    TeamMember:{screen:TeamMember,navigationOptions:{headerShown:false} },
    EditText:{screen:EditText,navigationOptions:{headerShown:false}},
   Logout:{screen:Login},
+  JobInProgress:{screen:JobInProgress,navigationOptions:{headerShown:false}},
   Feedback:{screen:Feedback,navigationOptions:{headerShown:false}},
   AddFeedback:{screen:AddFeedback,navigationOptions:{headerShown:false}},
   AddTechnician:{screen:AddTechnician,navigationOptions:{headerShown:false}},
@@ -168,8 +165,6 @@ Notes:{screen:Notes,navigationOptions:{headerShown:false}},
 Notification:{screen:Notification,navigationOptions:{headerShown:false}},
 MyNotification:{screen:MyNotification,navigationOptions:{headerShown:false}},
 currentJob:{screen:currentJob,navigationOptions:{headerShown:false}},
-JobInProgress:{screen:JobInProgress,navigationOptions:{headerShown:false}},
-camera:{screen:camera,navigationOptions:{headerShown:false}},
  AdditionalHours:{screen:AdditionalHours,navigationOptions:{headerShown:false,headerRight: () => (
     <StackHeader/>)}},
   JobAssign:{screen:JobAssign,navigationOptions:{headerShown:false}},
@@ -178,13 +173,13 @@ camera:{screen:camera,navigationOptions:{headerShown:false}},
   SearchClient:{screen:SearchClient,navigationOptions:{headerShown:false}},
   Equip_Id_Details:{screen:Equip_Id_Details,navigationOptions:{headerShown:false}},
   Equip_ID:{screen:Equip_ID,navigationOptions:{headerShown:false}},
-  StackHeader:{screen:StackHeader},
-  JobInProgress:{screen:JobInProgress,navigationOptions:{headerShown:false}},
   SplashScreen:{screen:SplashScreen,navigationOptions:{headerShown:false}},
+  StackHeader:{screen:StackHeader},
+  Camera:{screen:Camera,navigationOptions:{headerShown:false}}
   
 },
   {
-    initialRouteName: "SplashScreen",
+    initialRouteName: "Login",
     // headerMode: "none",
      //unmountInactiveRoutes: true
   }

@@ -4,9 +4,9 @@ const { StyleSheet } = require("react-native");
 import {View,Dimensions,Text, Alert,Button,TextInput,TouchableWithoutFeedback,Keyboard,ScrollView} from 'react-native';
 import React from 'react';
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
-
+import { AppStorage } from '../utils/AppStorage';
 import DatePicker from 'react-native-datepicker';
-import DateTimePicker from 'react-native-modal-datetime-picker';
+import DateTimePickerModal from "react-native-modal-datetime-picker";
 import moment from 'moment';
 import {Calendar, CalendarList, Agenda} from 'react-native-calendars';
 import { TouchableOpacity } from 'react-native-gesture-handler';
@@ -15,26 +15,35 @@ import DrawerHeader from '../CommonComponents/DrawerHeader';
 import BottomTabNavigator from '../CommonComponents/BottomTabNavigator'
 // import DateTimePickerModal from "react-native-modal-datetime-picker";
 import { SafeAreaView } from 'react-navigation';
-
+import AuthService from '../RestClient/AuthService';
+import ApiLoader from '../PopUp/ApiLoader';
 export default class AdditionalHours  extends React.Component{
 constructor(){
 super();
 this.state = {
+  jobId:'',
  showDate:false,
 mode :'',
 showStartTime:false,
 showEndTime:false,
 startTime:'',
 endTime:'',
-chosenDate:''
-
-
+chosenDate:'',
+isLoading: false,
+description:''
 }
 
 
 }
 
+componentDidMount=async()=>{
 
+  var assignedJobId= await AppStorage.getAssignedJobId()
+console.log("Assigned job ID******************",assignedJobId)
+this.setState({
+  jobId:assignedJobId
+})
+}
   _hideDateTimePicker = () => this.setState({ 
 showStartTime:false,
 showEndTime:false,
@@ -42,7 +51,9 @@ showDate:false
 
    });
 
- 
+   toggleLoader = (val) => {
+    this.setState(({isLoading: val}));
+};
 showDatePicker=()=>{
 
   this.setState({
@@ -53,19 +64,176 @@ showDatePicker=()=>{
 
 }
 
+
 handleStartTime=(time)=>{
+  var a=moment(time).format("hh:mm A")
+  var b=a.substring(5,a.length)
+  console.log("value of a",a.substring(0,2))
+  
+  if(b===' AM')
+  {
+    
+
+if(a.substring(0,2)==12)
+{
+
+var c="00"+a.substring(2,5)
+console.log("12 selected",c)
+this.setState({
+  startTime:c
+})
+}
+else
+{
+  var c=a.substring(0,5)
+  this.setState({
+    startTime:c
+  })
+  
+
+}
+
+  }
+
+  else if(b===' PM')
+  {
+
+if(a.substring(0,2)<12)
+{
+  var c=a.substring(0,2)
+  var NewTime=parseInt(c)+12+a.substring(2,5)
+  
+  this.setState({
+    startTime:NewTime
+  })
+
+
+}
+else{
+
+  this.setState({
+    startTime:a.substring(0,5)
+  })
+
+}
+ 
+    
+
+  }
+  else{
+    alert("nothing")
+  }
+
+  
+
+  
+
+
+
     this.setState({
      showStartTime:false,
-     startTime:moment(time, "HH:mm").format("hh:mm "),
+    //  startTime:moment(time).format("hh:mm A"),
 
     });
 
 
 }
+
+saveDetail=async()=>{
+try{
+this.toggleLoader(true);
+var json_response = await AppStorage.getLoginResponse();
+        console.log("userId", response.userResponse.UserId);
+var userId= response.userResponse.UserId
+
+
+let response= await AuthService.requestAdditionalHours(this.state.jobId,userId,this.state.startTime,this.state.endTime,this.state.chosenDate,this.state.description)
+Alert.alert("Success",response.data.Message);
+this.props.navigation.navigate("Dashboard")
+console.log("response recieved******************",response.data)
+
+}
+catch(e){
+Alert.alert("error",e.response.data.Message)
+
+}
+finally {
+  this.toggleLoader(false);
+  // console.log('login finally print hua');
+}
+
+}
+
+
+
 handleEndTime=(time)=>{
+
+  var a=moment(time).format("hh:mm A")
+  var b=a.substring(5,a.length)
+  console.log("value of a",a.substring(0,2))
+  
+  if(b===' AM')
+  {
+    
+
+if(a.substring(0,2)==12)
+{
+
+var c="00"+a.substring(2,5)
+console.log("12 selected",c)
+this.setState({
+  endTime:c
+})
+}
+else
+{
+  var c=a.substring(0,5)
+  this.setState({
+    endTime:c
+  })
+  
+
+}
+
+  }
+
+  else if(b===' PM')
+  {
+
+if(a.substring(0,2)<12)
+{
+  var c=a.substring(0,2)
+  var NewTime=parseInt(c)+12+a.substring(2,5)
+  
+  this.setState({
+    endTime:NewTime
+  })
+
+
+}
+else{
+
+  this.setState({
+    endTime:a.substring(0,5)
+  })
+
+}
+ 
+    
+
+  }
+  else{
+    alert("nothing")
+  }
+
+
+
+
+
+
   this.setState({
     showEndTime:false,
-    endTime:moment(time, "HH:mm").format("hh:mm "),
+    // endTime:moment(time, "HH:mm").format("hh:mm "),
 
    });
 
@@ -119,18 +287,20 @@ handleDate=(date)=>{
 
 render()
 {
-
+  const {isLoading} = this.state;
 
 return(
 <SafeAreaView style={styles.container}>
 <View style={styles.subcontainer1}> 
-<DrawerHeader name="Additional Work Hours" openDrawer={this.props.navigation} status={false} notification={true}/>
+ <DrawerHeader name="Additional Work Hours" openDrawer={this.props.navigation} status={false} notification={true}/> 
+<ApiLoader visibility={isLoading} loadingColor={'green'} onCancelPress={() => {
+                    }}/>
 </View>
 
 <View style={styles.subcontainer2}>
 <View style={{width:"90%",height:"7%",borderColor:'gray', 
-marginTop:"5%",justifyContent:'center',backgroundColor:'red'}}
-elevation={3}>
+marginTop:"5%",justifyContent:'center'}}
+elevation={2}>
  <TouchableOpacity style={styles.setTimeStyle} onPress={this.showDatePicker} >
 {
   this.state.chosenDate==''?
@@ -145,12 +315,12 @@ elevation={3}>
 
 
 
- <View style={{backgroundColor:'red',width:"90%",height:"7%",borderColor:'gray', 
+ <View style={{width:"90%",height:"7%",borderColor:'gray', 
 marginTop:"5%",justifyContent:'center',shadowColor: '#000',
 shadowOffset: { width: 0, height: 1 },
 shadowOpacity: 0.8,
 shadowRadius: 2,  
-}}elevation={3}>
+}}elevation={2}>
  <TouchableOpacity style={styles.setTimeStyle} onPress={this.startTime } >
 {
   this.state.startTime==''?
@@ -165,9 +335,9 @@ shadowRadius: 2,
 </TouchableOpacity>
 </View>
    
-<View style={{backgroundColor:'blue',width:"90%",height:"7%",borderColor:'gray', 
+<View style={{width:"90%",height:"7%",borderColor:'gray', 
 marginTop:"5%",justifyContent:'center'}}
-elevation={3}
+elevation={2}
 >
  <TouchableOpacity style={styles.setTimeStyle} onPress={this.endTime } >
 {
@@ -182,12 +352,13 @@ elevation={3}
 </View>
 {
 this.state.showStartTime?
-<DateTimePicker
+<DateTimePickerModal
           isVisible={this.state.showStartTime}
           onConfirm={this.handleStartTime}
           onCancel={this._hideDateTimePicker}
           mode={this.state.mode}
           is24Hour={false}
+          locale="en_GB"
         />
 :
 null
@@ -196,7 +367,7 @@ null
 }
 {
 this.state.showEndTime?
-<DateTimePicker
+<DateTimePickerModal
           isVisible={this.state.showEndTime}
           onConfirm={this.handleEndTime}
           onCancel={this._hideDateTimePicker}
@@ -212,7 +383,7 @@ null
 
 {
 this.state.showDate?
-<DateTimePicker
+<DateTimePickerModal
           isVisible={this.state.showDate}
           onConfirm={this.handleDate}
           onCancel={this._hideDateTimePicker}
@@ -241,7 +412,8 @@ style={styles.descriptionStyle}
 placeholder="Description"
 placeholderTextColor='gray'
 multiline={true}
-
+onChangeText={(text) => {
+  this.setState({description: text});}}
 
 
 />
@@ -252,7 +424,7 @@ multiline={true}
 
   </View>
   <View style={{height:'30%',justifyContent:'flex-end',backgroundColor:'transparent'}}>
-<TickButton label="Save" handleClick={this.Validate} />
+<TickButton label="Save" handleClick={this.saveDetail} />
 </View>
 
 </View>
@@ -260,8 +432,8 @@ multiline={true}
 
 
 <View style={styles.subcontainer3}>
-<BottomTabNavigator isFeedbackIcon={true} isMenuIcon={true}  navigate={this.props.navigation.navigate}>
-         </BottomTabNavigator>
+<BottomTabNavigator isFeedbackIcon={true} isMenuIcon={true}  navigate={this.props.navigation.navigate}> 
+          </BottomTabNavigator>
                 </View>
                 
 </SafeAreaView>

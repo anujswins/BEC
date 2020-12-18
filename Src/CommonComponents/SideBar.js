@@ -46,7 +46,7 @@ export default class Sidebar extends React.Component {
             <View style={styles.container}>
                 <View style={{width:'100%',alignItems:'center'}}>
                 <Image source={require("../../assets/profile.png")} style={styles.profileImg}/>
-                {/* <Text style={{fontWeight:"bold",fontSize:16,marginTop:10,color:'#ffffff'}}>Janna Doe</Text> */}
+                <Text style={{fontSize:16,marginTop:10,color:'#ffffff'}}>{this.props.navigation.getParam('Name')}</Text>
                 <Text style={{color:"#fff",marginBottom:10}}>{this.props.navigation.getParam('username')}</Text>
                 </View>
              

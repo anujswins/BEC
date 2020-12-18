@@ -123,12 +123,6 @@ return(
 </View>
 {/* -----------Email Address  Field */}
 <View style={{marginTop:hp('10%')}}>
-<<<<<<< HEAD
-<CustomTextInput label="Enter code" onChange={this.onChange}  />
-=======
-<<<<<<< HEAD
-<CustomTextInput label="Enter code" onChange={this.onChange}  />
-=======
 {/* <CustomTextInput label="Enter code" onChange={this.onChange}  /> */}
 
 <EditText
@@ -148,8 +142,6 @@ return(
 
 
 
->>>>>>> cdc289e2804b5bc3c721f86018d5aca4d96f9fbc
->>>>>>> 1efb17fd4e6918320511e82874706b886d9fece0
 </View>
 
 {/* ---------Next button ------------ */}

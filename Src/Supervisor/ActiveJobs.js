@@ -11,7 +11,6 @@ import {
     search,
     FlatList,
     Image,
-    Alert,
     TouchableOpacity
 } from 'react-native';
 
@@ -24,95 +23,102 @@ import {
 } from 'react-native/Libraries/NewAppScreen';
 import DrawerHeader from "../CommonComponents/DrawerHeader"
 import BottomTabNavigator from '../CommonComponents/BottomTabNavigator';
-<<<<<<< HEAD
+import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import ApiLoader from '../../Src/PopUp/ApiLoader';
 import AuthService from '../../Src/RestClient/AuthService';
-=======
->>>>>>> 1efb17fd4e6918320511e82874706b886d9fece0
-import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
 const height = Dimensions.get("screen").height
 const width = Dimensions.get("screen").width
 
 export default class ActiveJobs extends Component {
-    static navigationOptions={
-        title:'Technician',
-        headerTintColor:'#fff',
-        headerStyle:{
-            backgroundColor:'#008ad1'
+    static navigationOptions = {
+        title: 'Technician',
+        headerTintColor: '#fff',
+        headerStyle: {
+            backgroundColor: '#008ad1'
         },
-        headerTitleStyle:{
-          fontWeight:'normal',
-          textAlign:'left'
+        headerTitleStyle: {
+            fontWeight: 'normal',
+            textAlign: 'left'
         }
-        
-        
-        }
+
+
+    }
     constructor() {
         super();
         this.state = {
-<<<<<<< HEAD
-            "JobId": 0,
-=======
->>>>>>> 1efb17fd4e6918320511e82874706b886d9fece0
-            Data: [{ JobNum: "JN-2345", MachineType: "3-Phase Induction motor", Machine: "Induction Motor", Segment: "Single Speed", Sub_segment: "3 Speed", Stage: "4", TotalTimeSpent: "25", TotalSpentToday: "4", TeamMember: "6" }]
-
+            jobId: '',
+            // Data: [{ JobNum: "JN-2345", MachineType: "3-Phase Induction motor", Machine: "Induction Motor", Segment: "Single Speed", Sub_segment: "3 Speed", Stage: "4", TotalTimeSpent: "25", TotalSpentToday: "4", TeamMember: "6" }]
+            Data: [],
         }
     }
-<<<<<<< HEAD
-    componentDidMount = async () => {
-        this.Fun_GetActiveJobRecords();
+    componentDidMount() {
+        this.ActiveJobDetail();
+
+
+    }
+
+    ActiveJobDetail = async () => {
+        // console.log('Active jobs called');
+
+        try {
+            this.toggleLoader(true);
+            // console.log('inside try');
+            var id = (this.props.navigation.getParam('JobId'));
+            
+
+            let json_response = await AuthService.getActiveJobDetail(id);
+            this.setState({
+                Data: json_response.data.data.assignedJobMainDetail.assignedJobDetail,
+                jobId:json_response.data.data.assignedJobMainDetail.assignedJobDetail[0].JobId
+
+            })
+
+     
+        console.log('Job in Active jobs',json_response.data.data.assignedJobMainDetail.assignedJobDetail[0].JobId);
+            // console.log('GetAllRecords try==', json_response.data.data.assignedJobMainDetail.assignedJobDetail[0]);
+
+
+
+        } catch (e) {
+
+            //  Alert.alert(e.response.data);
+            // console.log('GetAllRecords catch', e.response.data);
+        } finally {
+            this.toggleLoader(false);
+            console.log('GetAllRecords finally print hua');
+        }
+
     };
-    
-    
     toggleLoader = (val) => {
         this.setState(({ isLoading: val }));
     };
-    
-    
-    Fun_GetActiveJobRecords = async () => {
-        try {
-            this.toggleLoader(true);
-            let json_response = await AuthService.SupActiveJobs(this.state.JobId);
-    
-             console.log('GetActiveJobRecords try==', json_response.data.data.assignedJobMainDetail
-             .assignedJobDetail);
-          
-    
-        } catch (e) {
-    
-             Alert.alert(e.response);
-            console.log('GetActiveJobRecords catch', e.response);
-        } finally {
-            this.toggleLoader(false);
-            console.log('GetActiveJobRecords finally print hua');
-        }};
- 
-=======
-
->>>>>>> 1efb17fd4e6918320511e82874706b886d9fece0
-
     render() {
+        const { search, isLoading } = this.state;
         return (
             <SafeAreaView style={styles.container}>
-                <StatusBar  
-     backgroundColor = "#008BD0"  
-   
-   /> 
-            <View style={styles.StackHeader}>
-            <DrawerHeader name="Technicians" openDrawer={this.props.navigation} status={false} notification={true}/>
-           </View>
-           <View style={{height:'82%',width:'100%', backgroundColor:'transparent'}}>
-            <View style={styles.activeJobs}>
-                <Text style={styles.textActiveJobs}>
-                    Active Jobs
+                <StatusBar
+                    backgroundColor="#008BD0"
+                    barStyle="#ffffff"
+                />
+                <View style={styles.StackHeader}>
+                    <DrawerHeader name="Technicians" openDrawer={this.props.navigation} status={false} notification={true} />
+                </View>
+                <ApiLoader visibility={isLoading} loadingColor={'green'} onCancelPress={() => {
+                }} />
+                <View style={{ height: '82%', width: '100%', backgroundColor: 'transparent' }}>
+                    <View style={styles.activeJobs}>
+                        <Text style={styles.textActiveJobs}>
+                            Active Jobs
                 </Text>
-            </View>
-            <View style={styles.flatListDataContainer}>
-                <FlatList data={this.state.Data}
-                keyExtractor={(item,index)=>index.toString()}
-                    renderItem={({ item }) => (
-                        <View style={styles.viewFlatListdataContain}>
-                            <View style={styles.viewJobNoContainer}>
+                    </View>
+                    <View style={styles.flatListDataContainer}>
+                        <FlatList data={this.state.Data}
+                            keyExtractor={(item, index) => index.toString()}
+                            renderItem={({ item }) => {
+                                // this.setState({jobId:item.JobId})
+                               return (
+                                <View style={styles.viewFlatListdataContain}>
+                                    <View style={styles.viewJobNoContainer}>
                                 <View style={styles.viewJobNo}>
                                     <Text style={styles.textJobNo}>
                                         Job Number
@@ -120,12 +126,12 @@ export default class ActiveJobs extends Component {
                                 </View>
                                 <View style={styles.viewJobNoValue}>
                                     <Text style={styles.textJobNoValue}>
-                                        {item.JobNum}
+                                        {item.JobCode}
                                     </Text>
                                 </View>
                             </View>
 
-                            <View style={styles.viewMachinetypeContainer}>
+                                    {/* <View style={styles.viewMachinetypeContainer}>
                                 <View style={styles.viewMachineType}>
                                     <Text style={styles.textMachineType}>
                                         Machine Type
@@ -136,448 +142,468 @@ export default class ActiveJobs extends Component {
                                         {item.MachineType}
                                     </Text>
                                 </View>
-                            </View>
+                            </View> */}
 
-                            <View style={styles.viewMachineContainer}>
-                                <View style={styles.viewMachine}>
-                                    <Text style={styles.textMachine}>
-                                        Machine
+                                    <View style={styles.viewMachineContainer}>
+                                        <View style={styles.viewMachine}>
+                                            <Text style={styles.textMachine}>
+                                                Machine
                                 </Text>
-                                </View>
-                                <View style={styles.viewMachineValue}>
-                                    <Text style={styles.textMachineValue}>
-                                        {item.Machine}
+                                        </View>
+                                        <View style={styles.viewMachineValue}>
+                                            <Text style={styles.textMachineValue}>
+                                                {item.Machine}
+                                            </Text>
+                                        </View>
+                                    </View>
+
+                                    <View style={styles.viewSegmentcontainer}>
+                                        <View style={styles.viewSegment}>
+                                            <Text style={styles.textSegment}>
+                                                Segment
+                                </Text>
+                                        </View>
+                                        <View style={styles.viewSegmentValue}>
+                                            <Text style={styles.textSegmentValue}>
+                                                {item.Segment}
+                                            </Text>
+                                        </View>
+                                    </View>
+
+                                    <View style={styles.viewSubsegmentContainer}>
+                                        <View style={styles.viewSubsegment}>
+                                            <Text style={styles.textSubSegment}>
+                                                Sub-segment
+                                </Text>
+                                        </View>
+                                        <View style={styles.viewSubsegmentValue}>
+                                            {item.Sub_segment === "" ?
+                                                <Text style={styles.textSubsegmentValue}>
+                                                    --
                                     </Text>
-                                </View>
-                            </View>
+                                                :
+                                                <Text style={styles.textSubsegmentValue}>
+                                                    {item.Sub_segment}
+                                                </Text>
+                                            }
 
-                            <View style={styles.viewSegmentcontainer}>
-                                <View style={styles.viewSegment}>
-                                    <Text style={styles.textSegment}>
-                                        Segment
+                                        </View>
+                                    </View>
+
+                                    <View style={styles.viewStageContainer}>
+                                        <View style={styles.viewStage}>
+                                            <Text style={styles.textStage}>
+                                                Stage
                                 </Text>
-                                </View>
-                                <View style={styles.viewSegmentValue}>
-                                    <Text style={styles.textSegmentValue}>
-                                        {item.Segment}
-                                    </Text>
-                                </View>
-                            </View>
+                                        </View>
+                                        <View style={styles.viewStageValue}>
+                                            <Text style={styles.textStageValue}>
+                                                {item.Stage}
+                                            </Text>
+                                        </View>
+                                    </View>
 
-                            <View style={styles.viewSubsegmentContainer}>
-                                <View style={styles.viewSubsegment}>
-                                    <Text style={styles.textSubSegment}>
-                                        Sub-segment
+                                    <View style={styles.viewTotalTimeSpentContainer}>
+                                        <View style={styles.viewTotalTimeSpent}>
+                                            <Text style={styles.textTotalTimeSpent}>
+                                                Total Time Spent
                                 </Text>
-                                </View>
-                                <View style={styles.viewSubsegmentValue}>
-                                    <Text style={styles.textSubsegmentValue}>
-                                        {item.Sub_segment}
-                                    </Text>
-                                </View>
-                            </View>
+                                        </View>
+                                        <View style={styles.viewTotalTimeSpentValue}>
+                                            <Text style={styles.textTotalTimeSpentValue}>
+                                                {item.TotalSpendTime}
+                                            </Text>
+                                        </View>
+                                    </View>
 
-                            <View style={styles.viewStageContainer}>
-                                <View style={styles.viewStage}>
-                                    <Text style={styles.textStage}>
-                                        Stage
+                                    <View style={styles.viewTotalSpentTodayContainer}>
+                                        <View style={styles.viewTotalSpentToday}>
+                                            <Text style={styles.textTotalSpentToday}>
+                                                Total Spent Today
                                 </Text>
-                                </View>
-                                <View style={styles.viewStageValue}>
-                                    <Text style={styles.textStageValue}>
-                                        {item.Stage}
-                                    </Text>
-                                </View>
-                            </View>
+                                        </View>
+                                        <View style={styles.viewTotalSpentTodayValue}>
+                                            <Text style={styles.textTotalSpentTodayValue}>
+                                                {item.TimeSpentToday}
+                                            </Text>
+                                        </View>
+                                    </View>
 
-                            <View style={styles.viewTotalTimeSpentContainer}>
-                                <View style={styles.viewTotalTimeSpent}>
-                                    <Text style={styles.textTotalTimeSpent}>
-                                        Total Time Spent
+                                    <View style={styles.viewTotalMemberContainer}>
+                                        <View style={styles.viewTotalMember}>
+                                            <Text style={styles.textTotalMembers}>
+                                                Total Member
                                 </Text>
+                                        </View>
+                                        <View style={styles.viewTeamMemberBtn}>
+                                            <TouchableOpacity
+                                                // onPress={() =>
+                                                //     // console.log("ActiveJobId@@@@@@@@@@@",item.JobId);
+                                                //      this.props.navigation.navigate("TeamMember"),{ActiveJobId:item.JobId }
+                                                //      }
+                                                onPress={() =>
+                                                    this.props.navigation.navigate("TeamMember", { ActiveJobId: item.JobId })
+                                                    // console.log("Kuldeep",item.JobId)
+                                                }
+                                            >
+                                                <Text style={styles.textTeamMemberBtn}>
+                                                    {item.TotalMembers}
+                                                </Text>
+                                            </TouchableOpacity>
+                                        </View>
+                                    </View>
+
+
+
+
+
+
                                 </View>
-                                <View style={styles.viewTotalTimeSpentValue}>
-                                    <Text style={styles.textTotalTimeSpentValue}>
-                                        {item.TotalTimeSpent}
-                                    </Text>
-                                </View>
-                            </View>
+                            )}}>
 
-                            <View style={styles.viewTotalSpentTodayContainer}>
-                                <View style={styles.viewTotalSpentToday}>
-                                    <Text style={styles.textTotalSpentToday}>
-                                        Total Spent Today
-                                </Text>
-                                </View>
-                                <View style={styles.viewTotalSpentTodayValue}>
-                                    <Text style={styles.textTotalSpentTodayValue}>
-                                        {item.TotalSpentToday}
-                                    </Text>
-                                </View>
-                            </View>
+                        </FlatList>
 
-                            <View style={styles.viewTotalMemberContainer}>
-                                <View style={styles.viewTotalMember}>
-                                    <Text style={styles.textTotalMembers}>
-                                        Total Member
-                                </Text>
-                                </View>
-                                <View style={styles.viewTeamMemberBtn}>
-                                    <TouchableOpacity onPress={() => { this.props.navigation.navigate("TeamMember") }}>
-                                        <Text style={styles.textTeamMemberBtn}>
-                                            {item.TeamMember}
-                                        </Text>
-                                    </TouchableOpacity>
-                                </View>
-                            </View>
+                    </View>
+                    <View style={styles.viewAddMemberIcon}>
+      
 
-                            
-                            
-                            
-
-
-                        </View>
-                    )}>
-
-                </FlatList>
-
-            </View>
-            <View style={styles.viewAddMemberIcon}>
-            <TouchableOpacity onPress={() => { this.props.navigation.navigate("Technicians") }}>
-                    <Image style={{resizeMode:'contain',height:hp('10%'),width:wp('11.5%')}} source={require("../../assets/plus_icon.png")} />
-                </TouchableOpacity>
-            </View>
-            {/* <View style={styles.viewAddMemberIcon}>
+                        <TouchableOpacity onPress={() => {
+                            console.log("job id sent",this.state.jobId)
+                            this.props.navigation.navigate("JobAssignment",{JobAssignBool:"Active_Job",JobId:this.state.jobId}) }}>
+                            <Image style={{ resizeMode: 'contain', height: hp('10%'), width: wp('11.5%') }} source={require("../../assets/plus_icon.png")} />
+                        </TouchableOpacity>
+                    </View>
+                    {/* <View style={styles.viewAddMemberIcon}>
                 <TouchableOpacity onPress={() => { this.props.navigation.navigate("Technicians") }}>
                     <Image source={require("../../assets/add.png")} />
                 </TouchableOpacity>
 
             </View> */}
-            </View>
-            <View style={styles.BottomBarBtn}>
-           <BottomTabNavigator isFeedbackIcon={true} isMenuIcon={true} navigate={this.props.navigation.navigate}/>
-            </View>
+                </View>
+                <View style={styles.BottomBarBtn}>
+                    <BottomTabNavigator isFeedbackIcon={true} isMenuIcon={true} navigate={this.props.navigation.navigate} />
+                </View>
 
-        </SafeAreaView>
+            </SafeAreaView>
         )
     }
 }
 
 const styles = StyleSheet.create({
-    container:{
-         flex: 1, 
-         height: '100%', 
-         width: '100%', 
-         backgroundColor: "#FFFFFF",
-        },
-        StackHeader:{
-            height:'9%', 
-            width:'100%',
-            backgroundColor:'#008BD0'
-        },
-    activeJobs:{ 
+    container: {
+        flex: 1,
+        height: '100%',
+        width: '100%',
+        backgroundColor: "#FFFFFF",
+    },
+    StackHeader: {
         height: '9%',
-        width: '100%', 
-        backgroundColor: "#E6F7FF", 
-        justifyContent: "center", 
-        alignItems: "flex-start", 
-        paddingLeft: '6%' 
+        width: '100%',
+        backgroundColor: '#008BD0'
     },
-    textActiveJobs:{ 
-        fontSize: hp('2.6%'), 
-        fontWeight: "bold", 
-        color: "#008AD2" 
+    activeJobs: {
+        height: '9%',
+        width: '100%',
+        backgroundColor: "#E6F7FF",
+        justifyContent: "center",
+        alignItems: "flex-start",
+        paddingLeft: '6%'
     },
-    flatListDataContainer:{ 
+    textActiveJobs: {
+        fontSize: hp('2.6%'),
+        fontWeight: "bold",
+        color: "#008AD2"
+    },
+    flatListDataContainer: {
         height: '81%',        // res
-        width: '100%', 
+        width: '100%',
         backgroundColor: "transparent"
     },
-    viewFlatListdataContain:{
-        backgroundColor: "transparent", 
-        marginHorizontal: wp('3%') 
+    viewFlatListdataContain: {
+        backgroundColor: "transparent",
+        marginHorizontal: wp('3%')
     },
-    viewJobNoContainer:{ 
-        borderBottomWidth: 1, 
-        borderBottomColor: "#D2D3D5", 
-        height: hp('6%'), 
-        width: wp('94%'), 
-        flexDirection: "row" 
+    viewJobNoContainer: {
+        borderBottomWidth: 1,
+        borderBottomColor: "#D2D3D5",
+        height: hp('6%'),
+        width: wp('94%'),
+        flexDirection: "row"
     },
-    viewJobNo:{ 
-        width: wp('47%'), 
-        height: hp('6%'), 
-        backgroundColor: "transparent", 
-        justifyContent: "center", 
-        alignItems: "flex-start", 
-        paddingLeft: wp('8%') 
+    viewJobNo: {
+        width: wp('47%'),
+        height: hp('6%'),
+        backgroundColor: "transparent",
+        justifyContent: "center",
+        alignItems: "flex-start",
+        paddingLeft: wp('8%')
     },
-    textJobNo:{ 
-        fontSize: hp('1.9%'), 
-        color: "#333333", 
+    textJobNo: {
+        fontSize: hp('1.9%'),
+        color: "#333333",
     },
-    viewJobNoValue:{ 
-        width: wp('47%'), 
-        height: hp('6%'), 
-        backgroundColor: "transparent", 
-        justifyContent: "center", 
-        alignItems: "flex-start" 
+    viewJobNoValue: {
+        width: wp('47%'),
+        height: hp('6%'),
+        backgroundColor: "transparent",
+        justifyContent: "center",
+        alignItems: "flex-start"
     },
-    textJobNoValue:{ 
-        fontSize: hp('1.9%'),  
-        color: "#333333" 
-    },
-    viewMachinetypeContainer:{ 
-        borderBottomWidth: 1, 
-        borderBottomColor: "#D2D3D5", 
-        height: hp('6%'), 
-        width: wp('94%'), 
-        flexDirection: "row" 
-    },
-    viewMachineType:{ 
-        width: wp('47%'), 
-        height: hp('6%'), 
-        backgroundColor: "transparent", 
-        justifyContent: "center", 
-        alignItems: "flex-start", 
-        paddingLeft: wp('8%') 
-    },
-    textMachineType:{ 
-        fontSize: hp('1.9%'), 
-        color: "#333333" 
-    },
-    viewMachineContainer:{ 
-        borderBottomWidth: 1, 
-        borderBottomColor: "#D2D3D5", 
-        height: hp('6%'), 
-        width: wp('94%'), 
-        flexDirection: "row" 
-    },
-    viewMachineTypeValue:{ 
-        width: wp('47%'), 
-        height: hp('6%'), 
-        backgroundColor: "transparent", 
-        justifyContent: "center", 
-        alignItems: "flex-start" 
-    },
-    textMachineTypeValue:{ 
-        fontSize: hp('1.9%'), 
-        color: "#333333" 
-    },
-    viewMachine:{ 
-        width: wp('47%'), 
-        height: hp('6%'), 
-        backgroundColor: "transparent", 
-        justifyContent: "center", 
-        alignItems: "flex-start", 
-        paddingLeft: wp('8%') ,
-        // fontSize: hp('5%'),
-    },
-    textMachine:{
-        fontSize: hp('1.9%'), 
+    textJobNoValue: {
+        fontSize: hp('1.9%'),
         color: "#333333"
     },
-    viewMachineValue:{ 
-        width: wp('47%'), 
-        height: hp('6%'), 
-        backgroundColor: "transparent", 
-        justifyContent: "center", 
-        alignItems: "flex-start" 
-    },
-    textMachineValue:{ 
-        fontSize: hp('1.9%'), 
-        color: "#333333" 
-    },
-    viewSegmentcontainer:{ 
-        borderBottomWidth: 1, 
-        borderBottomColor: "#D2D3D5", 
-        height: hp('6%'), 
-        width: wp('94%'), 
-        flexDirection: "row" 
-    },
-    viewSegment:{ 
-        width:wp('47%'), 
-        height: hp('6%'), 
-        backgroundColor: "transparent", 
-        justifyContent: "center", 
-        alignItems: "flex-start", 
-        paddingLeft: wp('8%') 
-    },
-    textSegment:{ 
-        fontSize: hp('1.9%'), 
-        color: "#333333" 
-    },
-    viewSegmentValue:{ 
-        width: wp('47%'), 
-        height: hp('6%'), 
-        backgroundColor: "transparent", 
-        justifyContent: "center", 
-        alignItems: "flex-start" 
-    },
-    textSegmentValue:{ 
-        fontSize: hp('1.9%'), 
-        color: "#333333" 
-    },
-    viewSubsegmentContainer:{ 
-        borderBottomWidth: 1, 
-        borderBottomColor: "#D2D3D5", 
-        height: hp('6%'), 
-        width: wp('94%'), 
-        flexDirection: "row" 
-    },
-    viewSubsegment:{ 
-        width: wp('47%'), 
-        height: hp('6%'), 
-        backgroundColor: "transparent", 
-        justifyContent: "center",
-        alignItems: "flex-start", 
-        paddingLeft: wp('8%') 
-    },
-    textSubSegment:{ 
-        fontSize: hp('1.9%'), 
-        color: "#333333" 
-    },
-    viewSubsegmentValue:{ 
-        width: wp('47%'), 
-        height: hp('6%'), 
-        backgroundColor: "transparent", 
-        justifyContent: "center", 
-        alignItems: "flex-start" 
-    },textSubsegmentValue:{ 
-        fontSize: hp('1.9%'), 
-        color: "#333333" 
-    },viewStageContainer:{ 
-        borderBottomWidth: 1, 
-        borderBottomColor: "#D2D3D5", 
-        height: hp('6%'), 
-        width: wp('94%'), 
-        flexDirection: "row" 
-    },
-    viewStage:{
-        width: wp('47%'), 
-        height: hp('6%'), 
-        backgroundColor: "transparent", 
-        justifyContent: "center",
-        alignItems: "flex-start", 
-        paddingLeft: wp('8%') 
-    },
-    textStage:{ 
-        fontSize: hp('1.9%'), 
-        color: "#333333" 
-    },
-    viewStageValue:{ 
-        width: wp('47%'), 
-        height: hp('6%'), 
-        backgroundColor: "transparent", 
-        justifyContent: "center", 
-        alignItems: "flex-start" 
-    },
-    textStageValue:{ 
-        fontSize: hp('1.9%'), 
-        color: "#333333" 
-    },
-    viewTotalTimeSpentContainer:{ 
-        borderBottomWidth: 1, 
-        borderBottomColor: "#D2D3D5", 
+    viewMachinetypeContainer: {
+        borderBottomWidth: 1,
+        borderBottomColor: "#D2D3D5",
         height: hp('6%'),
-         width: wp('94%'), 
-         flexDirection: "row" 
-        },
-        viewTotalTimeSpent:{ 
-            width: wp('47%'), 
-            height: hp('6%'),  
-            backgroundColor: "transparent", 
-            justifyContent: "center", 
-            alignItems: "flex-start", 
-            paddingLeft: wp('8%') 
-        },
-        textTotalTimeSpent:{ 
-            fontSize: hp('1.9%'), 
-            color: "#333333" 
-        },
-        viewTotalTimeSpentValue:{ 
-            width: wp('47%'), 
-            height: hp('6%'), 
-            backgroundColor: "transparent", 
-            justifyContent: "center", 
-            alignItems: "flex-start" 
-        },
-        textTotalTimeSpentValue:{ 
-            fontSize: hp('1.9%'), 
-            color: "#333333" 
-        },
-        viewTotalSpentTodayContainer:{ 
-            borderBottomWidth: 1, 
-            borderBottomColor: "#D2D3D5", 
-            height: hp('6%'), 
-            width: wp('94%'), 
-            flexDirection: "row" 
-        },
-        viewTotalSpentToday:{ 
-            width: wp('47%'), 
-            height: hp('6%'), 
-            backgroundColor: "transparent", 
-            justifyContent: "center", 
-            alignItems: "flex-start", 
-            paddingLeft: wp('8%') 
-        },
-        textTotalSpentToday:{ 
-            fontSize: hp('1.9%'), 
-            color: "#333333" 
-        },
-        viewTotalSpentTodayValue:{ 
-            width: wp('47%'), 
-            height: hp('6%'), 
-            backgroundColor: "transparent", 
-            justifyContent: "center", 
-            alignItems: "flex-start" 
-        },
-        textTotalSpentTodayValue:{ 
-            fontSize: hp('1.9%'), 
-            color: "#333333" 
-        },
-        viewTotalMemberContainer:{ 
-            borderBottomWidth: 1, 
-            borderBottomColor: "#D2D3D5", 
-            height: hp('6%'),
-            width: wp('94%'), 
-            flexDirection: "row" 
-        },
-        viewTotalMember:{ 
-            width: wp('47%'), 
-            height: hp('6%'), 
-            justifyContent: "center", 
-            alignItems: "flex-start", 
-            paddingLeft: wp('8%') 
-        },
-        textTotalMembers:{ 
-            fontSize: hp('1.9%'), 
-            color: "#333333" 
-        },
-        viewTeamMemberBtn:{ 
-            width: wp('47%'), 
-            height: hp('6%'), 
-            justifyContent: "center", 
-            alignItems: "flex-start" 
-        },
-        textTeamMemberBtn:{ 
-            fontSize: hp('1.9%'), 
-            color: "#008AD2" 
-        },
-        viewAddMemberIcon:{ 
-            height: '10%', 
-            width: '100%', 
-            backgroundColor: "transparent", 
-            justifyContent: "flex-end", 
-            alignItems: "flex-end", 
-            paddingRight: '8%', 
-            paddingBottom: '4%',
-        },
-        BottomBarBtn:{ 
-            height: '9%', 
-            width: '100%', 
-            backgroundColor: "#008BD0" 
-        }
+        width: wp('94%'),
+        flexDirection: "row"
+    },
+    viewMachineType: {
+        width: wp('47%'),
+        height: hp('6%'),
+        backgroundColor: "transparent",
+        justifyContent: "center",
+        alignItems: "flex-start",
+        paddingLeft: wp('8%')
+    },
+    textMachineType: {
+        fontSize: hp('1.9%'),
+        color: "#333333"
+    },
+    viewMachineContainer: {
+        borderBottomWidth: 1,
+        borderBottomColor: "#D2D3D5",
+        height: hp('6%'),
+        width: wp('94%'),
+        flexDirection: "row"
+    },
+    viewMachineTypeValue: {
+        width: wp('47%'),
+        height: hp('6%'),
+        backgroundColor: "transparent",
+        justifyContent: "center",
+        alignItems: "flex-start"
+    },
+    textMachineTypeValue: {
+        fontSize: hp('1.9%'),
+        color: "#333333"
+    },
+    viewMachine: {
+        width: wp('47%'),
+        height: hp('6%'),
+        backgroundColor: "transparent",
+        justifyContent: "center",
+        alignItems: "flex-start",
+        paddingLeft: wp('8%'),
+        // fontSize: hp('5%'),
+    },
+    textMachine: {
+        fontSize: hp('1.9%'),
+        color: "#333333"
+    },
+    viewMachineValue: {
+        width: wp('47%'),
+        height: hp('6%'),
+        backgroundColor: "transparent",
+        justifyContent: "center",
+        alignItems: "flex-start"
+    },
+    textMachineValue: {
+        fontSize: hp('1.9%'),
+        color: "#333333"
+    },
+    viewSegmentcontainer: {
+        borderBottomWidth: 1,
+        borderBottomColor: "#D2D3D5",
+        height: hp('6%'),
+        width: wp('94%'),
+        flexDirection: "row"
+    },
+    viewSegment: {
+        width: wp('47%'),
+        height: hp('6%'),
+        backgroundColor: "transparent",
+        justifyContent: "center",
+        alignItems: "flex-start",
+        paddingLeft: wp('8%')
+    },
+    textSegment: {
+        fontSize: hp('1.9%'),
+        color: "#333333"
+    },
+    viewSegmentValue: {
+        width: wp('47%'),
+        height: hp('6%'),
+        backgroundColor: "transparent",
+        justifyContent: "center",
+        alignItems: "flex-start"
+    },
+    textSegmentValue: {
+        fontSize: hp('1.9%'),
+        color: "#333333"
+    },
+    viewSubsegmentContainer: {
+        borderBottomWidth: 1,
+        borderBottomColor: "#D2D3D5",
+        height: hp('6%'),
+        width: wp('94%'),
+        flexDirection: "row"
+    },
+    viewSubsegment: {
+        width: wp('47%'),
+        height: hp('6%'),
+        backgroundColor: "transparent",
+        justifyContent: "center",
+        alignItems: "flex-start",
+        paddingLeft: wp('8%')
+    },
+    textSubSegment: {
+        fontSize: hp('1.9%'),
+        color: "#333333"
+    },
+    viewSubsegmentValue: {
+        width: wp('47%'),
+        height: hp('6%'),
+        backgroundColor: "transparent",
+        justifyContent: "center",
+        alignItems: "flex-start"
+    }, textSubsegmentValue: {
+        fontSize: hp('1.9%'),
+        color: "#333333"
+    }, viewStageContainer: {
+        borderBottomWidth: 1,
+        borderBottomColor: "#D2D3D5",
+        height: hp('6%'),
+        width: wp('94%'),
+        flexDirection: "row"
+    },
+    viewStage: {
+        width: wp('47%'),
+        height: hp('6%'),
+        backgroundColor: "transparent",
+        justifyContent: "center",
+        alignItems: "flex-start",
+        paddingLeft: wp('8%')
+    },
+    textStage: {
+        fontSize: hp('1.9%'),
+        color: "#333333"
+    },
+    viewStageValue: {
+        width: wp('47%'),
+        height: hp('6%'),
+        backgroundColor: "transparent",
+        justifyContent: "center",
+        alignItems: "flex-start"
+    },
+    textStageValue: {
+        fontSize: hp('1.9%'),
+        color: "#333333"
+    },
+    viewTotalTimeSpentContainer: {
+        borderBottomWidth: 1,
+        borderBottomColor: "#D2D3D5",
+        height: hp('6%'),
+        width: wp('94%'),
+        flexDirection: "row"
+    },
+    viewTotalTimeSpent: {
+        width: wp('47%'),
+        height: hp('6%'),
+        backgroundColor: "transparent",
+        justifyContent: "center",
+        alignItems: "flex-start",
+        paddingLeft: wp('8%')
+    },
+    textTotalTimeSpent: {
+        fontSize: hp('1.9%'),
+        color: "#333333"
+    },
+    viewTotalTimeSpentValue: {
+        width: wp('47%'),
+        height: hp('6%'),
+        backgroundColor: "transparent",
+        justifyContent: "center",
+        alignItems: "flex-start"
+    },
+    textTotalTimeSpentValue: {
+        fontSize: hp('1.9%'),
+        color: "#333333"
+    },
+    viewTotalSpentTodayContainer: {
+        borderBottomWidth: 1,
+        borderBottomColor: "#D2D3D5",
+        height: hp('6%'),
+        width: wp('94%'),
+        flexDirection: "row"
+    },
+    viewTotalSpentToday: {
+        width: wp('47%'),
+        height: hp('6%'),
+        backgroundColor: "transparent",
+        justifyContent: "center",
+        alignItems: "flex-start",
+        paddingLeft: wp('8%')
+    },
+    textTotalSpentToday: {
+        fontSize: hp('1.9%'),
+        color: "#333333"
+    },
+    viewTotalSpentTodayValue: {
+        width: wp('47%'),
+        height: hp('6%'),
+        backgroundColor: "transparent",
+        justifyContent: "center",
+        alignItems: "flex-start"
+    },
+    textTotalSpentTodayValue: {
+        fontSize: hp('1.9%'),
+        color: "#333333"
+    },
+    viewTotalMemberContainer: {
+        borderBottomWidth: 1,
+        borderBottomColor: "#D2D3D5",
+        height: hp('6%'),
+        width: wp('94%'),
+        flexDirection: "row"
+    },
+    viewTotalMember: {
+        width: wp('47%'),
+        height: hp('6%'),
+        justifyContent: "center",
+        alignItems: "flex-start",
+        paddingLeft: wp('8%')
+    },
+    textTotalMembers: {
+        fontSize: hp('1.9%'),
+        color: "#333333"
+    },
+    viewTeamMemberBtn: {
+        width: wp('47%'),
+        height: hp('6%'),
+        justifyContent: "center",
+        alignItems: "flex-start"
+    },
+    textTeamMemberBtn: {
+        fontSize: hp('1.9%'),
+        color: "#008AD2"
+    },
+    viewAddMemberIcon: {
+        height: '10%',
+        width: '100%',
+        backgroundColor: "transparent",
+        justifyContent: "flex-end",
+        alignItems: "flex-end",
+        paddingRight: '8%',
+        paddingBottom: '4%',
+    },
+    BottomBarBtn: {
+        height: '9%',
+        width: '100%',
+        backgroundColor: "#008BD0"
+    }
 
 
 
@@ -624,8 +650,8 @@ const styles = StyleSheet.create({
 //           fontWeight:'normal',
 //           textAlign:'left'
 //         }
-        
-        
+
+
 //         }
 //     constructor() {
 //         super();
@@ -774,8 +800,8 @@ const styles = StyleSheet.create({
 //                                     </TouchableOpacity>
 //                                 </View>
 //                             </View>
-                            
-                            
+
+
 
 
 //                         </View>

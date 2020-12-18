@@ -36,6 +36,7 @@ import ActiveJobsPractise from './Src/Supervisor/ActivejobsPractise'
 import TeamMemberPractise from './Src/Supervisor/TeamMemberPractise'
 import SearchClientPractise from "./Src/Supervisor/SearchClientPractise"
 import AdditionalHours from './Src/Technician/AdditionalHours'
+import Camera from './Src/Technician/Camera'
 //import PercentageCir from "./Src/Supervisor/percentcircle"
 //import Equip_Id_Details from './Src/Supervisor/EquipmentIdDetails'
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';

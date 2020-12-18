@@ -13,19 +13,9 @@ import BottomHomeCompnent from '../CommonComponents/BottomHomeComponent';
 import DrawerHeader from '../CommonComponents/DrawerHeader';
 import EditText from '../CommonComponents/EditText'
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
-<<<<<<< HEAD
-
-
-=======
-<<<<<<< HEAD
-
-
-=======
 import AuthService from '../RestClient/AuthService';
 import ApiLoader from '../PopUp/ApiLoader';
 import {AppStorage, key} from '../utils/AppStorage';
->>>>>>> cdc289e2804b5bc3c721f86018d5aca4d96f9fbc
->>>>>>> 1efb17fd4e6918320511e82874706b886d9fece0
 export default class ForgotPassword extends Component {
 
   static navigationOptions = {
@@ -46,7 +36,8 @@ backgroundColor:'#008ad1'
   constructor() {
     super();
     this.state = {
-      UserEmail: ''
+      UserEmail: '',
+      isLoading: false,
     }
 
 
@@ -64,10 +55,6 @@ backgroundColor:'#008ad1'
     Alert.alert("inside forgot Password")
 
   }
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
-=======
   toggleLoader = (val) => {
     this.setState(({isLoading: val}));
 }
@@ -106,11 +93,28 @@ else{
 
 }
 
->>>>>>> cdc289e2804b5bc3c721f86018d5aca4d96f9fbc
->>>>>>> 1efb17fd4e6918320511e82874706b886d9fece0
 
+
+
+    } catch (e) {
+
+      // showMessage({
+      //   message: respo.data.Message,
+      //   type: "info",
+      //   backgroundColor: "black",
+    
+      // });
+         console.log('login catch me print hua', e.response.data);
+         Alert.alert(e.response.data.Message)
+    } finally {
+        this.toggleLoader(false);
+        // console.log('login finally print hua');
+    }
+
+};
 
   Validate = () => {
+   
     let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
     const { UserEmail } = this.state;
     var lettrs = /^[A-Za-z]+$/;
@@ -138,17 +142,23 @@ else{
         position: (0, 0, 100, 100),
         hideStatusBar: true
       });
+
+
+
     }
 
 
 
     else {
-      this.props.navigation.navigate('OTPVerification')
+      this.sendEmail();
+
+     
     }
   }
 
 
   render() {
+    const {isLoading} = this.state;
     return (
       <View style={styles.container}>
 
@@ -161,6 +171,8 @@ else{
         {/* --------- main View----------   */}
         <View style={styles.subcontainer1}>
           {/* --------------lock icon and Email text------ */}
+          <ApiLoader visibility={isLoading} loadingColor={'green'} onCancelPress={() => {
+                    }}/>
           <View style={styles.lockIconContainer}>
             <View>
               <Image
@@ -188,12 +200,6 @@ else{
                               
                               })}
                             />
-<<<<<<< HEAD
-
-=======
-<<<<<<< HEAD
-
-=======
            {/* <TextInput style={styles.input}
                                    underlineColorAndroid="transparent"
                                    placeholder="Password"
@@ -205,8 +211,6 @@ else{
                                    onChangeText={(text) => {
                                        this.setState({ UserEmail: text});
                                    }}/> */}
->>>>>>> cdc289e2804b5bc3c721f86018d5aca4d96f9fbc
->>>>>>> 1efb17fd4e6918320511e82874706b886d9fece0
       
           </View>
 

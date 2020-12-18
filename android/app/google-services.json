@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "502964808996",
+    "project_id": "becapp-c5885",
+    "storage_bucket": "becapp-c5885.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:502964808996:android:2da3eab3f8a532dc51d7b1",
+        "android_client_info": {
+          "package_name": "com.bec_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "502964808996-6f0b07vqg7p0vikf3cqfnkg8mhjjuqi2.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCFtBmtrrj8zG4ZrDMLf1SkkmDGMjpbaa0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "502964808996-6f0b07vqg7p0vikf3cqfnkg8mhjjuqi2.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

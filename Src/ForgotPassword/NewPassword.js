@@ -108,8 +108,8 @@ resetPassword = async () => {
     try {
          this.toggleLoader(true);
      var email=this.props.navigation.getParam('userEmail')
-     Alert.alert("Email",email)
-        let respo = await AuthService.resetPassword("gurjeet492@gmail.com",this.state.password);
+    //  Alert.alert("Email",email)
+        let respo = await AuthService.resetPassword(email,this.state.password);
         // console.log('FORGOT PASS RESPONSE PRINTED===========================',respo.data.Message);
   
     //  Alert.alert("Password reset",respo.data.Message);

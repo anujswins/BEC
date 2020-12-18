@@ -1,21 +1,23 @@
 import AsyncStorage from '@react-native-community/async-storage';
 import store from '../Redux/Store';
 import Action from '../Redux/Action';
-import {Alert} from 'react-native';
-import Equip_ID from '../Supervisor/EquipIdDetails';
+import { Alert } from 'react-native';
 
 
 const key = {
     USER_PROFILE_DATA: 'USER_PROFILE_DATA',
+    ASSIGNED_JOB_INFO:"ASSIGNED_JOB_INFO",
     USER_TOKEN: 'USER_TOKEN',
     USER_REMEMBER_ME: 'USER_REMEMBER_ME',
     NOTIFICATION_TOKEN_STATUS: 'NOTIFICATION_TOKEN_STATUS',
-<<<<<<< HEAD
-    JOBASSIGNMENT: 'JOBASSIGNMENT',
+    CHOOSE_JOB_TYPE:'CHOOSE_JOB_TYPE',                
+       
+    SAVE_EMAIL:"SAVE_EMAIL",
+    ALL_TECHNICIAN_DETAIL:'ALL_TECHNICIAN_DETAIL',
+    TECHNICIAN_ASSIGNED_JOB_ID:'ASSIGNED_JOB_ID',
 
-=======
-<<<<<<< HEAD
-    CHOOSE_JOB_TYPE:'CHOOSE_JOB_TYPE',                    // Choose Job Type
+
+
     EQUIP_AVAIL_ID_DETAILS:'EQUIP_AVAIL_ID_DETAILS',        //EquipIdYesDetails
     EQUIP_ID_DETAILS:'EQUIP_ID_DETAILS',                   //EquipIdDetails
     USER_JOBSDETAILS: 'USER_JOBSDETAILS',                  //JobDetails
@@ -24,16 +26,7 @@ const key = {
     GET_MACHINETYPE_ID:'GET_MACHINETYPE_ID',                  //MachineType_Id
     GET_MACHINE_ID:"GET_MACHINE_ID",
     CREATEJOB_EQUIPID:'CREATEJOB_EQUIPID'                      //CreateJobEquipId
-=======
-    CHOOSE_JOB_TYPE: 'CHOOSE_JOB_TYPE',
-    EQUIP_ID_DETAILS: 'EQUIP_ID_DETAILS',
-    SAVE_EMAIL: 'SAVE_EMAIL',
-    ALL_TECHNICIAN_DETAIL: 'ALL_TECHNICIAN_DETAIL',
-    ALL_RECORDS_DATA:'ALL_RECORDS_DATA',
-    ALL_LOGINRESPO:'ALL_LOGINRESPO',
-    EQUIP_AVAIL_ID_DETAILS:'EQUIP_AVAIL_ID_DETAILS'
->>>>>>> cdc289e2804b5bc3c721f86018d5aca4d96f9fbc
->>>>>>> 1efb17fd4e6918320511e82874706b886d9fece0
+
 };
 const AppStorage = {
 
@@ -45,149 +38,8 @@ const AppStorage = {
 
         }
     },
-<<<<<<< HEAD
-=======
-// // ----------------ChooseJobTypeKey--------------------------------
 
-
-<<<<<<< HEAD
-    async getJobTypeId() {
-        try {
-            let Get_Choose_JobType_Resp = await AsyncStorage.getItem(key.CHOOSE_JOB_TYPE);
-            response_JobType = JSON.parse(Get_Choose_JobType_Resp);
-            let value_JobTypeId=response_JobType
-             console.log('token response++++++++++++++++',value_JobTypeId);
-            // console.log('mera token agya ===',token);
-            return value_JobTypeId;
-        } catch (error) {
-            return null;
-        }
-    },
-
-// ----------------------EquipIDAvail----------------------------
-async EquipIdAvail(keyName, value) {
-    try {
-        await AsyncStorage.setItem(keyName, value);
-    } catch (error) {
-
-    }
-},
-
-// -------------------------AllRecordData------------------------
-async getJobDetails() {
-    try {
-        let response = await AsyncStorage.getItem(key.USER_JOBSDETAILS);
-        response = JSON.parse(response);
-        
-        return response;
-    } catch (error) {
-        return null;
-    }
-},
-
-async getjobid() {
-    try {
-        let response = await AsyncStorage.getItem(key.USER_JOBSDETAILS);
-        response = JSON.parse(response);
-     
-        return response;
-    } catch (error) {
-        return null;
-    }
-},
-
-// ---------------getUserId--------------------------------
-async getUserId() {
-    try {
-        let response = await AsyncStorage.getItem(key.USER_PROFILE_DATA);
-        response = JSON.parse(response);
-        
-        return response.data.userResponse.UserId;
-    } catch (error) {
-        return null;
-    }
-},
-
-// ---------------getLoginResponse------------------
-async getLoginResponse() {
-    try {
-        let response1 = await AsyncStorage.getItem(key.USER_PROFILE_DATA);
-        var response = JSON.parse(response1);
-      //  console.log("getLoginResponse===========",response)
-        return response.data;
-    } catch (error) {
-
-        return null;
-    }
-
-},
-// -----------------Client_Records--------------------------
-async GetSearchClientRecords() {
-    try {
-        let response1 = await AsyncStorage.getItem(key.SEARCH_CLIENT_RECORDS);
-        var respo_ClientRecords = JSON.parse(response1);
-        return respo_ClientRecords;
-    } catch (error) {
-
-        return null;
-    }
-
-},
-// -----------------Client_Type--------------------------
-async getClientTypeRecords() {
-    try {
-        let response1 = await AsyncStorage.getItem(key.GET_CLIENT_TYPES);
-        var respo_ClientType = JSON.parse(response1);
-        return respo_ClientType;
-    } catch (error) {
-
-        return null;
-    }
-
-},
-// ----------------MachineType_Id_details--------------------------
-async getMachineTypeIdDetails() {
-    try {
-        let response1 = await AsyncStorage.getItem(key.GET_MACHINETYPE_ID);
-        var respo_MachineType = JSON.parse(response1);
-      //  console.log("appstor+++++++",respo_MachineType)
-        return respo_MachineType;
-    } catch (error) {
-
-        return null;
-    }
-
-},
-// -----------------Machine_Id_Details--------------------------
-async getMachineIdDetails() {
-    try {
-        let response1 = await AsyncStorage.getItem(key.GET_MACHINE_ID);
-        var respo_MachineDetails = JSON.parse(response1);
-      //  console.log("appstorrespo_MachineDetails+++++++",respo_MachineDetails)
-        return respo_MachineDetails;
-    } catch (error) {
-
-        return null;
-    }
-
-},
-// --------------createJobEquipId--------------
-async createJobEquipId() {
-    try {
-        let response = await AsyncStorage.getItem(key.EQUIP_AVAIL_ID_DETAILS);
-        var respo_createJob = JSON.parse(response);
-        console.log("respo_createJob+++++++",respo_createJob)
-        return respo_createJob;
-    } catch (error) {
-
-        return null;
-    }
-
-},
-=======
-
->>>>>>> cdc289e2804b5bc3c721f86018d5aca4d96f9fbc
->>>>>>> 1efb17fd4e6918320511e82874706b886d9fece0
+  
     async saveRememberMeKey(keyName, value) {
         try {
             await AsyncStorage.setItem(keyName, value);
@@ -212,14 +64,10 @@ async createJobEquipId() {
         try {
             let fcmToken = await AsyncStorage.getItem('Token_Notification');
 
-<<<<<<< HEAD
-            return fcmToken
-=======
-            return fcmToken;
->>>>>>> 1efb17fd4e6918320511e82874706b886d9fece0
+           return fcmToken
         } catch (error) {
-
-            return '';
+            console.log('PUSH NOTIFICATION TOKEN: error  ', error);
+            return "";
         }
     },
     async saveNotificationToken(token) {
@@ -236,174 +84,180 @@ async createJobEquipId() {
         try {
             let response = await AsyncStorage.getItem(key.USER_PROFILE_DATA);
             response = JSON.parse(response);
-<<<<<<< HEAD
-            let token = response.data.userResponse.token
+            let token=response.data.userResponse.token
             // console.log('token response++++++++++++++++',response);
             // console.log('mera token agya ===',token);
-=======
-            let token = response.data.userResponse.token;
-
-            // console.log('token login----- response++++++++++++++++',response);
-
->>>>>>> 1efb17fd4e6918320511e82874706b886d9fece0
             return response.data.userResponse.token;
         } catch (error) {
             return null;
         }
     },
 
-<<<<<<< HEAD
-=======
-
-<<<<<<< HEAD
-=======
-
-    async getLoginResponse() {
-        try {
-            let response1 = await AsyncStorage.getItem(key.USER_PROFILE_DATA);
-            var response = JSON.parse(response1);
-            return response.data;
-        } catch (error) {
-
-            return null;
-        }
+    async getLoginResponse(){
+      try{
+         let  response1=await AsyncStorage.getItem(key.USER_PROFILE_DATA);
+        var  response = JSON.parse(response1);
+         return response.data
+      }
+catch(error)
+{
+    console.log("error occured",error);
+    return null;
+}
 
     },
 
->>>>>>> 1efb17fd4e6918320511e82874706b886d9fece0
+async getAssignedJobInfo(){
+  try{
+       let  response1=await AsyncStorage.getItem(key.ASSIGNED_JOB_INFO);
+       var  response = JSON.parse(response1);
+        return response
+     }
+   catch(error)
+   {
+   console.log("error occured",error);
+   return null;
+   }
+
+
+},
+
+
+
+
+
     async getUserId() {
         try {
             let response = await AsyncStorage.getItem(key.USER_PROFILE_DATA);
             response = JSON.parse(response);
-
+            
             return response.data.userResponse.UserId;
         } catch (error) {
             return null;
         }
     },
-
-
-
-
-
-
-    async getAllTechnician() {
-        try {
-            let json_response = await AsyncStorage.getItem(key.ALL_TECHNICIAN_DETAIL);
-
-            let response = JSON.parse(json_response);
-
-            return response.data.jobsAssignmentMainResponse.jobsAssignmentResponse;
-
-        } catch (error) {
-
-            return null;
-
-        }
-    },
-    async createJobEquipId() {
-        try {
-            let response = await AsyncStorage.getItem(key.EQUIP_AVAIL_ID_DETAILS);
-            var respo_createJob = JSON.parse(response);
-            console.log("respo_createJob+++++++",respo_createJob)
-            return respo_createJob;
-        } catch (error) {
-
-            return null;
-        }
-
-    },
-
-
-
     async getJobDetails() {
         try {
-            let response = await AsyncStorage.getItem(key.ALL_RECORDS_DATA);
+            let response = await AsyncStorage.getItem(key.USER_JOBSDETAILS);
             response = JSON.parse(response);
-
-<<<<<<< HEAD
-=======
-        // console.log('navi appstorage_data=====================================',response);
-
->>>>>>> 1efb17fd4e6918320511e82874706b886d9fece0
+            
             return response;
         } catch (error) {
             return null;
         }
     },
-<<<<<<< HEAD
-    // Job Assignment
-    async SuperviseAssignJobs() {
-        try {
-            let response = await AsyncStorage.getItem(key.JOBASSIGNMENT);
-            response = JSON.parse(response);
-
-            console.log('appstorage data from assign job++++++++++++++++++++++++++++', response)
 
 
-            return response;
-        }
-        catch (error) {
-=======
-    async getlogin_Respo() {
-        try {
-            let responselogin = await AsyncStorage.getItem(key.ALL_LOGINRESPO);
-            responselogin = JSON.parse(response);
 
-       console.log('navi appstorage_data from login=====================================',responselogin);
+//////////////Assigned job Id (technician team member screen)
 
-            return responselogin;
-        } catch (error) {
-            return null;
-        }
-    },
-    async getjobid() {
-        try {
-            let response = await AsyncStorage.getItem(key.ALL_RECORDS_DATA);
-            response = JSON.parse(response);
+async getAssignedJobId() {
+    try {
+        let response = await AsyncStorage.getItem(key.TECHNICIAN_ASSIGNED_JOB_ID);
+        // response = JSON.parse(response);
+        
+        return response;
+    } catch (error) {
+        return null;
+    }
+},
 
-            return response.data.jobsMainResponse.jobResponse;
-        } catch (error) {
->>>>>>> 1efb17fd4e6918320511e82874706b886d9fece0
-            return null;
-        }
-    },
+async getAllTechnician(){
+try{
+let json_response=await AsyncStorage.getItem(key.ALL_TECHNICIAN_DETAIL);
+console.log("get Alltechnician called",json_response)
+ let response=JSON.parse(json_response);
 
-<<<<<<< HEAD
+return response.data.jobsAssignmentMainResponse.jobsAssignmentResponse;
+
+}
+catch(error)
+{
+    console.log("error occured",error)
+return null
+
+}
+},
 
 
-=======
 // ----------------ChooseJobTypeKey--------------------------------
-    async ChooseJobTypeKey(keyName, value) {
-        try {
-            await AsyncStorage.setItem(keyName, value);
-        } catch (error) {
+async ChooseJobTypeKey(keyName, value) {
+    try {
+        await AsyncStorage.setItem(keyName, value);
+    } catch (error) {
 
-        }
-    },
+    }
+},
 
-    async getJobTypeId() {
-        try {
-            let response_JobTypeid = await AsyncStorage.getItem(key.CHOOSE_JOB_TYPE);
-            response_JobTypeid = JSON.parse(response_JobTypeid);
-            let value_JobTypeId = response_JobTypeid;
-          console.log('value_JobTypeId++++++++++++++++',value_JobTypeId);
+async getJobTypeId() {
+    try {
+        let response_JobTypeid = await AsyncStorage.getItem(key.CHOOSE_JOB_TYPE);
+        response_JobTypeid = JSON.parse(response_JobTypeid);
+        let value_JobTypeId=response_JobTypeid
+        // console.log('token response++++++++++++++++',response);
+        // console.log('mera token agya ===',token);
+        return value_JobTypeId;
+    } catch (error) {
+        return null;
+    }
+},
 
-            return value_JobTypeId;
-        } catch (error) {
-            return null;
-        }
-    },
+// -----------------Client_Records--------------------------
+async GetSearchClientRecords() {
+    try {
+        let response1 = await AsyncStorage.getItem(key.SEARCH_CLIENT_RECORDS);
+        var respo_ClientRecords = JSON.parse(response1);
+        return respo_ClientRecords;
+    } catch (error) {
+
+        return null;
+    }
+
+},
+
+// --------------------------------
+async createJobEquipId() {
+    try {
+        let response = await AsyncStorage.getItem(key.EQUIP_AVAIL_ID_DETAILS);
+        var respo_createJob = JSON.parse(response);
+        console.log("respo_createJob+++++++",respo_createJob)
+        return respo_createJob;
+    } catch (error) {
+
+        return null;
+    }
+
+},
+
+// async getEmail(){
+
+// try{
+// let email=await AsyncStorage.getItem(key.SAVE_EMAIL);
+// Alert.alert("Email recived",email)
+
+
+// }
+
+// catch(error)
+// {
+//   return null;  
+// }
 
 
 
->>>>>>> cdc289e2804b5bc3c721f86018d5aca4d96f9fbc
->>>>>>> 1efb17fd4e6918320511e82874706b886d9fece0
+
+// },
+
+
+
+
+
+
     async clearStorage() {
         try {
-            store.dispatch({ type: Action.SIGN_OUT });
+            store.dispatch({type: Action.SIGN_OUT});
             await AsyncStorage.removeItem(key.USER_PROFILE_DATA);
-            await AsyncStorage.removeItem('Token_Notification');
+            await AsyncStorage.removeItem("Token_Notification");
         } catch (error) {
         }
     },
@@ -415,12 +269,9 @@ async createJobEquipId() {
         }
     },
 
-<<<<<<< HEAD
+ 
 
-
-=======
->>>>>>> 1efb17fd4e6918320511e82874706b886d9fece0
 
 };
-export { AppStorage, key };
+export {AppStorage, key};
 

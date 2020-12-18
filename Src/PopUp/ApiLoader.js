@@ -1,50 +1,7 @@
-<<<<<<< HEAD
-import React from 'react';
-import {ActivityIndicator, Modal, TouchableWithoutFeedback, View} from 'react-native';
-import PropTypes from 'prop-types';
-
-const ApiLoader = (props) => {
-    return (
-        <Modal
-            visible={props.visibility}
-            transparent={true}
-            onBackdropPress={() => props.onCancelPress()}
-            animationType={'fade'}
-            onRequestClose={() => props.onCancelPress()}>
-            <TouchableWithoutFeedback onPress={() => props.onCancelPress()}>
-                <View style={styles.mainContainer}>
-                    <ActivityIndicator size="large" color={props.loadingColor}/>
-                </View>
-
-            </TouchableWithoutFeedback>
-        </Modal>
-    );
-};
-
-const styles = {
-    mainContainer: {
-        flex: 1,
-        alignItems: 'center',
-        justifyContent: 'center',
-        backgroundColor: 'rgba(0,0,0,0.2)',
-    },
-};
-
-ApiLoader.propTypes = {
-    visibility: PropTypes.bool,
-    onCancelPress: PropTypes.func,
-    loadingColor: PropTypes.string,
-};
-
-ApiLoader.defaultProps = {};
-=======
-<<<<<<< HEAD
-
-=======
 // import React from 'react';
 // import {ActivityIndicator, Modal, TouchableWithoutFeedback, View,Text} from 'react-native';
 // import PropTypes from 'prop-types';
-//
+
 // const ApiLoader = (props) => {
 //     return (
 //         <Modal
@@ -58,12 +15,12 @@ ApiLoader.defaultProps = {};
 //                     <ActivityIndicator size="large" color={props.loadingColor}/>
 //                   <Text>Please wait....</Text>
 //                 </View>
-//
+
 //             </TouchableWithoutFeedback>
 //         </Modal>
 //     );
 // };
-//
+
 // const styles = {
 //     mainContainer: {
 //         flex: 1,
@@ -72,18 +29,17 @@ ApiLoader.defaultProps = {};
 //         backgroundColor: 'rgba(0,0,0,0.2)',
 //     },
 // };
-//
+
 // ApiLoader.propTypes = {
 //     visibility: PropTypes.bool,
 //     onCancelPress: PropTypes.func,
 //     loadingColor: PropTypes.string,
 // };
-//
+
 // ApiLoader.defaultProps = {};
-//
+
 // export default ApiLoader;
-//
->>>>>>> cdc289e2804b5bc3c721f86018d5aca4d96f9fbc
+
 import React, { Component } from 'react';
 import {
   StyleSheet,
@@ -111,7 +67,7 @@ const ApiLoader = props => {
             animating={loading} color={props.loadingColor}/>
            <Text>Please wait...</Text>
         </View>
-
+        
       </View>
     </Modal>
   )
@@ -136,48 +92,5 @@ const styles = StyleSheet.create({
     justifyContent: 'space-around'
   }
 });
->>>>>>> 1efb17fd4e6918320511e82874706b886d9fece0
 
 export default ApiLoader;
-
-
-// import React from 'react';
-// import {ActivityIndicator, Modal, TouchableWithoutFeedback, View} from 'react-native';
-// import PropTypes from 'prop-types';
-
-// const ApiLoader = (props) => {
-//     return (
-//         <Modal
-//             visible={props.visibility}
-//             transparent={true}
-//             onBackdropPress={() => props.onCancelPress()}
-//             animationType={'fade'}
-//             onRequestClose={() => props.onCancelPress()}>
-//             <TouchableWithoutFeedback onPress={() => props.onCancelPress()}>
-//                 <View style={styles.mainContainer}>
-//                     <ActivityIndicator size="large" color={props.loadingColor}/>
-//                 </View>
-
-//             </TouchableWithoutFeedback>
-//         </Modal>
-//     );
-// };
-
-// const styles = {
-//     mainContainer: {
-//         flex: 1,
-//         alignItems: 'center',
-//         justifyContent: 'center',
-//         backgroundColor: 'rgba(0,0,0,0.2)',
-//     },
-// };
-
-// ApiLoader.propTypes = {
-//     visibility: PropTypes.bool,
-//     onCancelPress: PropTypes.func,
-//     loadingColor: PropTypes.string,
-// };
-
-// ApiLoader.defaultProps = {};
-
-// export default ApiLoader;
